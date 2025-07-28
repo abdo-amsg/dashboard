@@ -33,8 +33,6 @@ class KasperskyAVFinding:
     ksc_fqdn: Optional[str] = None
     action: Optional[str] = None
     malware_type: Optional[str] = None
-    attack_type: Optional[str] = None
-    vulnerability_name: Optional[str] = None
     reason: Optional[str] = None
     file_md5: Optional[str] = None
     event_type: Optional[str] = None
@@ -42,7 +40,7 @@ class KasperskyAVFinding:
     summary: Optional[str] = None
     category_details: Optional[List[str]] = None
     labels: Optional[Dict[str, str]] = None
-    vulnerability_description: Optional[str] = None
+    quarantine_status: Optional[str] = None
     
     # CHAMPS SUPPLÉMENTAIRES (pour compatibilité avec votre logique existante)
     host_fqdn: Optional[str] = None
@@ -83,6 +81,18 @@ class KasperskyAVParser:
         "Detected": "DETECT",
         "blocked": "BLOCK",
         "allowed": "ALLOW"
+    }
+
+    # Event types
+    EVENT_TYPES = {
+        "GNRL_EV_VIRUS_FOUND": "Virus found",       # Virus détecté
+        "GNRL_EV_ATTACK_DETECTED": "Attack detected",      # Attaque détectée
+        "GNRL_EV_SUSPICIOUS_OBJECT": "Suspicious object",    # Objet suspect
+        "GNRL_EV_SCAN_COMPLETED": "Scan completed",       # Scan terminé
+        "GNRL_EV_SCAN_STARTED": "Scan started",         # Scan démarré
+        "GNRL_EV_UPDATE_INSTALLED": "Update installed",     # Mise à jour installée
+        "GNRL_EV_LICENSE_EXPIRED": "License expired",      # Licence expirée
+        "GNRL_EV_QUARANTINE_RESTORED":  "Quarantine restored",  # Fichier restauré de quarantaine
     }
     
     # HTTP methods for network validation
@@ -414,7 +424,8 @@ class KasperskyAVParser:
                 pass
         
         # 7. Event metadata
-        finding.log_type = fields.get('et')
+        finding.log_type = KasperskyAVParser.EVENT_TYPES.get(fields.get('et'), 'Unknown')
+        finding.quarantine_status = "quarantined" if finding.log_type == "GNRL_EV_QUARANTINE_RESTORED" else "not quarantined"
         finding.detection_technology = fields.get('tdn')
         finding.event_description = fields.get('etdn')
         finding.engine_id = fields.get('engine')
@@ -424,12 +435,6 @@ class KasperskyAVParser:
         
         # 8. Threat information  
         finding.malware_type = fields.get('Type')
-        finding.attack_type = (fields.get('Type') or 
-                              fields.get('p5') or
-                              fields.get('Name'))
-        finding.vulnerability_name = (fields.get('Name') or 
-                                     fields.get('p5') or
-                                     fields.get('Type'))
         
         # 9. Action and results
         if 'Result' in fields:
@@ -460,8 +465,6 @@ class KasperskyAVParser:
         # 11. Additional details
         finding.summary = (fields.get('summary') or 
                           fields.get('Reason'))
-        finding.vulnerability_description = (fields.get('etdn') or 
-                                           fields.get('tdn'))
         finding.reason = fields.get('Reason')
         
         # 12. Category and labels

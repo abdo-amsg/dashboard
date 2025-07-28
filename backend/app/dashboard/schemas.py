@@ -56,8 +56,9 @@ class ToolBase(BaseModel):
     @field_validator('category')
     def validate_category(cls, v):
         allowed_categories = [
-            'Data Security', 'IAM', 'IAC', 
-            'Perimeter Security', 'SMIR','SGOR'
+            'Sécurité data', 'Sécurité drs identités, accès et mobilité', 'Sécurité des infrastructures, applicatifs et continuité', 
+            'Security Perimeter', 'Monitoring de la sécurité et réponse aux incidents',
+            'Gouvernance sécurité organisation et ressources'
         ]
         if v not in allowed_categories:
             raise ValueError(f'Category must be one of: {", ".join(allowed_categories)}')
