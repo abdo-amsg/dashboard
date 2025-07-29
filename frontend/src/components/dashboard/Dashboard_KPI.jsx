@@ -56,9 +56,18 @@ function DashboardContent({ user, user_role, loading }) {
       switch (user_role) {
         case "Viewer":
         case "Operational": {
-          const { kpis, charts } = Operational.getDashboardData()
-          setKpiData(kpis)
-          setChartData(charts)
+          const getedata = async () => {
+            const { kpis, charts } = await Operational.getDashboardData()
+            return { kpis, charts }
+          }
+          getedata().then(({ kpis, charts }) => {
+            setKpiData(kpis)
+            setChartData(charts)
+          }).catch(error => {
+            console.error("Error fetching Operational dashboard data:", error)
+            setKpiData([])
+            setChartData([])
+          })
           break
         }
         case "Managerial": {
@@ -110,7 +119,7 @@ function DashboardContent({ user, user_role, loading }) {
     let progressWidth = 0
     if (unit === "%") {
       progressWidth = Math.min(current_value, 100)
-    } else if (unit.includes("/")) {
+    } else if (unit && unit.includes("/")) {
       const [current, total] = unit.split("/").map((s) => Number.parseInt(s))
       progressWidth = total > 0 ? Math.min((current / total) * 100, 100) : 0
     } else if (progress_value) {
@@ -272,10 +281,24 @@ function DashboardContent({ user, user_role, loading }) {
   }
 
   const ChartCard = ({ title, type, data = [] }) => {
-    const chartData = data.map((item) => ({
-      ...item,
-      date: new Date(item.date).toLocaleDateString("en-US", { month: "short", day: "numeric" }),
-    }))
+    console.log("data : ", data,"\ntype : ", type);
+    // Transform data based on its structure
+    const chartData = data?.map((item) => {
+      if (item.rule_name && item.performance_percentage !== undefined) {
+        // Handle rule performance data
+        return {
+          name: item.rule_name,
+          value: item.performance_percentage
+        }
+      } else if (item.date && item.score !== undefined) {
+        // Handle time series data
+        return {
+          date: new Date(item.date).toLocaleDateString("en-US", { month: "short", day: "numeric" }),
+          value: item.score
+        }
+      }
+      return item
+    })
 
     // Find a matching KPI with a threshold for this chart
     const matchingKPI = kpiData?.find(
@@ -285,10 +308,20 @@ function DashboardContent({ user, user_role, loading }) {
 
     const CustomTooltip = ({ active, payload, label }) => {
       if (active && payload && payload.length) {
+        const isRuleData = payload[0].payload.name !== undefined
         return (
           <div className="bg-white p-3 border border-slate-200 rounded-lg shadow-lg">
-            <p className="text-sm font-medium text-slate-900">{`Date: ${label}`}</p>
-            <p className="text-sm text-slate-600">{`Value: ${payload[0].value}`}</p>
+            {isRuleData ? (
+              <>
+                <p className="text-sm font-medium text-slate-900">{`Rule: ${payload[0].payload.name}`}</p>
+                <p className="text-sm text-slate-600">{`Performance: ${payload[0].value}%`}</p>
+              </>
+            ) : (
+              <>
+                <p className="text-sm font-medium text-slate-900">{`Date: ${label}`}</p>
+                <p className="text-sm text-slate-600">{`Score: ${payload[0].value}`}</p>
+              </>
+            )}
           </div>
         )
       }
@@ -298,26 +331,57 @@ function DashboardContent({ user, user_role, loading }) {
     const renderChart = () => {
       const commonProps = {
         data: chartData,
-        margin: { top: 5, right: 30, left: 20, bottom: 5 },
+        margin: { top: 20, right: 40, left:10, bottom: 20 },
       }
+
+      // Check if the data is rule-based (bar chart with names)
+      const isRuleData = chartData?.[0]?.name !== undefined
+      
       switch (type) {
         case "line":
           return (
             <RechartsLineChart {...commonProps}>
-              <CartesianGrid stroke="#cbd5e1" strokeWidth={1} strokeDasharray="3 3" />
-              <XAxis dataKey="date" tick={{ fontSize: 12, fill: "#64748b" }} />
-              <YAxis tick={{ fontSize: 12, fill: "#64748b" }} />
+              <defs>
+                <linearGradient id="lineGradient" x1="0" y1="0" x2="0" y2="1">
+                  <stop offset="5%" stopColor="#3b82f6" stopOpacity={0.3}/>
+                  <stop offset="95%" stopColor="#3b82f6" stopOpacity={0}/>
+                </linearGradient>
+              </defs>
+              <CartesianGrid stroke="#e2e8f0" strokeWidth={1} strokeDasharray="3 3" />
+              <XAxis 
+                dataKey="date" 
+                tick={{ fontSize: 12, fill: "#64748b" }}
+                tickLine={{ stroke: '#94a3b8' }}
+              />
+              <YAxis 
+                tick={{ fontSize: 12, fill: "#64748b" }}
+                tickLine={{ stroke: '#94a3b8' }}
+                domain={[0, 'auto']}
+              />
               <Tooltip content={<CustomTooltip />} />
               <Line
                 type="monotone"
                 dataKey="value"
-                stroke="#dc2626"
+                stroke="#3b82f6"
                 strokeWidth={3}
-                dot={{ fill: "#dc2626", strokeWidth: 2, r: 4 }}
-                activeDot={{ r: 6, stroke: "#dc2626", strokeWidth: 2 }}
+                dot={{ fill: "#3b82f6", strokeWidth: 2, r: 4 }}
+                activeDot={{ r: 6, stroke: "#3b82f6", strokeWidth: 2 }}
+                fill="url(#lineGradient)"
               />
               {threshold !== undefined && (
-                <ReferenceLine y={threshold} stroke="#2563eb" strokeDasharray="6 3" label={{ value: 'Target', position: 'left', fill: '#2563eb', fontSize: 12, fontWeight: 'bold', offset: 30 }} />
+                <ReferenceLine 
+                  y={threshold} 
+                  stroke="#2563eb" 
+                  strokeDasharray="6 3" 
+                  label={{ 
+                    value: 'Target', 
+                    position: 'left', 
+                    fill: '#2563eb', 
+                    fontSize: 12, 
+                    fontWeight: 'bold', 
+                    offset: 30 
+                  }} 
+                />
               )}
             </RechartsLineChart>
           )
@@ -342,14 +406,58 @@ function DashboardContent({ user, user_role, loading }) {
           )
         default:
           return (
-            <RechartsBarChart {...commonProps}>
-              <CartesianGrid stroke="#cbd5e1" strokeWidth={1} strokeDasharray="3 3" />
-              <XAxis dataKey="date" tick={{ fontSize: 12, fill: "#64748b" }} />
-              <YAxis tick={{ fontSize: 12, fill: "#64748b" }} />
-              <Tooltip content={<CustomTooltip />} />
-              <Bar dataKey="value" fill="#2563eb" radius={[4, 4, 0, 0]} />
+            <RechartsBarChart {...commonProps} layout={isRuleData ? "vertical" : "horizontal"}>
+              <defs>
+                <linearGradient id="barGradient" x1="0" y1="0" x2="0" y2="1">
+                  <stop offset="0%" stopColor="#3b82f6" stopOpacity={0.8}/>
+                  <stop offset="100%" stopColor="#60a5fa" stopOpacity={0.8}/>
+                </linearGradient>
+              </defs>
+              <CartesianGrid stroke="#e2e8f0" strokeWidth={1} strokeDasharray="3 3" />
+              <XAxis 
+                dataKey={isRuleData ? "value" : "date"}
+                type={isRuleData ? "number" : "category"}
+                tick={{ fontSize: 12, fill: "#64748b" }}
+                tickLine={{ stroke: '#94a3b8' }}
+                domain={isRuleData ? [0, 100] : null}
+              />
+              <YAxis 
+                dataKey={isRuleData ? "name" : "value"}
+                type={isRuleData ? "category" : "number"}
+                tick={{ fontSize: 12, fill: "#64748b" }}
+                tickLine={{ stroke: '#94a3b8' }}
+                width={isRuleData ? 150 : 60}
+              />
+              <Tooltip 
+                content={<CustomTooltip />}
+                cursor={{ fill: '#f1f5f9' }}
+              />
+              <Bar 
+                dataKey="value"
+                fill="url(#barGradient)"
+                radius={[4, 4, 4, 4]}
+                maxBarSize={isRuleData ? 20 : 40}
+                label={isRuleData ? {
+                  position: 'right',
+                  fill: '#64748b',
+                  fontSize: 12,
+                  formatter: (value) => `${value}%`
+                } : null}
+              />
               {threshold !== undefined && (
-                <ReferenceLine y={threshold} stroke="#2563eb" strokeDasharray="6 3" label={{ value: 'Target', position: 'left', fill: '#2563eb', fontSize: 12, fontWeight: 'bold', offset: 30 }} />
+                <ReferenceLine 
+                  y={threshold} 
+                  stroke="#2563eb" 
+                  strokeDasharray="6 3" 
+                  label={{ 
+                    value: 'Target', 
+                    position: 'left', 
+                    fill: '#2563eb', 
+                    fontSize: 12, 
+                    fontWeight: 'bold', 
+                    offset: 30 
+                  }} 
+                />
               )}
             </RechartsBarChart>
           )
@@ -373,13 +481,13 @@ function DashboardContent({ user, user_role, loading }) {
               </CardTitle>
             </div>
             <Badge variant="outline" className="text-xs text-slate-500 border-slate-300">
-              {data.length} data points
+              {data?.length} data points
             </Badge>
           </div>
         </CardHeader>
         <CardContent>
           <div className="h-80">
-            {data.length > 0 ? (
+            {data?.length > 0 ? (
               <ResponsiveContainer width="100%" height="100%">
                 {renderChart()}
               </ResponsiveContainer>

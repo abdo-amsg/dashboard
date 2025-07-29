@@ -28,10 +28,7 @@ async def get_all_kpis(
     """Get all KPIs with pagination and filtering"""
     query = db.query(models.KPI)
     
-    # filter by the level of the current user or if it is an admin (filter by current_user.level OR current_user.is_superuser)
     level = current_user.role.name if current_user else None
-    if current_user.is_superuser:
-        level = None
     if level:
         print('Filtering KPIs by level:', level)
         query = query.filter(models.KPI.level.ilike(f"%{level}%"))
@@ -316,16 +313,15 @@ async def get_dashboard_kpi_values(
     
     # Filter KPIs based on user role
     query = db.query(models.KPI)
-    if not current_user.is_superuser:  # If not admin, filter by role
-        role_level_map = {
-            "viewer": "operational",
-            "operational": "operational",
-            "managerial": "managerial",
-            "strategic": "strategic"
-        }
-        user_level = role_level_map.get(current_user.role.name.lower())
-        if user_level:
-            query = query.filter(models.KPI.level.ilike(f"%{user_level}%"))
+    role_level_map = {
+        "viewer": "operational",
+        "operational": "operational",
+        "managerial": "managerial",
+        "strategic": "strategic"
+    }
+    user_level = role_level_map.get(current_user.role.name.lower())
+    if user_level:
+        query = query.filter(models.KPI.level.ilike(f"%{user_level}%"))
     
     kpis = query.all()
     
@@ -343,9 +339,14 @@ async def get_dashboard_kpi_values(
         
         if recent_values:
             current_value = recent_values[0].value
+            if kpi.reporting_format.lower() == "number":
+                current_value = current_value['value']
+
             last_calculated_date = recent_values[0].timestamp
             if len(recent_values) > 1:
                 previous_value = recent_values[1].value
+                if kpi.reporting_format.lower() == "number":
+                    previous_value = previous_value['value']
         
         kpi_data.append({
             "title": kpi.name,

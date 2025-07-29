@@ -2,9 +2,7 @@ import React, { useState } from 'react';
 import { LayoutGrid, Settings, Globe, FileText, ChevronLeft, ChevronRight } from 'lucide-react';
 
 // Accepts activeItem (string or number) and onSelect (function) as props
-function DashboardSidebar({ activeItem, onSelect, is_superuser }) {
-  const [isCollapsed, setIsCollapsed] = useState(false);
-
+function DashboardSidebar({ activeItem, onSelect, is_superuser, isOpen, onToggle }) {
   const menuItems = [
     {
       id: 0,
@@ -33,11 +31,13 @@ function DashboardSidebar({ activeItem, onSelect, is_superuser }) {
   };
 
   const toggleSidebar = () => {
-    setIsCollapsed(!isCollapsed);
+    if (onToggle) {
+      onToggle();
+    }
   };
 
   return (
-    <div className={`relative bg-gray-50 border-r border-gray-200 transition-all duration-300 ${isCollapsed ? 'w-16' : 'w-48'} h-screen`}>
+    <div className={`relative bg-gray-50 border-r border-gray-200 transition-all duration-300 ${!isOpen ? 'w-16' : 'w-64'} h-screen`}>
       {/* Navigation Items */}
       <div className="py-4">
         {menuItems.map((item) => {
@@ -54,8 +54,8 @@ function DashboardSidebar({ activeItem, onSelect, is_superuser }) {
                   : 'text-gray-600 hover:text-gray-900 hover:bg-gray-100'
               }`}
             >
-              <IconComponent className={`w-5 h-5 ${isCollapsed ? 'mx-auto' : 'mr-3'}`} />
-              {!isCollapsed && (
+              <IconComponent className={`w-5 h-5 ${!isOpen ? 'mx-auto' : 'mr-3'}`} />
+              {isOpen && (
                 <span className="text-sm font-medium">{item.label}</span>
               )}
             </button>
@@ -68,7 +68,7 @@ function DashboardSidebar({ activeItem, onSelect, is_superuser }) {
         onClick={toggleSidebar}
         className="absolute right-0 top-1/2 transform translate-x-1/2 -translate-y-1/2 bg-white border border-gray-300 rounded-full p-1 hover:bg-gray-50 transition-colors"
       >
-        {isCollapsed ? (
+        {!isOpen ? (
           <ChevronRight className="w-4 h-4 text-gray-600" />
         ) : (
           <ChevronLeft className="w-4 h-4 text-gray-600" />

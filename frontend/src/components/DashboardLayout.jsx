@@ -9,6 +9,7 @@ import { useEffect, useState } from 'react';
 function DashboardLayout({user, loading, user_role, fetchUserRole}) {
   const [activeItem, setActiveItem] = useState(0);
   const [Switch, setSwitch] = useState(false);
+  const [isSidebarOpen, setIsSidebarOpen] = useState(true);
 
   useEffect(() => {
     if (user) {
@@ -20,10 +21,20 @@ function DashboardLayout({user, loading, user_role, fetchUserRole}) {
 
   return (
     <div className='flex flex-col min-h-screen'>
-      <DashboardHeader setSwitch={setSwitch} setActiveItem={setActiveItem}/>
-      <div className='flex flex-1'>
-        <DashboardSidebar activeItem={activeItem} onSelect={setActiveItem} is_superuser={user.is_superuser} />
-        <div className='flex-1'>
+      <div className="fixed top-0 left-0 right-0 z-50">
+        <DashboardHeader setSwitch={setSwitch} setActiveItem={setActiveItem}/>
+      </div>
+      <div className='flex flex-1 pt-16'>
+        <div className={`fixed left-0 top-16 bottom-0 transition-all duration-300`}>
+          <DashboardSidebar 
+            activeItem={activeItem} 
+            onSelect={setActiveItem} 
+            is_superuser={user.is_superuser}
+            isOpen={isSidebarOpen}
+            onToggle={() => setIsSidebarOpen(!isSidebarOpen)}
+          />
+        </div>
+        <div className={`flex-1 transition-all duration-300 ${isSidebarOpen ? 'ml-64' : 'ml-16'}`}>
           {activeItem === 0 ? (
             (CanAccess === true ? 
               (

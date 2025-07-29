@@ -258,7 +258,7 @@ def seed_data():
                     category='Respond'
                 ),
                 DashboardModels.KPI(
-                    name='Average CVSS Score Trend',
+                    name='CVSS Base Score Trend',
                     description='Calculates the average CVSS score of vulnerabilities detected',
                     level='Managerial',
                     type='Vulnerability',

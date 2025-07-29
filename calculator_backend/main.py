@@ -324,7 +324,7 @@ async def calculate_average_cvss(db: Session) -> Optional[KPIData]:
                 description="Average CVSS base score across all vulnerabilities",
                 type=KPIType.AVERAGE,
                 unit="score",
-                target=7.0  # Example target
+                target=4.0  # Example target
             )
     except Exception as e:
         logger.error(f"Failed to calculate average CVSS: {str(e)}")
@@ -344,7 +344,7 @@ async def calculate_top_attack_types(db: Session, limit: int = 5) -> Optional[KP
         
         if attack_types_raw:
             attack_types = [
-                {"type": row[0], "count": row[1]} 
+                {"name": row[0], "count": row[1]} 
                 for row in attack_types_raw 
                 if row[0] is not None and row[1] is not None
             ]
@@ -541,6 +541,40 @@ async def calculate_cvss_trends(db: Session) -> Optional[KPIData]:
     
     return None
 
+async def calculate_cvss_score_trends(db: Session) -> Optional[KPIData]:
+    """Calculate CVSS score trends KPI"""
+    try:
+        result = await execute_kpi_query(
+            db,
+            "SELECT * FROM public.get_average_cvss_score_trends()",
+            "CVSS trends calculation"
+        )
+        cvss_trends_raw = result.fetchall()
+        
+        if cvss_trends_raw:
+            cvss_trends = [
+                {
+                    "date": row[0].strftime("%Y-%m-%d"), 
+                    "score": round(float(row[1]), 2)
+                } 
+                for row in cvss_trends_raw 
+                if row[0] is not None and row[1] is not None
+            ]
+            
+            if cvss_trends:
+                return  KPIData(
+                    name="CVSS Base Score Trend",
+                    value=cvss_trends,
+                    description="Monthly average CVSS scores trend",
+                    type=KPIType.TREND,
+                    unit="score"
+                )
+    except Exception as e:
+        logger.error(f"Failed to calculate CVSS trends: {str(e)}")
+        raise CalculationError(f"CVSS trends calculation failed: {str(e)}", "CVSS_TRENDS_CALC_FAILED")
+    
+    return None
+
 async def calculate_incident_trends(db: Session) -> Optional[KPIData]:
     """Calculate incident trends KPI"""
     try:
@@ -586,6 +620,7 @@ async def calculate_all_kpis(db: Session) -> List[KPIData]:
         calculate_top_malware_types,
         calculate_quarantine_actions,
         calculate_cvss_trends,
+        calculate_cvss_score_trends,
         calculate_incident_trends,
         calculate_average_detection_rule_performance,
         calculate_detection_rule_performance,
@@ -596,6 +631,7 @@ async def calculate_all_kpis(db: Session) -> List[KPIData]:
     for calc_func in calculation_functions:
         try:
             kpi_data = await calc_func(db)
+            print("********************** kpi data : \n",kpi_data)
             if kpi_data:
                 calculated_kpis.append(kpi_data)
                 logger.debug(f"Successfully calculated KPI: {kpi_data.name}")
