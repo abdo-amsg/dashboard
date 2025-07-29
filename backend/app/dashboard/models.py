@@ -1,4 +1,5 @@
 from sqlalchemy import Column, Float, Integer, String, ForeignKey, DateTime
+from sqlalchemy.dialects.postgresql import JSONB
 from sqlalchemy.orm import relationship
 from sqlalchemy.sql import func
 from .database import Base
@@ -12,7 +13,8 @@ class KPI(Base):
     level = Column(String, nullable=False)
     type = Column(String, nullable=False)
     category = Column(String, nullable=False)
-    target = Column(String, nullable=False)
+    threshold = Column(Float, nullable=True)
+    target = Column(String, nullable=True)
     unit = Column(String, nullable=True)
     frequency = Column(String, nullable=False)
     formula = Column(String, nullable=True)
@@ -28,7 +30,7 @@ class KPIValue(Base):
 
     id = Column(Integer, primary_key=True, index=True)
     kpi_id = Column(Integer, ForeignKey("kpis.id"), nullable=False)
-    value = Column(Float, nullable=False)
+    value = Column(JSONB, nullable=False)
     timestamp = Column(DateTime(timezone=True), server_default=func.now())
 
     kpi = relationship("KPI", back_populates="values")

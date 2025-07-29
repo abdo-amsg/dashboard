@@ -8,7 +8,6 @@ export const dashboardApi = {
     const searchParams = new URLSearchParams();
     if (params.skip) searchParams.append('skip', params.skip);
     if (params.limit) searchParams.append('limit', params.limit);
-    if (params.level) searchParams.append('level', params.level);
 
     const response = await api.get(`/api/dashboard/kpis?${searchParams}`);
     return response.data;
@@ -85,7 +84,11 @@ export const dashboardApi = {
     return response.data;
   },
 
-  // ==================== DASHBOARD STATISTICS ====================
+  getLogs: async () => {
+
+  },
+
+  // ==================== DASHBOARD MANAGEMENT ====================
 
   // Get dashboard statistics
   getDashboardStats: async () => {
@@ -93,7 +96,14 @@ export const dashboardApi = {
     return response.data;
   },
 
-  getLogs: async () =>{
-    
-  }
+  getDashboardKPIs: async () => {
+    try {
+      const response = await api.get('/api/dashboard/kpi-values/dashboard');
+      return response.data;
+    } catch (error) {
+      console.error('Error fetching dashboard KPIs:', error);
+      throw error;
+    }
+  },
+
 };

@@ -127,7 +127,6 @@ def verify_email(token: str, db: Session = Depends(get_db)):
     db.commit()
     return {"message": "Email verified successfully!"}
 
-# ✅ FIXED: Use decorator for rate limiting
 @router.post("/auth/token", response_model=schemas.Token)
 @limiter.limit("5/minute")
 async def login(

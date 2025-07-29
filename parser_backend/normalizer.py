@@ -3,7 +3,6 @@ from typing import Optional, Dict, Any
 from datetime import datetime
 import ipaddress
 
-
 class SeverityLevel:
     INFO = "Info"
     LOW = "Low"
@@ -11,7 +10,6 @@ class SeverityLevel:
     HIGH = "High"
     CRITICAL = "Critical"
     VALID_LEVELS = {INFO, LOW, MEDIUM, HIGH, CRITICAL}
-
 
 @dataclass
 class Normalizer:

@@ -1,7 +1,7 @@
 from fastapi import FastAPI, HTTPException
 from pydantic import BaseModel
 import httpx
-from parsers.nessus import NessusParser
+from parsers import nessus, cisco_asa, KasperskyAV
 from normalizer import Normalizer
 import json
 import logging
@@ -87,12 +87,32 @@ async def parse_file(request: ParseRequest):
                 # For vulnerability scanners, we need to determine the specific type
                 tool_name_lower = tool_info['name'].lower()
                 if 'nessus' in tool_name_lower:
-                    parser = NessusParser()
+                    parser = nessus.NessusParser()
                 else:
                     logger.warning(f"Unsupported vulnerability scanner: {tool_info['name']}")
                     raise HTTPException(
                         status_code=400, 
                         detail=f"Vulnerability scanner '{tool_info['name']}' is not supported yet. Currently supported: Nessus"
+                    )
+            elif tool_info['type'].lower() == 'firewall':    
+                tool_name_lower = tool_info['name'].lower()
+                if 'cisco' in tool_name_lower:
+                    parser = cisco_asa.CiscoASAParser()
+                else:
+                    logger.warning(f"Unsupported firewall tool: {tool_info['name']}")
+                    raise HTTPException(
+                        status_code=400, 
+                        detail=f"Firewall tool '{tool_info['name']}' is not supported yet. Currently supported: Cisco ASA"
+                    )
+            elif tool_info['type'].lower() == 'antivirus':
+                tool_name_lower = tool_info['name'].lower()
+                if 'kaspersky' in tool_name_lower:
+                    parser = KasperskyAV.KasperskyAVParser()
+                else:
+                    logger.warning(f"Unsupported antivirus tool: {tool_info['name']}")
+                    raise HTTPException(
+                        status_code=400, 
+                        detail=f"Antivirus tool '{tool_info['name']}' is not supported yet. Currently supported: Kaspersky"
                     )
             else:
                 logger.warning(f"No parser available for tool type: {tool_info['type']}")

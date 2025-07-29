@@ -1,0 +1,59 @@
+{
+    "file_id": 1,
+    "tool_id": 1,
+    "user_id": 1,
+    "auth_token": "your-auth-token",
+    "log_count": 5,
+    "processed_findings": [
+        {
+            "event_time": "2025-07-25T10:00:00",
+            "severity": "HIGH",
+            "log_type": "THREAT",
+            "attack_type": "SQL Injection",
+            "vulnerability_name": "SQL Injection Vulnerability",
+            "cvss_base_score": 8.5,
+            "action": "BLOCKED",
+            "quarantine_status": "successful"
+        },
+        {
+            "event_time": "2025-07-25T10:05:00",
+            "severity": "CRITICAL",
+            "log_type": "THREAT",
+            "attack_type": "XSS",
+            "vulnerability_name": "Cross-site Scripting",
+            "cvss_base_score": 7.2,
+            "action": "BLOCKED",
+            "quarantine_status": "successful"
+        },
+        {
+            "event_time": "2025-07-25T10:10:00",
+            "severity": "HIGH",
+            "log_type": "THREAT",
+            "attack_type": "SQL Injection",
+            "vulnerability_name": "SQL Injection Vulnerability",
+            "cvss_base_score": 8.1,
+            "action": "BLOCKED",
+            "quarantine_status": "successful"
+        },
+        {
+            "event_time": "2025-07-25T10:15:00",
+            "severity": "CRITICAL",
+            "log_type": "THREAT",
+            "attack_type": "Remote Code Execution",
+            "vulnerability_name": "RCE Vulnerability",
+            "cvss_base_score": 9.1,
+            "action": "BLOCKED",
+            "quarantine_status": "successful"
+        },
+        {
+            "event_time": "2025-07-25T10:20:00",
+            "severity": "HIGH",
+            "log_type": "THREAT",
+            "attack_type": "Directory Traversal",
+            "vulnerability_name": "Path Traversal Vulnerability",
+            "cvss_base_score": 7.5,
+            "action": "BLOCKED",
+            "quarantine_status": "successful"
+        }
+    ]
+}

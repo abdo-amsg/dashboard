@@ -1,5 +1,5 @@
 from pydantic import BaseModel, field_validator
-from typing import Optional, List
+from typing import Any, Optional, List
 from datetime import datetime
 
 # ==================== KPI SCHEMAS ====================
@@ -9,7 +9,8 @@ class KPIBase(BaseModel):
     description: Optional[str] = None
     level: str
     type: str
-    target: str
+    threshold: float = None
+    target: Optional[str] = None
     unit: Optional[str] = None
     frequency: str
     formula: Optional[str] = None
@@ -41,6 +42,22 @@ class KPI(KPIBase):
 
     class Config:
         from_attributes = True
+
+class KPIDashboardResponse(BaseModel):
+    title: str
+    current_value: Optional[Any]
+    previous_value: Optional[Any]
+    unit: Optional[str]
+    last_calculated_date: Optional[datetime]
+    threshold: Optional[float]
+    target: Optional[float]
+    reported_format: str
+
+class DashboardKPIResponse(BaseModel):
+    success: bool
+    kpis: List[KPIDashboardResponse]
+    count: int
+    last_updated: Optional[datetime]
 
 # ==================== TOOL SCHEMAS ====================
 
@@ -105,6 +122,13 @@ class FileResponse(FileBase):
 
     class Config:
         from_attributes = True
+
+class FileUploadResponse(BaseModel):
+    id: int
+    filename: str
+    status: str
+    created_at: datetime
+    kpi_calculation: Optional[dict] = None
 
 # ==================== LOG SCHEMAS ====================
 

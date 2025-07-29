@@ -11,7 +11,7 @@ def create_rpc_functions():
         LANGUAGE plpgsql
         AS $$
         BEGIN
-            RETURN QUERY SELECT attack_type, COUNT(*) FROM logs GROUP BY attack_type ORDER BY COUNT(*) DESC LIMIT n;
+            RETURN QUERY SELECT l.attack_type::TEXT, COUNT(*)::INTEGER FROM logs l WHERE l.attack_type IS NOT NULL GROUP BY l.attack_type ORDER BY COUNT(*) DESC LIMIT n;
         END;
         $$;
         """,
@@ -21,7 +21,7 @@ def create_rpc_functions():
         LANGUAGE plpgsql
         AS $$
         BEGIN
-            RETURN (SELECT AVG(cvss_base_score) FROM logs WHERE cvss_base_score IS NOT NULL);
+            RETURN (SELECT AVG(cvss_base_score) FROM logs WHERE cvss_base_score IS NOT NULL AND cvss_base_score > 0);
         END;
         $$;
         """,
@@ -31,7 +31,7 @@ def create_rpc_functions():
         LANGUAGE plpgsql
         AS $$
         BEGIN
-            RETURN QUERY SELECT vulnerability_name, COUNT(*) FROM logs GROUP BY vulnerability_name ORDER BY COUNT(*) DESC LIMIT n;
+            RETURN QUERY SELECT l.vulnerability_name::TEXT, COUNT(*)::INTEGER FROM logs l WHERE l.vulnerability_name IS NOT NULL GROUP BY l.vulnerability_name ORDER BY COUNT(*) DESC LIMIT n;
         END;
         $$;
         """,
@@ -41,7 +41,7 @@ def create_rpc_functions():
         LANGUAGE plpgsql
         AS $$
         BEGIN
-            RETURN QUERY SELECT malware_type, COUNT(*) FROM logs GROUP BY malware_type ORDER BY COUNT(*) DESC LIMIT n;
+            RETURN QUERY SELECT l.malware_type::TEXT, COUNT(*)::INTEGER FROM logs l WHERE l.malware_type IS NOT NULL GROUP BY l.malware_type ORDER BY COUNT(*) DESC LIMIT n;
         END;
         $$;
         """,
@@ -74,10 +74,10 @@ def create_rpc_functions():
         LANGUAGE plpgsql
         AS $$
         BEGIN
-            RETURN QUERY SELECT date_trunc('month', timestamp) AS date, AVG(cvss_base_score) AS average_score
+            RETURN QUERY SELECT date_trunc('month', event_time)::DATE AS date, AVG(cvss_base_score)::numeric AS average_score
             FROM logs
-            WHERE cvss_base_score IS NOT NULL
-            GROUP BY date_trunc('month', timestamp)
+            WHERE cvss_base_score IS NOT NULL AND cvss_base_score > 0
+            GROUP BY date_trunc('month', event_time)
             ORDER BY date;
         END;
         $$;
@@ -88,14 +88,52 @@ def create_rpc_functions():
         LANGUAGE plpgsql
         AS $$
         BEGIN
-            RETURN QUERY SELECT date_trunc('month', timestamp) AS date, COUNT(*) AS incident_count
+            RETURN QUERY SELECT date_trunc('month', event_time)::DATE AS date, COUNT(*)::integer AS incident_count
             FROM logs
             WHERE severity IN ('HIGH', 'CRITICAL') OR log_type = 'THREAT' OR action = 'BLOCKED'
-            GROUP BY date_trunc('month', timestamp)
+            GROUP BY date_trunc('month', event_time)
             ORDER BY date;
         END;
         $$;
         """,
+        """
+        CREATE OR REPLACE FUNCTION public.get_detection_rule_performance()
+        RETURNS TABLE(rule_name text, performance_percentage numeric)
+        LANGUAGE plpgsql
+        AS $$
+        BEGIN
+            RETURN QUERY 
+            WITH rule_stats AS (
+                SELECT 
+                    policy,
+                    COUNT(*) as total_events,
+                    COUNT(CASE WHEN action IN ('BLOCKED', 'QUARANTINED') THEN 1 END) as successful_detections
+                FROM logs 
+                WHERE policy IS NOT NULL 
+                GROUP BY policy
+            )
+            SELECT 
+                rs.policy::TEXT as rule_name,
+                CASE 
+                    WHEN rs.total_events > 0 THEN 
+                        ROUND((rs.successful_detections::numeric / rs.total_events::numeric) * 100, 2)
+                    ELSE 0 
+                END as performance_percentage
+            FROM rule_stats rs
+            ORDER BY performance_percentage ASC;
+        END;
+        $$;
+        """,
+        """
+        CREATE OR REPLACE FUNCTION public.get_average_detection_rule_performance()
+        RETURNS numeric
+        LANGUAGE plpgsql
+        AS $$
+        BEGIN
+            RETURN (SELECT AVG(performance_percentage) FROM public.get_detection_rule_performance());
+        END;
+        $$;
+        """
         # Add more functions as needed for other KPIs
     ]
 

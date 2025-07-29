@@ -22,14 +22,18 @@ router = APIRouter(prefix="/dashboard", tags=["dashboard"])
 async def get_all_kpis(
     skip: int = Query(0, ge=0),
     limit: int = Query(100, le=1000),
-    level: Optional[str] = Query(None, description="Filter by level: operational, managerial, strategic"),
     db: Session = Depends(get_db),
     current_user: auth_models.User = Depends(get_current_user)
 ):
     """Get all KPIs with pagination and filtering"""
     query = db.query(models.KPI)
     
+    # filter by the level of the current user or if it is an admin (filter by current_user.level OR current_user.is_superuser)
+    level = current_user.role.name if current_user else None
+    if current_user.is_superuser:
+        level = None
     if level:
+        print('Filtering KPIs by level:', level)
         query = query.filter(models.KPI.level.ilike(f"%{level}%"))
     
     kpis = query.offset(skip).limit(limit).all()
@@ -250,7 +254,7 @@ async def delete_tool(
     db.commit()
     return {"message": f"Tool '{tool.name}' deleted successfully"}
 
-# ==================== STATISTICS ====================
+# ==================== Dashboard ====================
 
 @router.get("/stats")
 async def get_dashboard_stats(
@@ -271,7 +275,7 @@ async def get_dashboard_stats(
         total_tools = db.query(models.Tool).count()
         tools_by_category = db.query(
             models.Tool.category, 
-            func.count(models.Tool.id).label('count')  # ✅ FIXED: Use func.count()
+            func.count(models.Tool.id).label('count')
         ).group_by(models.Tool.category).all()
         
         # Log statistics
@@ -300,18 +304,100 @@ async def get_dashboard_stats(
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"Error fetching dashboard stats: {str(e)}")
 
+@router.get("/kpi-values/dashboard")
+async def get_dashboard_kpi_values(
+    db: Session = Depends(get_db),
+    current_user: auth_models.User = Depends(get_current_user),
+):
+    """Get the latest and previous values for all KPIs for dashboard display"""
+    
+    # Get the two most recent values for each KPI
+    kpi_data = []
+    
+    # Filter KPIs based on user role
+    query = db.query(models.KPI)
+    if not current_user.is_superuser:  # If not admin, filter by role
+        role_level_map = {
+            "viewer": "operational",
+            "operational": "operational",
+            "managerial": "managerial",
+            "strategic": "strategic"
+        }
+        user_level = role_level_map.get(current_user.role.name.lower())
+        if user_level:
+            query = query.filter(models.KPI.level.ilike(f"%{user_level}%"))
+    
+    kpis = query.all()
+    
+    for kpi in kpis:
+        # Get the two most recent values for this KPI
+        recent_values = db.query(models.KPIValue).filter(
+            models.KPIValue.kpi_id == kpi.id
+        ).order_by(
+            models.KPIValue.timestamp.desc()
+        ).limit(2).all()
+        
+        current_value = None
+        previous_value = None
+        last_calculated_date = None
+        
+        if recent_values:
+            current_value = recent_values[0].value
+            last_calculated_date = recent_values[0].timestamp
+            if len(recent_values) > 1:
+                previous_value = recent_values[1].value
+        
+        kpi_data.append({
+            "title": kpi.name,
+            "current_value": current_value,
+            "previous_value": previous_value,
+            "unit": kpi.unit,
+            "last_calculated_date": last_calculated_date.isoformat() if last_calculated_date else None,
+            "threshold": kpi.threshold,
+            "target": kpi.target,
+            "reported_format": kpi.reporting_format
+        })
+    
+    return {
+        "success": True,
+        "kpis": kpi_data,
+        "count": len(kpi_data),
+        "last_updated": datetime.utcnow().isoformat()
+    }
+
 # ==================== FILE MANAGEMENT ====================
 from fastapi import Request, Header
 
 UPLOAD_DIR = "uploads"
-PARSER_SERVICE_URL = "http://parser_backend:8001"  # Update with your parser service URL
+PARSER_SERVICE_URL = "http://parser_backend:8001"
+CALCULATOR_SERVICE_URL = "http://calculator_backend:8002"
+
 import logging
 # Set up logging
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
-# Updated upload_file function in dashboard_routes.py
-@router.post("/files/upload", response_model=schemas.FileResponse)
+async def trigger_kpi_calculation(token: str) -> dict:
+    """Trigger KPI calculation after file processing"""
+    try:
+        async with httpx.AsyncClient() as client:
+            response = await client.post(
+                f"{CALCULATOR_SERVICE_URL}/calculate",
+                headers={"Authorization": f"Bearer {token}"},
+                timeout=60.0
+            )
+            
+            if response.status_code != 200:
+                logger.error(f"KPI calculation failed: {response.text}")
+                return None
+                
+            return response.json()
+            
+    except Exception as e:
+        logger.error(f"Error triggering KPI calculation: {str(e)}")
+        return None
+
+@router.post("/files/upload", response_model=schemas.FileUploadResponse)
 async def upload_file(
     file: UploadFile = File(...),
     tool_id: int = Query(..., description="ID of the tool to use for parsing"),
@@ -450,6 +536,30 @@ async def upload_file(
             
             logger.info(f"Successfully processed {len(findings)} findings from {file.filename}")
             
+            # Trigger KPI calculation
+            calculation_result = await trigger_kpi_calculation(token)
+            if calculation_result:
+                logger.info("KPI calculation completed successfully")
+                # Store new KPI values
+                # if calculation_result.get("calculated_kpis"):
+                #     for kpi in calculation_result["calculated_kpis"]:
+                #         try:
+                #             # Create KPI value record
+                #             kpi_value = models.KPIValue(
+                #                 kpi_id=kpi["id"],
+                #                 value=json.dumps(kpi["value"]),
+                #                 timestamp=datetime.utcnow()
+                #             )
+                #             db.add(kpi_value)
+                #         except Exception as e:
+                #             logger.error(f"Error storing KPI value: {str(e)}")
+                #     db.commit()
+            else:
+                logger.warning("KPI calculation failed or returned no results")
+                raise HTTPException(
+                    status_code=500,
+                    detail="KPI calculation failed. Please check logs for details."
+                )
     except httpx.TimeoutException:
         error_msg = "Parser service timeout"
         logger.error(error_msg)
@@ -463,7 +573,14 @@ async def upload_file(
         db.commit()
         raise HTTPException(status_code=500, detail=error_msg)
     
-    return db_file
+    return {
+        "id": db_file.id,
+        "filename": db_file.filename,
+        "status": db_file.status,
+        "created_at": db_file.created_at,
+        "uploaded_by": db_file.uploaded_by,
+        "kpi_calculation": calculation_result
+    }
 
 @router.get("/files", response_model=List[schemas.FileResponse])
 async def list_files(

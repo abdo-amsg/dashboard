@@ -7,6 +7,7 @@ const FilesPage = () => {
   const [files, setFiles] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
+  const [users, setUsers] = useState({});
   const { user } = useAuth();
 
   const fetchFiles = async () => {
@@ -24,11 +25,32 @@ const FilesPage = () => {
   };
 
   useEffect(() => {
+    if(files.length === 0)
     fetchFiles();
+    // Fetch all users for mapping userId to name
+    const fetchUsers = async () => {
+      try {
+        const response = await api.get('/api/admin/users');
+        const usersMap = {};
+        response.data.forEach(u => {
+          usersMap[u.id] = u.username;
+        });
+        setUsers(usersMap);
+      } catch (err) {
+        // Optionally handle error
+        setUsers({});
+      }
+    };
+    
+    fetchUsers();
     // Set up polling for status updates
     // const interval = setInterval(fetchFiles, 10000); // Poll every 10 seconds
     // return () => clearInterval(interval);
   }, []);
+
+  const getUserName = (userId) => {
+    return users[userId] || 'Unknown';
+  }
 
   const getStatusInfo = (status) => {
     switch (status.toLowerCase()) {
@@ -158,6 +180,9 @@ const FilesPage = () => {
                   <th className="px-6 py-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                     Status
                   </th>
+                  {user.is_superuser && (<th className="px-6 py-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    Uploaded By
+                  </th>)}
                   <th className="px-6 py-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                     Actions
                   </th>
@@ -199,6 +224,11 @@ const FilesPage = () => {
                           <span className="ml-1">{statusInfo.label}</span>
                         </span>
                       </td>
+                      {user.is_superuser && (<td className="px-6 py-4 whitespace-nowrap">
+                        <div className="text-sm text-gray-900">
+                          {file.uploaded_by ? getUserName(file.uploaded_by) : 'Unknown'}
+                        </div>
+                      </td>)}
                       <td className="px-6 py-4 whitespace-nowrap text-sm font-medium">
                         <div className="flex items-center space-x-2">
                           <button

@@ -5,7 +5,7 @@ const Managerial = {
         title: 'Number of Incidents',
         current_value: 16,
         previous_value: 22,
-        unit: 'incidents',
+        unit: 'Incidents',
         last_calculated_date: "01-07-2025",
         threshold: 10,
         target: 'decreasing',
