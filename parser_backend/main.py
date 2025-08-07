@@ -2,6 +2,7 @@ from fastapi import FastAPI, HTTPException
 from pydantic import BaseModel
 import httpx
 from parsers.nessus import NessusParser
+from parsers.KasperskyAV import KasperskyAVParser  # CORRIGÉ: nom de fichier correct
 from normalizer import Normalizer
 import json
 import logging
@@ -12,7 +13,7 @@ logger = logging.getLogger(__name__)
 
 app = FastAPI(title="Security Parser Service", version="1.0.0")
 
-DASHBOARD_SERVICE_URL = "http://backend:8000"  # Correct service name
+DASHBOARD_SERVICE_URL = "http://backend:8000"  # service name in Docker Compose
 
 from typing import List, Dict, Any
 class ParsedFinding(BaseModel):
@@ -69,17 +70,24 @@ async def parse_file(request: ParseRequest):
             tool_info = tool_response.json()
             logger.info(f"Retrieved tool info: {tool_info['name']} - {tool_info['type']}")
             
-            # Read file content
-            try:
-                with open(file_info["file_path"], "r", encoding='utf-8') as f:
-                    file_content = f.read()
-                logger.info(f"Successfully read file content ({len(file_content)} characters)")
-            except FileNotFoundError:
-                logger.error(f"File not found: {file_info['file_path']}")
-                raise HTTPException(status_code=404, detail="File not found on disk")
-            except Exception as e:
-                logger.error(f"Error reading file: {str(e)}")
-                raise HTTPException(status_code=500, detail=f"Error reading file: {str(e)}")
+            file_content = None
+            
+            # approche read file content
+            if file_content is None:
+                try:
+                    if "file_path" in file_info:
+                        with open(file_info["file_path"], "r", encoding='utf-8') as f:
+                            file_content = f.read()
+                        logger.info(f"Retrieved file content via direct read: {len(file_content)} characters")
+                    else:
+                        logger.error("No file_path found in file_info")
+                except Exception as e:
+                    logger.error(f"Failed to read file directly: {e}")
+            
+            # Si aucune méthode ne fonctionne
+            if file_content is None:
+                logger.error("Failed to retrieve file content via any method")
+                raise HTTPException(status_code=404, detail="File content not found")
             
             # Initialize appropriate parser based on tool type
             parser = None
@@ -94,11 +102,14 @@ async def parse_file(request: ParseRequest):
                         status_code=400, 
                         detail=f"Vulnerability scanner '{tool_info['name']}' is not supported yet. Currently supported: Nessus"
                     )
+            elif 'kaspersky' in tool_info['name'].lower():  # CORRIGÉ: Condition simplifiée
+                parser = KasperskyAVParser()
+                logger.info("Using Kaspersky AV parser")
             else:
                 logger.warning(f"No parser available for tool type: {tool_info['type']}")
                 raise HTTPException(
                     status_code=400, 
-                    detail=f"Tool type '{tool_info['type']}' is not supported yet. Currently supported: vulnerability_scanner (Nessus)"
+                    detail=f"Tool type '{tool_info['type']}' is not supported yet. Currently supported: vulnerability_scanner (Nessus), Kaspersky AV"
                 )
             
             # Parse the report
@@ -151,10 +162,20 @@ async def parse_file(request: ParseRequest):
                         status_code=400, 
                         detail="The uploaded file is not a valid Nessus report. Please ensure you exported the report as '.nessus' format from Tenable Nessus."
                     )
+                elif "does not appear to be a valid Kaspersky AV log" in error_message:  # CORRIGÉ
+                    raise HTTPException(
+                        status_code=400, 
+                        detail="The uploaded file is not a valid Kaspersky AV log. Please ensure you uploaded a properly formatted Kaspersky AV log file."
+                    )
                 elif "does not have valid Nessus report structure" in error_message:
                     raise HTTPException(
                         status_code=400, 
                         detail="The file structure is not valid for a Nessus report. Please check that the XML export completed successfully."
+                    )
+                elif "does not have valid Kaspersky AV log structure" in error_message:  # CORRIGÉ
+                    raise HTTPException(
+                        status_code=400, 
+                        detail="The file structure is not valid for a Kaspersky AV log. Please check that the log format is correct."
                     )
                 elif "Invalid XML format" in error_message:
                     raise HTTPException(
