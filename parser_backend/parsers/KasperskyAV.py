@@ -77,8 +77,8 @@ class KasperskyAVParser:
     
     # Action mapping
     ACTION_MAP = {
-        "allowed": "ALLOW",
-        "detected": "DETECT",
+        "Allowed": "ALLOW",
+        "Detected": "DETECT",
         "blocked": "BLOCK",
         "allowed": "ALLOW"
     }
