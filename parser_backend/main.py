@@ -1,12 +1,7 @@
 from fastapi import FastAPI, HTTPException
 from pydantic import BaseModel
 import httpx
-<<<<<<< HEAD
 from parsers import nessus, cisco_asa, KasperskyAV
-=======
-from parsers.nessus import NessusParser
-from parsers.KasperskyAV import KasperskyAVParser  # CORRIGÉ: nom de fichier correct
->>>>>>> 30b9016efa49e1d033ec33d17f74a6446dab9007
 from normalizer import Normalizer
 import json
 import logging
@@ -106,7 +101,6 @@ async def parse_file(request: ParseRequest):
                         status_code=400, 
                         detail=f"Vulnerability scanner '{tool_info['name']}' is not supported yet. Currently supported: Nessus"
                     )
-<<<<<<< HEAD
             elif tool_info['type'].lower() == 'firewall':    
                 tool_name_lower = tool_info['name'].lower()
                 if 'cisco' in tool_name_lower:
@@ -127,11 +121,6 @@ async def parse_file(request: ParseRequest):
                         status_code=400, 
                         detail=f"Antivirus tool '{tool_info['name']}' is not supported yet. Currently supported: Kaspersky"
                     )
-=======
-            elif 'kaspersky' in tool_info['name'].lower():  # CORRIGÉ: Condition simplifiée
-                parser = KasperskyAVParser()
-                logger.info("Using Kaspersky AV parser")
->>>>>>> 30b9016efa49e1d033ec33d17f74a6446dab9007
             else:
                 logger.warning(f"No parser available for tool type: {tool_info['type']}")
                 raise HTTPException(
