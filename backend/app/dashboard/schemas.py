@@ -73,7 +73,7 @@ class ToolBase(BaseModel):
     @field_validator('category')
     def validate_category(cls, v):
         allowed_categories = [
-            'Sécurité data', 'Sécurité drs identités, accès et mobilité', 'Sécurité des infrastructures, applicatifs et continuité', 
+            'Sécurité data', 'Sécurité des identités, accès et mobilité', 'Sécurité des infrastructures, applicatifs et continuité', 
             'Security Perimeter', 'Monitoring de la sécurité et réponse aux incidents',
             'Gouvernance sécurité organisation et ressources'
         ]
