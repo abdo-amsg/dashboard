@@ -1,14 +1,12 @@
 import { useState, useRef, useEffect } from 'react';
 import { Search, Download, Upload, Moon, Sun, ChevronDown } from 'lucide-react';
-import { useAuth } from '../contexts/AuthContext';
 import UploadFlow from './UploadFlow';
 
-function DashboardHeader({ setSwitch, setActiveItem }) {
+function DashboardHeader({ setSwitch, setActiveItem, user, logout }) {
   const [searchQuery, setSearchQuery] = useState('');
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const [isUploadModalOpen, setIsUploadModalOpen] = useState(false);
   const [isDarkMode, setIsDarkMode] = useState(false);
-  const { user, logout } = useAuth();
   const dropdownRef = useRef(null);
 
   useEffect(() => {
@@ -31,7 +29,7 @@ function DashboardHeader({ setSwitch, setActiveItem }) {
     <>
       <header
         className="bg-white border-b border-gray-200 shadow-sm"
-        // style={{ backgroundColor: 'hsl(26, 41%, 96%)' }}
+      // style={{ backgroundColor: 'hsl(26, 41%, 96%)' }}
       >
         <div className="flex items-center justify-between px-6 py-3">
           {/* Logo Section */}
@@ -76,7 +74,7 @@ function DashboardHeader({ setSwitch, setActiveItem }) {
                 Export Reports
               </span>
             </button>
-            
+
             {/* Upload Button with Enhanced Styling */}
             <button
               onClick={() => setIsUploadModalOpen(true)}
@@ -126,13 +124,25 @@ function DashboardHeader({ setSwitch, setActiveItem }) {
               {/* Dropdown Menu */}
               {isDropdownOpen && (
                 <div className="absolute right-0 mt-2 w-48 bg-white rounded-xl shadow-lg border border-gray-200 py-2 z-10 animate-fadeIn">
-                  <a href="#" className="block px-4 py-2 text-sm text-gray-700 hover:bg-blue-50 transition-colors">
+                  <a
+                    onClick={() => {
+                      setActiveItem(4);
+                      setIsDropdownOpen(false);
+                    }}
+                    className="block px-4 py-2 text-sm text-gray-700 hover:bg-blue-50 transition-colors"
+                  >
                     <div className="flex items-center space-x-2">
                       <div className="w-2 h-2 bg-green-500 rounded-full"></div>
                       <span>Profile</span>
                     </div>
                   </a>
-                  <a href="#" className="block px-4 py-2 text-sm text-gray-700 hover:bg-blue-50 transition-colors">
+                  <a
+                    onClick={() => {
+                      setActiveItem(1);
+                      setIsDropdownOpen(false);
+                    }}
+                    className="block px-4 py-2 text-sm text-gray-700 hover:bg-blue-50 cursor-pointer transition-colors"
+                  >
                     Settings
                   </a>
                   {user?.is_superuser && (

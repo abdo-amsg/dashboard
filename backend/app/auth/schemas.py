@@ -15,7 +15,6 @@ class ConfigurationModel(BaseModel):
 
 from datetime import datetime
 
-
 class UserBase(BaseModel):
     email: EmailStr
     username: str
@@ -52,12 +51,12 @@ class User(UserBase):
     id: int
     is_active: bool
     is_superuser: bool
+    is_verified : bool
     created_at: datetime
     updated_at: Optional[datetime]
 
     class Config:
         from_attributes = True
-
 
 class RoleBase(BaseModel):
     name: str
@@ -72,7 +71,6 @@ class Role(RoleBase):
 
     class Config:
         from_attributes = True
-
 
 class PermissionBase(BaseModel):
     name: str

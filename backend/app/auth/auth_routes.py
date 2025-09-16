@@ -213,7 +213,6 @@ async def refresh_token(current_token: str = Depends(oauth2_scheme), db: Session
         "token_type": "bearer"
     }
 
-
 def get_current_user(db: Session = Depends(get_db), token: str = Depends(oauth2_scheme)):
     """Get current authenticated user, with token blacklist check"""
     credentials_exception = HTTPException(

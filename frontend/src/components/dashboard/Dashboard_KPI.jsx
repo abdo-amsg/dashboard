@@ -281,7 +281,6 @@ function DashboardContent({ user, user_role, loading }) {
   }
 
   const ChartCard = ({ title, type, data = [] }) => {
-    console.log("data : ", data,"\ntype : ", type);
     // Transform data based on its structure
     const chartData = data?.map((item) => {
       if (item.rule_name && item.performance_percentage !== undefined) {

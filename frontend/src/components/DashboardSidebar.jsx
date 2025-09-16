@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { LayoutGrid, Settings, Globe, FileText, ChevronLeft, ChevronRight } from 'lucide-react';
+import { Map } from '@mui/icons-material';
 
 // Accepts activeItem (string or number) and onSelect (function) as props
 function DashboardSidebar({ activeItem, onSelect, is_superuser, isOpen, onToggle }) {
@@ -23,6 +24,11 @@ function DashboardSidebar({ activeItem, onSelect, is_superuser, isOpen, onToggle
       id: 3,
       label: 'Files',
       icon: FileText
+    },
+    {
+      id: 5,
+      label: 'KPI Mapping',
+      icon: Map
     }
   ];
 
@@ -37,7 +43,7 @@ function DashboardSidebar({ activeItem, onSelect, is_superuser, isOpen, onToggle
   };
 
   return (
-    <div className={`relative bg-gray-50 border-r border-gray-200 transition-all duration-300 ${!isOpen ? 'w-16' : 'w-64'} h-screen`}>
+    <div className={`relative bg-gray-50 border-r border-gray-200 transition-all duration-300 ${!isOpen ? 'w-16' : 'w-48'} h-screen`}>
       {/* Navigation Items */}
       <div className="py-4">
         {menuItems.map((item) => {
