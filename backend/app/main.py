@@ -2,6 +2,7 @@ from datetime import datetime
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from contextlib import asynccontextmanager
+from sqlalchemy import text
 
 # Rate limiting imports
 from app.auth.auth_routes import limiter
@@ -66,7 +67,7 @@ async def health_check():
     try:
         # Test database connections
         auth_db = SessionLocal()
-        auth_db.execute('SELECT 1')
+        auth_db.execute(text('SELECT 1'))
         auth_db.close()
         
         return {

@@ -67,7 +67,6 @@ export const authApi = {
                 'Content-Type': 'application/x-www-form-urlencoded'
             }
         });
-        console.log('Login successful, storing tokens...');
         return response.data;
     },
 

@@ -57,7 +57,9 @@ function DashboardLayout({user, loading, user_role, fetchUserRole}) {
           ) : activeItem === 4 ? (
             <Profile user={user} logout={logout} />
           ) : activeItem === 5 ? (
-            <KPIMindmap />
+            <div className='w-full h-full'>
+              <KPIMindmap />
+            </div>
           ) : null}
         </div>
       </div>
