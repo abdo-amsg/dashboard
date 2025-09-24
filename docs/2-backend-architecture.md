@@ -203,28 +203,3 @@ security_headers = {
     "Content-Security-Policy": "default-src 'self'",
 }
 ```
-
-### 8. Testing Framework
-
-#### 8.1 Test Configuration
-```python
-def get_test_db():
-    try:
-        db = TestingSessionLocal()
-        yield db
-    finally:
-        db.close()
-```
-
-#### 8.2 Test Cases
-```python
-def test_create_user(client: TestClient, db: Session):
-    response = client.post(
-        f"{settings.API_V1_STR}/users/",
-        json={
-            "email": "test@example.com",
-            "password": "test123",
-        },
-    )
-    assert response.status_code == 200
-```
