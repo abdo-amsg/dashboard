@@ -11,6 +11,7 @@ import { initialNodes, initialEdges } from './mindmap/kpi_data';
 import { X, Target, Shield, AlertCircle, Info, BarChart3 } from 'lucide-react';
 import '@xyflow/react/dist/style.css';
 import './KpiMindmap.css';
+import DescriptionCard from './mindmap/DescriptionCard';
 
 import { useState, useMemo, useCallback } from 'react';
 
@@ -143,60 +144,75 @@ export const distributeNodesInGroups = (nodes) => {
 // Calculate node positions just once
 const laidOutInitialNodes = distributeNodesInGroups(initialNodes);
 
-const nodeTypes = {
-    kpiNode: CustomNode, // register our custom type
-};
-
 const KpiMindmap = () => {
     // Standard React Flow state management
     const [nodes, setNodes, onNodesChange] = useNodesState(laidOutInitialNodes);
     const [edges, setEdges, onEdgesChange] = useEdgesState(initialEdges);
-
+    const [selectedNode, setSelectedNode] = useState(null);
+    const handleNodeInfoClick = (nodeData) => {
+        setSelectedNode(nodeData);
+    };
+    const handleCloseCard = () => {
+        setSelectedNode(null);
+    };
     // Use our custom hook to get styled elements and the click handler
     const { styledNodes, styledEdges, handleNodeClick } = useNodeHighlighter(nodes, edges);
 
+    const memoizedCustomNode = (props) => (
+        <CustomNode {...props} onInfoClick={handleNodeInfoClick} />
+    );
+    
+    const nodeTypes = {
+        kpiNode: memoizedCustomNode, // register our custom type
+    };
+    
     return (
-        <ReactFlow
-            nodes={styledNodes}
-            edges={styledEdges}
-            onNodesChange={onNodesChange}
-            onEdgesChange={onEdgesChange}
-            onNodeClick={handleNodeClick}
-            fitView
-            fitViewOptions={{ padding: 0.1 }}
-            className="kpi-mindmap"
-            attributionPosition="none"
-            connectable='false'
-            connectionLineStyle={{ display: 'none' }}
-            nodesConnectable={false}
-            nodeTypes={nodeTypes}
-        >
-            <Controls />
-            <Background gap={16} />
-            {/* Legend Panel */}
-            <Panel position="top-left" className="bg-white/90 backdrop-blur-sm rounded-lg shadow-lg p-4 m-4">
-                <div className="space-y-3">
-                    <h4 className="font-semibold text-gray-800 flex items-center gap-2">
-                        <Target className="w-4 h-4" />
-                        KPI Hierarchy Legend
-                    </h4>
-                    <div className="space-y-2 text-sm">
-                        <div className="flex items-center gap-2">
-                            <div className="w-3 h-3 bg-emerald-500 rounded"></div>
-                            <span>Strategic Level</span>
-                        </div>
-                        <div className="flex items-center gap-2">
-                            <div className="w-3 h-3 bg-blue-500 rounded"></div>
-                            <span>Managerial Level</span>
-                        </div>
-                        <div className="flex items-center gap-2">
-                            <div className="w-3 h-3 bg-amber-500 rounded"></div>
-                            <span>Operational Level</span>
+        <div className="w-full h-full relative">
+            <ReactFlow
+                nodes={styledNodes}
+                edges={styledEdges}
+                onNodesChange={onNodesChange}
+                onEdgesChange={onEdgesChange}
+                onNodeClick={handleNodeClick}
+                fitView
+                fitViewOptions={{ padding: 0.1 }}
+                className="kpi-mindmap"
+                attributionPosition="none"
+                connectable='false'
+                connectionLineStyle={{ display: 'none' }}
+                nodesConnectable={false}
+                nodeTypes={nodeTypes}
+            >
+                <Controls />
+                <Background gap={16} />
+                {/* Legend Panel */}
+                <Panel position="top-left" className="bg-white/90 backdrop-blur-sm rounded-lg shadow-lg p-4 m-4">
+                    <div className="space-y-3">
+                        <h4 className="font-semibold text-gray-800 flex items-center gap-2">
+                            <Target className="w-4 h-4" />
+                            KPI Hierarchy Legend
+                        </h4>
+                        <div className="space-y-2 text-sm">
+                            <div className="flex items-center gap-2">
+                                <div className="w-3 h-3 bg-emerald-500 rounded"></div>
+                                <span>Strategic Level</span>
+                            </div>
+                            <div className="flex items-center gap-2">
+                                <div className="w-3 h-3 bg-blue-500 rounded"></div>
+                                <span>Managerial Level</span>
+                            </div>
+                            <div className="flex items-center gap-2">
+                                <div className="w-3 h-3 bg-amber-500 rounded"></div>
+                                <span>Operational Level</span>
+                            </div>
                         </div>
                     </div>
-                </div>
-            </Panel>
-        </ReactFlow>
+                </Panel>
+            </ReactFlow>
+            {selectedNode && (
+                <DescriptionCard nodeData={selectedNode} onClose={handleCloseCard} />
+            )}
+        </div>
     );
 };
 

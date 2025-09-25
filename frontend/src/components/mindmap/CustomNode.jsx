@@ -1,7 +1,8 @@
 import React, { memo } from 'react';
 import { Handle, Position } from '@xyflow/react';
+import { Info } from 'lucide-react';
 
-const CustomNode = ({ data, isConnectable, targetPosition = Position.Top, sourcePosition = Position.Bottom }) => {
+const CustomNode = ({ data, isConnectable, targetPosition = Position.Top, sourcePosition = Position.Bottom, onInfoClick }) => {
 
   // Determine node type and apply appropriate styling
   const getNodeStyle = () => {
@@ -31,6 +32,15 @@ const CustomNode = ({ data, isConnectable, targetPosition = Position.Top, source
     borderRadius: '50%'
   });
 
+  const handleInfoClick = (event) => {
+    // Stop the event from propagating to the node itself,
+    // which might trigger node drag or other events.
+    event.stopPropagation();
+    if (onInfoClick) {
+      onInfoClick(data);
+    }
+  };
+
   return (
     <div
       style={getNodeStyle()}
@@ -50,7 +60,7 @@ const CustomNode = ({ data, isConnectable, targetPosition = Position.Top, source
         isConnectable={isConnectable}
         style={getHandleStyle(targetPosition)}
       />
-
+      <Info className="absolute top-0 left-1 text-gray-400 hover:text-gray-600 cursor-pointer w-4" onClick={handleInfoClick} />
       {/* Node Content */}
       <div style={{ position: 'relative', zIndex: 1 }}>
         <span style={{ fontWeight: data.type === 'main' ? '600' : '400' }}>

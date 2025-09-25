@@ -37,7 +37,6 @@ export const initialNodes = [
         type: "kpiNode",
         data: {
             label: 'Taux de comptes conformes au principe "least privilege"',
-            description: 'Percentage of accounts compliant with least privilege security principle',
             category: 'operational',
         },
         parentId: 'operational',
@@ -48,7 +47,6 @@ export const initialNodes = [
         type: "kpiNode",
         data: {
             label: 'Taux de comptes inactifs supprimés',
-            description: 'Percentage of accounts compliant with least privilege security principle',
             category: 'operational',
         },
         parentId: 'operational',
@@ -59,7 +57,6 @@ export const initialNodes = [
         type: "kpiNode",
         data: {
             label: 'Taux d’implémentation du MFA',
-            description: 'Percentage of accounts compliant with least privilege security principle',
             category: 'operational',
         },
         parentId: 'operational',
@@ -70,7 +67,6 @@ export const initialNodes = [
         type: "kpiNode",
         data: {
             label: 'Taux de revue des comptes à privilèges',
-            description: 'Percentage of accounts compliant with least privilege security principle',
             category: 'operational',
         },
         parentId: 'operational',
@@ -81,7 +77,6 @@ export const initialNodes = [
         type: "kpiNode",
         data: {
             label: 'Taux de comptes génériques',
-            description: 'Percentage of accounts compliant with least privilege security principle',
             category: 'operational',
         },
         parentId: 'operational',
@@ -92,7 +87,6 @@ export const initialNodes = [
         type: "kpiNode",
         data: {
             label: 'Temps moyen de révocation des accès',
-            description: 'Percentage of accounts compliant with least privilege security principle',
             category: 'operational',
         },
         parentId: 'operational',
@@ -103,7 +97,6 @@ export const initialNodes = [
         type: "kpiNode",
         data: {
             label: 'Taux de données sensibles chiffrées',
-            description: 'Percentage of accounts compliant with least privilege security principle',
             category: 'operational',
         },
         parentId: 'operational',
@@ -114,7 +107,6 @@ export const initialNodes = [
         type: "kpiNode",
         data: {
             label: 'Taux de couverture du DLP',
-            description: 'Percentage of accounts compliant with least privilege security principle',
             category: 'operational',
         },
         parentId: 'operational',
@@ -125,7 +117,6 @@ export const initialNodes = [
         type: "kpiNode",
         data: {
             label: 'Taux d’assets critiques chiffrés',
-            description: 'Percentage of accounts compliant with least privilege security principle',
             category: 'operational',
         },
         parentId: 'operational',
@@ -136,7 +127,6 @@ export const initialNodes = [
         type: "kpiNode",
         data: {
             label: 'Taux de couverture Antivirus',
-            description: 'Percentage of accounts compliant with least privilege security principle',
             category: 'operational',
         },
         parentId: 'operational',
@@ -147,7 +137,6 @@ export const initialNodes = [
         type: "kpiNode",
         data: {
             label: 'Taux de couverture EDR',
-            description: 'Percentage of accounts compliant with least privilege security principle',
             category: 'operational',
         },
         parentId: 'operational',
@@ -158,7 +147,6 @@ export const initialNodes = [
         type: "kpiNode",
         data: {
             label: 'Taux d’obsolescence global',
-            description: 'Percentage of accounts compliant with least privilege security principle',
             category: 'operational',
         },
         parentId: 'operational',
@@ -169,7 +157,6 @@ export const initialNodes = [
         type: "kpiNode",
         data: {
             label: 'Taux d’obsolescence par systèmes',
-            description: 'Percentage of accounts compliant with least privilege security principle',
             category: 'operational',
         },
         parentId: 'operational',
@@ -180,7 +167,6 @@ export const initialNodes = [
         type: "kpiNode",
         data: {
             label: 'Taux de systèmes critiques avec obsolescence critique',
-            description: 'Percentage of accounts compliant with least privilege security principle',
             category: 'operational',
         },
         parentId: 'operational',
@@ -191,7 +177,6 @@ export const initialNodes = [
         type: "kpiNode",
         data: {
             label: 'Taux de dérogations contrôlées',
-            description: 'Percentage of accounts compliant with least privilege security principle',
             category: 'operational',
         },
         parentId: 'operational',
@@ -202,7 +187,6 @@ export const initialNodes = [
         type: "kpiNode",
         data: {
             label: 'Taux de changements contrôlés',
-            description: 'Percentage of accounts compliant with least privilege security principle',
             category: 'operational',
         },
         parentId: 'operational',
@@ -213,7 +197,6 @@ export const initialNodes = [
         type: "kpiNode",
         data: {
             label: 'Taux d’inspection du trafic sortant (messagerie)',
-            description: 'Percentage of accounts compliant with least privilege security principle',
             category: 'operational',
         },
         parentId: 'operational',
@@ -224,7 +207,6 @@ export const initialNodes = [
         type: "kpiNode",
         data: {
             label: 'Taux de spams identifiés',
-            description: 'Percentage of accounts compliant with least privilege security principle',
             category: 'operational',
         },
         parentId: 'operational',
@@ -235,7 +217,6 @@ export const initialNodes = [
         type: "kpiNode",
         data: {
             label: 'Nombre de spams remontés par les collaborateurs',
-            description: 'Percentage of accounts compliant with least privilege security principle',
             category: 'operational',
         },
         parentId: 'operational',
@@ -246,7 +227,6 @@ export const initialNodes = [
         type: "kpiNode",
         data: {
             label: 'Taux de scan code source des applications',
-            description: 'Percentage of accounts compliant with least privilege security principle',
             category: 'operational',
         },
         parentId: 'operational',
@@ -257,7 +237,6 @@ export const initialNodes = [
         type: "kpiNode",
         data: {
             label: 'Taux d’assets critiques contrôlés (Pentests/Scans)',
-            description: 'Percentage of accounts compliant with least privilege security principle',
             category: 'operational',
         },
         parentId: 'operational',
@@ -268,7 +247,6 @@ export const initialNodes = [
         type: "kpiNode",
         data: {
             label: 'Taux de projets techniquement contrôlés avant MEP',
-            description: 'Percentage of accounts compliant with least privilege security principle',
             category: 'operational',
         },
         parentId: 'operational',
@@ -279,7 +257,6 @@ export const initialNodes = [
         type: "kpiNode",
         data: {
             label: 'Taux de vulnérabilités pour les assets critiques',
-            description: 'Percentage of accounts compliant with least privilege security principle',
             category: 'operational',
         },
         parentId: 'operational',
@@ -290,7 +267,6 @@ export const initialNodes = [
         type: "kpiNode",
         data: {
             label: 'Taux de couverture des scans de vulnérabilités',
-            description: 'Percentage of accounts compliant with least privilege security principle',
             category: 'operational',
         },
         parentId: 'operational',
@@ -301,7 +277,6 @@ export const initialNodes = [
         type: "kpiNode",
         data: {
             label: 'Nombre de vulnérabilités enregistrées par sévérité',
-            description: 'Percentage of accounts compliant with least privilege security principle',
             category: 'operational',
         },
         parentId: 'operational',
@@ -312,7 +287,6 @@ export const initialNodes = [
         type: "kpiNode",
         data: {
             label: 'Répartition des vulnérabilités identifiées par catégorie',
-            description: 'Percentage of accounts compliant with least privilege security principle',
             category: 'operational',
         },
         parentId: 'operational',
@@ -323,7 +297,6 @@ export const initialNodes = [
         type: "kpiNode",
         data: {
             label: 'Taux de correction des vulnérabilités',
-            description: 'Percentage of accounts compliant with least privilege security principle',
             category: 'operational',
         },
         parentId: 'operational',
@@ -334,7 +307,6 @@ export const initialNodes = [
         type: "kpiNode",
         data: {
             label: 'Taux de couverture SOC global',
-            description: 'Percentage of accounts compliant with least privilege security principle',
             category: 'operational',
         },
         parentId: 'operational',
@@ -345,7 +317,6 @@ export const initialNodes = [
         type: "kpiNode",
         data: {
             label: 'Taux de couverture SOC par catégorie d’assets',
-            description: 'Percentage of accounts compliant with least privilege security principle',
             category: 'operational',
         },
         parentId: 'operational',
@@ -356,7 +327,6 @@ export const initialNodes = [
         type: "kpiNode",
         data: {
             label: 'Répartition des incidents par étape MITRE ATT&CK',
-            description: 'Percentage of accounts compliant with least privilege security principle',
             category: 'operational',
         },
         parentId: 'operational',
@@ -367,7 +337,6 @@ export const initialNodes = [
         type: "kpiNode",
         data: {
             label: 'Répartition des incidents par criticité',
-            description: 'Percentage of accounts compliant with least privilege security principle',
             category: 'operational',
         },
         parentId: 'operational',
@@ -378,7 +347,6 @@ export const initialNodes = [
         type: "kpiNode",
         data: {
             label: 'Répartition des incidents collectés par typologie',
-            description: 'Percentage of accounts compliant with least privilege security principle',
             category: 'operational',
         },
         parentId: 'operational',
@@ -389,7 +357,6 @@ export const initialNodes = [
         type: "kpiNode",
         data: {
             label: 'Taux de faux positifs',
-            description: 'Percentage of accounts compliant with least privilege security principle',
             category: 'operational',
         },
         parentId: 'operational',
@@ -400,7 +367,6 @@ export const initialNodes = [
         type: "kpiNode",
         data: {
             label: 'Taux de prise en charge des alertes dans les délais',
-            description: 'Percentage of accounts compliant with least privilege security principle',
             category: 'operational',
         },
         parentId: 'operational',
@@ -411,7 +377,6 @@ export const initialNodes = [
         type: "kpiNode",
         data: {
             label: 'Taux de traitement des incidents dans les délais',
-            description: 'Percentage of accounts compliant with least privilege security principle',
             category: 'operational',
         },
         parentId: 'operational',
@@ -422,7 +387,6 @@ export const initialNodes = [
         type: "kpiNode",
         data: {
             label: 'Temps moyen de qualification des incidents',
-            description: 'Percentage of accounts compliant with least privilege security principle',
             category: 'operational',
         },
         parentId: 'operational',
@@ -433,7 +397,6 @@ export const initialNodes = [
         type: "kpiNode",
         data: {
             label: 'Temps moyen de traitement des incidents',
-            description: 'Percentage of accounts compliant with least privilege security principle',
             category: 'operational',
         },
         parentId: 'operational',
@@ -444,7 +407,6 @@ export const initialNodes = [
         type: "kpiNode",
         data: {
             label: 'Temps moyen de mise en place des plans de mitigation',
-            description: 'Percentage of accounts compliant with least privilege security principle',
             category: 'operational',
         },
         parentId: 'operational',
@@ -455,7 +417,6 @@ export const initialNodes = [
         type: "kpiNode",
         data: {
             label: 'Taux de remontées avérées couvertes par SOP',
-            description: 'Percentage of accounts compliant with least privilege security principle',
             category: 'operational',
         },
         parentId: 'operational',
@@ -466,7 +427,6 @@ export const initialNodes = [
         type: "kpiNode",
         data: {
             label: 'Taux d’incidents de sécurité du Cloud externe',
-            description: 'Percentage of accounts compliant with least privilege security principle',
             category: 'operational',
         },
         parentId: 'operational',
@@ -477,7 +437,6 @@ export const initialNodes = [
         type: "kpiNode",
         data: {
             label: 'Taux de couverture des uses cases actuels',
-            description: 'Percentage of accounts compliant with least privilege security principle',
             category: 'operational',
         },
         parentId: 'operational',
@@ -488,7 +447,6 @@ export const initialNodes = [
         type: "kpiNode",
         data: {
             label: 'Taux d’implémentation des uses cases SIEM',
-            description: 'Percentage of accounts compliant with least privilege security principle',
             category: 'operational',
         },
         parentId: 'operational',
@@ -499,7 +457,6 @@ export const initialNodes = [
         type: "kpiNode",
         data: {
             label: 'Taux de conformité par loi et norme SSI',
-            description: 'Percentage of accounts compliant with least privilege security principle',
             category: 'operational',
         },
         parentId: 'managerial',
@@ -510,7 +467,6 @@ export const initialNodes = [
         type: "kpiNode",
         data: {
             label: 'Taux d’avancement des travaux de revue des lois et normes',
-            description: 'Percentage of accounts compliant with least privilege security principle',
             category: 'operational',
         },
         parentId: 'managerial',
@@ -521,7 +477,6 @@ export const initialNodes = [
         type: "kpiNode",
         data: {
             label: 'Taux d’avancement des chantiers de mise/maintien en conformité',
-            description: 'Percentage of accounts compliant with least privilege security principle',
             category: 'operational',
         },
         parentId: 'managerial',
@@ -532,7 +487,6 @@ export const initialNodes = [
         type: "kpiNode",
         data: {
             label: 'Taux de conformité à la PSI Entreprise et directives internes',
-            description: 'Percentage of accounts compliant with least privilege security principle',
             category: 'operational',
         },
         parentId: 'managerial',
@@ -543,7 +497,6 @@ export const initialNodes = [
         type: "kpiNode",
         data: {
             label: 'Taux de revue de la PSI et directives internes',
-            description: 'Percentage of accounts compliant with least privilege security principle',
             category: 'operational',
         },
         parentId: 'managerial',
@@ -554,7 +507,6 @@ export const initialNodes = [
         type: "kpiNode",
         data: {
             label: 'Niveau de maturité cyber (ISO27001)',
-            description: 'Percentage of accounts compliant with least privilege security principle',
             category: 'operational',
         },
         parentId: 'managerial',
@@ -565,7 +517,6 @@ export const initialNodes = [
         type: "kpiNode",
         data: {
             label: 'Taux de suivi global des sessions de sensibilisation SSI',
-            description: 'Percentage of accounts compliant with least privilege security principle',
             category: 'operational',
         },
         parentId: 'managerial',
@@ -576,7 +527,6 @@ export const initialNodes = [
         type: "kpiNode",
         data: {
             label: 'Taux de réalisation de la feuille de route de sensibilisation',
-            description: 'Percentage of accounts compliant with least privilege security principle',
             category: 'operational',
         },
         parentId: 'managerial',
@@ -587,7 +537,6 @@ export const initialNodes = [
         type: "kpiNode",
         data: {
             label: 'Taux de réussite au questionnaire SSI',
-            description: 'Percentage of accounts compliant with least privilege security principle',
             category: 'operational',
         },
         parentId: 'managerial',
@@ -598,7 +547,6 @@ export const initialNodes = [
         type: "kpiNode",
         data: {
             label: 'Taux d’échecs aux campagnes phishing',
-            description: 'Percentage of accounts compliant with least privilege security principle',
             category: 'operational',
         },
         parentId: 'managerial',
@@ -609,7 +557,6 @@ export const initialNodes = [
         type: "kpiNode",
         data: {
             label: 'Taux de collaborateurs ayant fourni des infos sensibles (phishing)',
-            description: 'Percentage of accounts compliant with least privilege security principle',
             category: 'operational',
         },
         parentId: 'managerial',
@@ -620,7 +567,6 @@ export const initialNodes = [
         type: "kpiNode",
         data: {
             label: 'Taux de collaborateurs ayant remonté une alerte (phishing)',
-            description: 'Percentage of accounts compliant with least privilege security principle',
             category: 'operational',
         },
         parentId: 'managerial',
@@ -631,7 +577,6 @@ export const initialNodes = [
         type: "kpiNode",
         data: {
             label: 'Statut de l’analyse de risque SSI',
-            description: 'Percentage of accounts compliant with least privilege security principle',
             category: 'operational',
         },
         parentId: 'managerial',
@@ -642,7 +587,6 @@ export const initialNodes = [
         type: "kpiNode",
         data: {
             label: 'Taux de couverture des risques par famille',
-            description: 'Percentage of accounts compliant with least privilege security principle',
             category: 'operational',
         },
         parentId: 'managerial',
@@ -653,7 +597,6 @@ export const initialNodes = [
         type: "kpiNode",
         data: {
             label: 'Taux de couverture des risques par criticité',
-            description: 'Percentage of accounts compliant with least privilege security principle',
             category: 'operational',
         },
         parentId: 'managerial',
@@ -664,7 +607,6 @@ export const initialNodes = [
         type: "kpiNode",
         data: {
             label: 'Taux d’avancement des plans de traitement des risques',
-            description: 'Percentage of accounts compliant with least privilege security principle',
             category: 'operational',
         },
         parentId: 'managerial',
@@ -675,7 +617,6 @@ export const initialNodes = [
         type: "kpiNode",
         data: {
             label: 'Taux de contribution des use cases à la couverture des risques',
-            description: 'Percentage of accounts compliant with least privilege security principle',
             category: 'operational',
         },
         parentId: 'managerial',
@@ -686,7 +627,6 @@ export const initialNodes = [
         type: "kpiNode",
         data: {
             label: 'Répartition des données Cloud par criticité',
-            description: 'Percentage of accounts compliant with least privilege security principle',
             category: 'operational',
         },
         parentId: 'managerial',
@@ -697,7 +637,6 @@ export const initialNodes = [
         type: "kpiNode",
         data: {
             label: 'Taux d’intégration de la sécurité dans les projets',
-            description: 'Percentage of accounts compliant with least privilege security principle',
             category: 'operational',
         },
         parentId: 'managerial',
@@ -708,7 +647,6 @@ export const initialNodes = [
         type: "kpiNode",
         data: {
             label: 'Taux d’analyse de risque SSI projet',
-            description: 'Percentage of accounts compliant with least privilege security principle',
             category: 'operational',
         },
         parentId: 'managerial',
@@ -719,7 +657,6 @@ export const initialNodes = [
         type: "kpiNode",
         data: {
             label: 'Taux de conformité global des scans code source',
-            description: 'Percentage of accounts compliant with least privilege security principle',
             category: 'operational',
         },
         parentId: 'managerial',
@@ -730,7 +667,6 @@ export const initialNodes = [
         type: "kpiNode",
         data: {
             label: 'Taux des tiers évalués avant contractualisation',
-            description: 'Percentage of accounts compliant with least privilege security principle',
             category: 'operational',
         },
         parentId: 'managerial',
@@ -741,7 +677,6 @@ export const initialNodes = [
         type: "kpiNode",
         data: {
             label: 'Score moyen des tiers pré-contractualisation',
-            description: 'Percentage of accounts compliant with least privilege security principle',
             category: 'operational',
         },
         parentId: 'managerial',
@@ -752,7 +687,6 @@ export const initialNodes = [
         type: "kpiNode",
         data: {
             label: 'Taux de prestataires critiques audités',
-            description: 'Percentage of accounts compliant with least privilege security principle',
             category: 'operational',
         },
         parentId: 'managerial',
@@ -763,7 +697,6 @@ export const initialNodes = [
         type: "kpiNode",
         data: {
             label: 'Score moyen SSI des tiers critiques post-audit',
-            description: 'Percentage of accounts compliant with least privilege security principle',
             category: 'operational',
         },
         parentId: 'managerial',
@@ -774,7 +707,6 @@ export const initialNodes = [
         type: "kpiNode",
         data: {
             label: 'Turnover des ressources SSI internes',
-            description: 'Percentage of accounts compliant with least privilege security principle',
             category: 'operational',
         },
         parentId: 'managerial',
@@ -785,7 +717,6 @@ export const initialNodes = [
         type: "kpiNode",
         data: {
             label: 'Charge prévisionnelle du pôle SSI',
-            description: 'Percentage of accounts compliant with least privilege security principle',
             category: 'operational',
         },
         parentId: 'managerial',
@@ -796,7 +727,6 @@ export const initialNodes = [
         type: "kpiNode",
         data: {
             label: 'Répartition de la charge globale (BUILD/RUN)',
-            description: 'Percentage of accounts compliant with least privilege security principle',
             category: 'operational',
         },
         parentId: 'managerial',
@@ -807,7 +737,6 @@ export const initialNodes = [
         type: "kpiNode",
         data: {
             label: 'Forecast du pôle SSI',
-            description: 'Percentage of accounts compliant with least privilege security principle',
             category: 'operational',
         },
         parentId: 'managerial',
@@ -818,7 +747,6 @@ export const initialNodes = [
         type: "kpiNode",
         data: {
             label: 'Suivi global du statut des projets SSI',
-            description: 'Percentage of accounts compliant with least privilege security principle',
             category: 'operational',
         },
         parentId: 'managerial',
@@ -829,7 +757,6 @@ export const initialNodes = [
         type: "kpiNode",
         data: {
             label: 'Suivi des 5 projets SSI phares',
-            description: 'Percentage of accounts compliant with least privilege security principle',
             category: 'operational',
         },
         parentId: 'managerial',
@@ -840,7 +767,6 @@ export const initialNodes = [
         type: "kpiNode",
         data: {
             label: 'Indice de performance de la fonction de détection',
-            description: 'Percentage of accounts compliant with least privilege security principle',
             category: 'operational',
         },
         parentId: 'managerial',
@@ -851,7 +777,6 @@ export const initialNodes = [
         type: "kpiNode",
         data: {
             label: 'Indice de performance de la fonction de réaction',
-            description: 'Percentage of accounts compliant with least privilege security principle',
             category: 'operational',
         },
         parentId: 'managerial',
@@ -862,7 +787,6 @@ export const initialNodes = [
         type: "kpiNode",
         data: {
             label: 'Indice de protection des assets',
-            description: 'Percentage of accounts compliant with least privilege security principle',
             category: 'operational',
         },
         parentId: 'managerial',
@@ -873,7 +797,6 @@ export const initialNodes = [
         type: "kpiNode",
         data: {
             label: 'Indice de perméabilité',
-            description: 'Percentage of accounts compliant with least privilege security principle',
             category: 'operational',
         },
         parentId: 'managerial',
@@ -884,7 +807,6 @@ export const initialNodes = [
         type: "kpiNode",
         data: {
             label: 'Indice d’exposition aux risques cyber',
-            description: 'Percentage of accounts compliant with least privilege security principle',
             category: 'operational',
         },
         parentId: 'managerial',
@@ -895,7 +817,6 @@ export const initialNodes = [
         type: "kpiNode",
         data: {
             label: 'Indice de Performance de la fonction de Détection',
-            description: 'Percentage of accounts compliant with least privilege security principle',
             category: 'operational',
         },
         parentId: 'strategic',
@@ -906,7 +827,6 @@ export const initialNodes = [
         type: "kpiNode",
         data: {
             label: 'Indice de Performance de la fonction de Réaction',
-            description: 'Percentage of accounts compliant with least privilege security principle',
             category: 'operational',
         },
         parentId: 'strategic',
@@ -917,7 +837,6 @@ export const initialNodes = [
         type: "kpiNode",
         data: {
             label: 'Indice de Protection des assets',
-            description: 'Percentage of accounts compliant with least privilege security principle',
             category: 'operational',
         },
         parentId: 'strategic',
@@ -928,7 +847,6 @@ export const initialNodes = [
         type: "kpiNode",
         data: {
             label: 'Indice de Perméabilité',
-            description: 'Percentage of accounts compliant with least privilege security principle',
             category: 'operational',
         },
         parentId: 'strategic',
@@ -939,7 +857,6 @@ export const initialNodes = [
         type: "kpiNode",
         data: {
             label: 'Indice d’exposition aux risques cyber',
-            description: 'Percentage of accounts compliant with least privilege security principle',
             category: 'operational',
         },
         parentId: 'strategic',
@@ -950,7 +867,6 @@ export const initialNodes = [
         type: "kpiNode",
         data: {
             label: 'Part budget dédié à la sécurité SI vs pratiques marché',
-            description: 'Percentage of accounts compliant with least privilege security principle',
             category: 'operational',
         },
         parentId: 'strategic',
@@ -961,7 +877,6 @@ export const initialNodes = [
         type: "kpiNode",
         data: {
             label: 'Répartition budget CAPEX - OPEX',
-            description: 'Percentage of accounts compliant with least privilege security principle',
             category: 'operational',
         },
         parentId: 'strategic',
@@ -972,7 +887,6 @@ export const initialNodes = [
         type: "kpiNode",
         data: {
             label: 'Répartition du budget cyber par domaine',
-            description: 'Percentage of accounts compliant with least privilege security principle',
             category: 'operational',
         },
         parentId: 'strategic',
@@ -983,7 +897,6 @@ export const initialNodes = [
         type: "kpiNode",
         data: {
             label: 'Consommation du budget run vs build',
-            description: 'Percentage of accounts compliant with least privilege security principle',
             category: 'operational',
         },
         parentId: 'strategic',
@@ -994,7 +907,6 @@ export const initialNodes = [
         type: "kpiNode",
         data: {
             label: 'Return On Security Investments (ROSI) d’une solution déployée',
-            description: 'Percentage of accounts compliant with least privilege security principle',
             category: 'operational',
         },
         parentId: 'strategic',
@@ -1005,7 +917,6 @@ export const initialNodes = [
         type: "kpiNode",
         data: {
             label: 'Taux de conformité global aux lois et normes SSI',
-            description: 'Percentage of accounts compliant with least privilege security principle',
             category: 'operational',
         },
         parentId: 'strategic',
@@ -1016,7 +927,6 @@ export const initialNodes = [
         type: "kpiNode",
         data: {
             label: 'Taux de conformité par loi et normes SSI',
-            description: 'Percentage of accounts compliant with least privilege security principle',
             category: 'operational',
         },
         parentId: 'strategic',
@@ -1027,7 +937,6 @@ export const initialNodes = [
         type: "kpiNode",
         data: {
             label: 'Niveau de maturité cyber par rapport au référentiel ISO27001',
-            description: 'Percentage of accounts compliant with least privilege security principle',
             category: 'operational',
         },
         parentId: 'strategic',
@@ -1038,7 +947,6 @@ export const initialNodes = [
         type: "kpiNode",
         data: {
             label: 'Suivi global du statut des projets/programmes au niveau du pôle',
-            description: 'Percentage of accounts compliant with least privilege security principle',
             category: 'operational',
         },
         parentId: 'strategic',
@@ -1049,7 +957,6 @@ export const initialNodes = [
         type: "kpiNode",
         data: {
             label: 'Taux d’intégration de la sécurité au niveau des projets (SI, réseau, digital)',
-            description: 'Percentage of accounts compliant with least privilege security principle',
             category: 'operational',
         },
         parentId: 'strategic',
@@ -1060,7 +967,6 @@ export const initialNodes = [
         type: "kpiNode",
         data: {
             label: 'Taux de couverture SOC global',
-            description: 'Percentage of accounts compliant with least privilege security principle',
             category: 'operational',
         },
         parentId: 'strategic',
@@ -1071,7 +977,6 @@ export const initialNodes = [
         type: "kpiNode",
         data: {
             label: 'Taux de couverture des uses cases actuels',
-            description: 'Percentage of accounts compliant with least privilege security principle',
             category: 'operational',
         },
         parentId: 'strategic',
@@ -1082,7 +987,6 @@ export const initialNodes = [
         type: "kpiNode",
         data: {
             label: 'Taux d’implémentation des uses cases',
-            description: 'Percentage of accounts compliant with least privilege security principle',
             category: 'operational',
         },
         parentId: 'strategic',
@@ -1093,7 +997,6 @@ export const initialNodes = [
         type: "kpiNode",
         data: {
             label: 'Taux de faux positifs',
-            description: 'Percentage of accounts compliant with least privilege security principle',
             category: 'operational',
         },
         parentId: 'strategic',
@@ -1104,7 +1007,6 @@ export const initialNodes = [
         type: "kpiNode",
         data: {
             label: 'Taux de remontées avérées couvertes par une procédure standard de réaction (SOP)',
-            description: 'Percentage of accounts compliant with least privilege security principle',
             category: 'operational',
         },
         parentId: 'strategic',
@@ -1115,7 +1017,6 @@ export const initialNodes = [
         type: "kpiNode",
         data: {
             label: 'Temps moyen de mise en place des plans de mitigation des incidents',
-            description: 'Percentage of accounts compliant with least privilege security principle',
             category: 'operational',
         },
         parentId: 'strategic',
@@ -1126,7 +1027,6 @@ export const initialNodes = [
         type: "kpiNode",
         data: {
             label: 'Taux de prise en charge des alertes dans les délais',
-            description: 'Percentage of accounts compliant with least privilege security principle',
             category: 'operational',
         },
         parentId: 'strategic',
@@ -1137,7 +1037,6 @@ export const initialNodes = [
         type: "kpiNode",
         data: {
             label: 'Taux de traitement des incidents dans les délais',
-            description: 'Percentage of accounts compliant with least privilege security principle',
             category: 'operational',
         },
         parentId: 'strategic',
@@ -1148,7 +1047,6 @@ export const initialNodes = [
         type: "kpiNode",
         data: {
             label: 'Taux de couverture des solutions Antivirus avec version à jour',
-            description: 'Percentage of accounts compliant with least privilege security principle',
             category: 'operational',
         },
         parentId: 'strategic',
@@ -1159,7 +1057,6 @@ export const initialNodes = [
         type: "kpiNode",
         data: {
             label: 'Taux de couverture de solutions EDR au niveau des endpoints',
-            description: 'Percentage of accounts compliant with least privilege security principle',
             category: 'operational',
         },
         parentId: 'strategic',
@@ -1170,7 +1067,6 @@ export const initialNodes = [
         type: "kpiNode",
         data: {
             label: 'Taux d’implémentation du MFA',
-            description: 'Percentage of accounts compliant with least privilege security principle',
             category: 'operational',
         },
         parentId: 'strategic',
@@ -1181,7 +1077,6 @@ export const initialNodes = [
         type: "kpiNode",
         data: {
             label: 'Taux de couverture des scans de sécurité et tests d’intrusion',
-            description: 'Percentage of accounts compliant with least privilege security principle',
             category: 'operational',
         },
         parentId: 'strategic',
@@ -1192,7 +1087,6 @@ export const initialNodes = [
         type: "kpiNode",
         data: {
             label: 'Taux de spams remontés par les collaborateurs',
-            description: 'Percentage of accounts compliant with least privilege security principle',
             category: 'operational',
         },
         parentId: 'strategic',
@@ -1203,7 +1097,6 @@ export const initialNodes = [
         type: "kpiNode",
         data: {
             label: 'Taux d’obsolescence global',
-            description: 'Percentage of accounts compliant with least privilege security principle',
             category: 'operational',
         },
         parentId: 'strategic',
@@ -1214,7 +1107,6 @@ export const initialNodes = [
         type: "kpiNode",
         data: {
             label: 'Taux de vulnérabilités pour les assets critiques',
-            description: 'Percentage of accounts compliant with least privilege security principle',
             category: 'operational',
         },
         parentId: 'strategic',
@@ -1225,7 +1117,6 @@ export const initialNodes = [
         type: "kpiNode",
         data: {
             label: 'Taux de systèmes critiques avec obsolescence critique',
-            description: 'Percentage of accounts compliant with least privilege security principle',
             category: 'operational',
         },
         parentId: 'strategic',
@@ -1236,7 +1127,6 @@ export const initialNodes = [
         type: "kpiNode",
         data: {
             label: 'Statut de l’analyse de risque SSI',
-            description: 'Percentage of accounts compliant with least privilege security principle',
             category: 'operational',
         },
         parentId: 'strategic',
@@ -1247,7 +1137,6 @@ export const initialNodes = [
         type: "kpiNode",
         data: {
             label: 'Taux de risques critiques non couverts',
-            description: 'Percentage of accounts compliant with least privilege security principle',
             category: 'operational',
         },
         parentId: 'strategic',
@@ -1258,7 +1147,6 @@ export const initialNodes = [
         type: "kpiNode",
         data: {
             label: 'Taux de suivi global des sessions sensibilisations SSI',
-            description: 'Percentage of accounts compliant with least privilege security principle',
             category: 'operational',
         },
         parentId: 'strategic',
