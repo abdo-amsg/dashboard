@@ -1,4 +1,4 @@
-# Frontend Dockerfile - Fixed
+# Frontend Dockerfile
 FROM node:20-slim
 
 # Install curl for health checks
@@ -7,31 +7,29 @@ RUN apt-get update && apt-get install -y \
     && rm -rf /var/lib/apt/lists/* \
     && apt-get clean
 
-# Create non-root user
-RUN groupadd -r nodeuser && useradd -r -g nodeuser nodeuser
+# Update npm to latest version
+RUN npm install -g npm@latest
 
 WORKDIR /app
 
 # Copy package files first for better caching
 COPY package.json package-lock.json ./
 
-# Install ALL dependencies (including dev dependencies for Vite)
-RUN npm ci && npm cache clean --force
+# Install dependencies with legacy peer deps to avoid conflicts
+RUN npm install --legacy-peer-deps
 
 # Copy source code
 COPY . .
 
-# Change ownership to non-root user
-RUN chown -R nodeuser:nodeuser /app
+# Create and set permissions for npm cache and logs
+RUN mkdir -p /app/.npm/_logs && \
+    chmod -R 777 /app/.npm
 
-# Switch to non-root user  
-USER nodeuser
-
-# Health check with curl now available
-HEALTHCHECK --interval=30s --timeout=10s --start-period=90s --retries=3 \
-  CMD curl -f http://localhost:5173 || exit 1
+# Set Vite host and port environment variables
+ENV VITE_HOST=0.0.0.0
+ENV VITE_PORT=5173
 
 EXPOSE 5173
 
-# Start the development server
-CMD ["npm", "run", "dev"]
+# Start Vite with host flag to allow external connections
+CMD ["npm", "run", "dev", "--", "--host", "0.0.0.0"]

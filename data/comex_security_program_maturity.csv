@@ -1,0 +1,14 @@
+domain,current_maturity,target_maturity,gap,investment_required,timeline_months,priority,progress_percentage,benchmark_score
+Governance,4.2,4.5,0.3,250000,6,High,85,4.1
+Risk Management,3.8,4.2,0.4,320000,8,High,70,3.9
+Asset Management,3.5,4.0,0.5,180000,12,Medium,60,3.6
+Access Control,4.0,4.3,0.3,150000,6,Medium,80,4.0
+Cryptography,3.9,4.1,0.2,120000,4,Low,90,3.8
+Physical Security,4.1,4.2,0.1,80000,3,Low,95,4.0
+Operations Security,3.7,4.0,0.3,200000,9,Medium,65,3.8
+Communications Security,3.6,3.9,0.3,160000,8,Medium,70,3.7
+System Acquisition,3.4,3.8,0.4,280000,12,High,55,3.5
+Supplier Relationships,3.2,3.7,0.5,220000,10,High,50,3.3
+Incident Management,4.3,4.4,0.1,100000,4,Low,92,4.2
+Business Continuity,3.9,4.1,0.2,140000,6,Medium,85,3.9
+Compliance,4.0,4.2,0.2,110000,5,Medium,88,4.0

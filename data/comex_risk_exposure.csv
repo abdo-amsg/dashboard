@@ -1,0 +1,13 @@
+asset_category,total_assets,exposed_assets,exposure_percentage,critical_vulnerabilities,risk_score,business_impact,remediation_cost,timeline_days
+Web Applications,45,12,26.7,8,7.2,High,180000,30
+Databases,28,3,10.7,2,8.5,Critical,95000,14
+Network Infrastructure,156,23,14.7,15,6.8,Medium,320000,45
+Endpoints,2340,187,8.0,45,5.9,Medium,150000,60
+Cloud Services,67,18,26.9,12,7.8,High,220000,21
+Mobile Devices,890,89,10.0,23,6.2,Medium,75000,30
+IoT Devices,234,78,33.3,34,8.1,High,280000,90
+Third-party Integrations,89,25,28.1,18,7.5,High,160000,45
+Legacy Systems,23,15,65.2,12,9.1,Critical,450000,120
+Backup Systems,12,2,16.7,1,4.5,Low,35000,7
+Email Infrastructure,8,1,12.5,1,5.8,Medium,45000,14
+VPN Gateways,15,4,26.7,3,6.9,Medium,85000,21

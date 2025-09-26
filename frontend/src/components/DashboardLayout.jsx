@@ -8,8 +8,8 @@ import Settings from './Settings';
 import Profile from './Profile';
 import { useEffect, useState } from 'react';
 import { useAuth } from '../contexts/AuthContext';
-import KPIMindmap from './Mapping'
-
+import KPIMindmap from './Mapping';
+import DashboardLevelSelector from './DashboardLevelSelector';
 function DashboardLayout({user, loading, user_role, fetchUserRole}) {
   const [activeItem, setActiveItem] = useState(0);
   const [Switch, setSwitch] = useState(false);
@@ -58,6 +58,8 @@ function DashboardLayout({user, loading, user_role, fetchUserRole}) {
             <Profile user={user} logout={logout} />
           ) : activeItem === 5 ? (
             <KPIMindmap />
+          ) : activeItem === 6 ? (
+            <DashboardLevelSelector />
           ) : null}
         </div>
       </div>

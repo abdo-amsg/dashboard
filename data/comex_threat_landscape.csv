@@ -1,0 +1,13 @@
+threat_type,current_level,trend,sector_targeting,our_exposure,mitigation_status,intelligence_sources,last_update,priority
+Ransomware,High,Increasing,Telecom,Medium,Partial,15,2024-12-01,Critical
+APT Groups,Medium,Stable,Telecom,Low,Good,12,2024-11-28,High
+Phishing,High,Increasing,All Sectors,Medium,Good,20,2024-12-02,High
+Supply Chain,Medium,Increasing,Technology,High,Partial,8,2024-11-30,Critical
+Insider Threats,Low,Stable,All Sectors,Low,Good,5,2024-11-25,Medium
+DDoS Attacks,Medium,Decreasing,Telecom,Medium,Good,10,2024-12-01,Medium
+Zero-day Exploits,High,Increasing,Technology,Medium,Partial,6,2024-11-29,High
+Social Engineering,Medium,Stable,All Sectors,Medium,Good,18,2024-12-02,Medium
+IoT Vulnerabilities,Medium,Increasing,Telecom,High,Poor,7,2024-11-27,High
+Cloud Misconfigurations,High,Increasing,All Sectors,Medium,Partial,14,2024-12-01,High
+Mobile Threats,Low,Stable,All Sectors,Low,Good,9,2024-11-26,Low
+Cryptojacking,Low,Decreasing,Technology,Low,Good,4,2024-11-24,Low

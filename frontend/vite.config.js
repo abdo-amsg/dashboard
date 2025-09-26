@@ -9,6 +9,13 @@ export default defineConfig({
     port: 5173,
     watch: {
       usePolling: true  // Pour le hot reload avec Docker
+    },
+    proxy: {
+      '/api': {
+        target: 'http://backend:8000',  // Nom du service Docker backend
+        changeOrigin: true,
+        secure: false
+      }
     }
   }
 })

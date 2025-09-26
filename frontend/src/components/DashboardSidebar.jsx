@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { LayoutGrid, Settings, Globe, FileText, ChevronLeft, ChevronRight } from 'lucide-react';
+import { LayoutGrid, Settings, Globe, FileText, ChevronLeft, ChevronRight, BarChart, Shield } from 'lucide-react';
 import { Map } from '@mui/icons-material';
 
 // Accepts activeItem (string or number) and onSelect (function) as props
@@ -29,6 +29,11 @@ function DashboardSidebar({ activeItem, onSelect, is_superuser, isOpen, onToggle
       id: 5,
       label: 'KPI Mapping',
       icon: Map
+    },
+    {
+      id: 6,
+      label: 'INWI Security',
+      icon: Shield
     }
   ];
 

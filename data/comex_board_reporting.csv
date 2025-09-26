@@ -1,0 +1,13 @@
+kpi_name,current_value,target_value,trend,last_quarter,variance_percentage,board_priority,action_required,next_review_date
+Cyber Risk Score,65,50,Improving,72,-9.7,High,Continue current strategy,2024-12-15
+Security ROI,22.1,25.0,Improving,18.5,19.5,Medium,Increase automation,2024-12-15
+Incident Response Time,18,12,Improving,24,-25.0,High,Enhance processes,2024-12-15
+Compliance Score,92,95,Stable,90,2.2,Critical,Address gaps,2024-12-15
+Security Maturity,3.8,4.2,Improving,3.5,8.6,Medium,Continue roadmap,2024-12-15
+Budget Utilization,98.4,95.0,Stable,96.2,2.3,Low,Monitor spending,2024-12-15
+Staff Retention,92,90,Stable,89,3.4,Medium,Maintain programs,2024-12-15
+Training Completion,95,90,Excellent,88,7.9,Low,Sustain momentum,2024-12-15
+Vulnerability Patching,93,95,Improving,85,9.4,High,Accelerate process,2024-12-15
+Third-party Risk,4.1,4.5,Improving,3.8,7.9,Medium,Enhance assessments,2024-12-15
+Business Continuity,96,98,Improving,92,4.3,High,Test scenarios,2024-12-15
+Customer Trust Score,87,90,Stable,85,2.4,High,Improve transparency,2024-12-15

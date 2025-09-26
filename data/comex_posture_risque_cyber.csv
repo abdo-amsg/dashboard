@@ -1,0 +1,16 @@
+asset_id,asset_criticality,vuln_severity,incident_count,patch_status,coverage_security_tools,score_risk
+SRV-001,5,8,3,Patched,Full,7.2
+SRV-002,4,6,1,Pending,Partial,6.8
+SRV-003,5,9,5,Patched,Full,8.5
+WS-001,3,4,0,Patched,Partial,4.2
+WS-002,3,5,1,Pending,Partial,5.1
+DB-001,5,7,2,Patched,Full,7.8
+DB-002,4,8,4,Pending,Partial,8.2
+NET-001,4,6,1,Patched,Full,6.5
+NET-002,3,3,0,Patched,Partial,3.8
+APP-001,5,9,6,Pending,Full,9.1
+APP-002,4,7,2,Patched,Full,7.3
+APP-003,3,5,1,Patched,Partial,5.2
+FW-001,5,4,0,Patched,Full,4.5
+FW-002,4,6,1,Patched,Full,6.2
+LB-001,4,5,0,Patched,Full,5.0
