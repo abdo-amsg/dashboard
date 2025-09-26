@@ -482,7 +482,6 @@ const Sources = () => {
   const fetchData = async () => {
     setLoading(true)
     try {
-      console.log("test");
       const [kpisRes, toolsRes, statsRes] = await Promise.all([
         dashboardApi.getAllKPIs(),
         dashboardApi.getAllTools(),

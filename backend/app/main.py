@@ -6,6 +6,7 @@ from app.inwi.inwi import router as inwi_router
 from app.inwi.inwi2 import router as inwi2_router
 from app.inwi.inwi3 import router as inwi3_router
 from app.inwi.export_service import router as export_router
+from sqlalchemy import text
 
 # Rate limiting imports
 from app.auth.auth_routes import limiter
@@ -70,7 +71,7 @@ async def health_check():
     try:
         # Test database connections
         auth_db = SessionLocal()
-        auth_db.execute('SELECT 1')
+        auth_db.execute(text('SELECT 1'))
         auth_db.close()
         
         return {
