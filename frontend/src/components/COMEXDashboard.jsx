@@ -10,7 +10,7 @@ import {
   BarChart, Bar, XAxis, YAxis, CartesianGrid, LineChart, Line, AreaChart, Area
 } from 'recharts';
 
-const ComexDashboard = () => {
+const ComexDashboard = ({returnToSelector}) => {
   const [file, setFile] = useState(null);
   const [selectedReport, setSelectedReport] = useState('');
   const [analysisResult, setAnalysisResult] = useState(null);
@@ -664,7 +664,7 @@ const ComexDashboard = () => {
         <div className="text-center mb-8">
           <div className="flex justify-center items-center mb-6">
             <button
-              onClick={() => window.history.back()}
+              onClick={returnToSelector}
               className="absolute left-6 top-6 p-3 bg-white rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-105 border border-gray-200"
             >
               <ArrowLeft size={24} className="text-gray-600" />

@@ -3,7 +3,7 @@ import { Upload, FileText, TrendingUp, Shield, AlertTriangle, Activity, BarChart
 import { LineChart, Line, AreaChart, Area, BarChart, Bar, PieChart, Pie, Cell, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts';
 import { useAuth } from '../contexts/AuthContext';
 
-const SOCAnalyzerDashboard = () => {
+const SOCAnalyzerDashboard = ({returnToSelector}) => {
   const { user, isAuthenticated } = useAuth();
   const [selectedReport, setSelectedReport] = useState('');
   const [file, setFile] = useState(null);
@@ -391,9 +391,6 @@ const SOCAnalyzerDashboard = () => {
     };
   };
 
-  const returnToSelector = () => {
-    window.location.reload(); // Simple way to return to selector
-  };
   // Export functions
   const exportToPDF = async () => {
     if (!analysisResult || !selectedReport) {
@@ -983,7 +980,7 @@ const SOCAnalyzerDashboard = () => {
 
   // Main JSX render
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-50 to-blue-50 relative overflow-hidden" style={{ marginLeft: '60px' }}>
+    <div className="min-h-screen bg-gradient-to-br from-slate-50 to-blue-50 relative overflow-hidden">
       {/* Notification System */}
       <NotificationSystem />
       

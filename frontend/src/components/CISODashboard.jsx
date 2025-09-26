@@ -3,7 +3,7 @@ import { Upload, FileText, TrendingUp, Shield, AlertTriangle, Activity, BarChart
 import { LineChart, Line, AreaChart, Area, BarChart, Bar, PieChart, Pie, Cell, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts';
 import { useAuth } from '../contexts/AuthContext';
 
-const CISODashboard = () => {
+const CISODashboard = ({ returnToSelector }) => {
   const { user, isAuthenticated } = useAuth();
   const [selectedReport, setSelectedReport] = useState('');
   const [file, setFile] = useState(null);
@@ -87,7 +87,7 @@ const CISODashboard = () => {
     const id = Date.now();
     const notification = { id, type, message };
     setNotifications(prev => [...prev, notification]);
-    
+
     setTimeout(() => {
       setNotifications(prev => prev.filter(n => n.id !== id));
     }, duration);
@@ -106,26 +106,26 @@ const CISODashboard = () => {
 
     const maxSize = 10 * 1024 * 1024; // 10MB
     const allowedTypes = ['text/csv', 'application/vnd.ms-excel'];
-    
+
     if (file.size > maxSize) {
-      setFileValidation({ 
-        isValid: false, 
-        message: 'Le fichier est trop volumineux (max 10MB)' 
+      setFileValidation({
+        isValid: false,
+        message: 'Le fichier est trop volumineux (max 10MB)'
       });
       return false;
     }
 
     if (!allowedTypes.includes(file.type) && !file.name.endsWith('.csv')) {
-      setFileValidation({ 
-        isValid: false, 
-        message: 'Format de fichier non supporté. Utilisez un fichier CSV.' 
+      setFileValidation({
+        isValid: false,
+        message: 'Format de fichier non supporté. Utilisez un fichier CSV.'
       });
       return false;
     }
 
-    setFileValidation({ 
-      isValid: true, 
-      message: 'Fichier valide et prêt pour l\'analyse' 
+    setFileValidation({
+      isValid: true,
+      message: 'Fichier valide et prêt pour l\'analyse'
     });
     return true;
   };
@@ -215,7 +215,7 @@ const CISODashboard = () => {
 
     try {
       addNotification('info', 'Début de l\'analyse des données CISO...', 3000);
-      
+
       const formData = new FormData();
       formData.append('file', file);
       formData.append('reportType', selectedReport);
@@ -358,11 +358,6 @@ const CISODashboard = () => {
     };
   };
 
-  // Return to level selector
-  const returnToSelector = () => {
-    window.location.reload(); // Simple way to return to selector
-  };
-
   // Notification component
   const NotificationSystem = () => (
     <div className="fixed top-4 right-4 z-50 space-y-2">
@@ -380,7 +375,7 @@ const CISODashboard = () => {
           info: 'bg-purple-50 border-purple-200 text-purple-800'
         };
         const IconComponent = icons[notification.type];
-        
+
         return (
           <div
             key={notification.id}
@@ -403,7 +398,7 @@ const CISODashboard = () => {
   // Progress bar component
   const ProgressBar = ({ progress, className = '' }) => (
     <div className={`w-full bg-gray-200 rounded-full h-2 overflow-hidden ${className}`}>
-      <div 
+      <div
         className="h-full bg-gradient-to-r from-purple-500 to-purple-600 transition-all duration-300 ease-out"
         style={{ width: `${progress}%` }}
       />
@@ -414,7 +409,7 @@ const CISODashboard = () => {
     <div className="bg-white rounded-xl p-6 border border-gray-200 hover:border-purple-300 shadow-lg hover:shadow-xl transition-all duration-300 hover:transform hover:scale-105 group relative overflow-hidden">
       {/* Background gradient effect */}
       <div className="absolute inset-0 bg-gradient-to-br from-transparent via-purple-50/30 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
-      
+
       <div className="relative z-10">
         <div className="flex items-center justify-between mb-4">
           <div className="p-3 rounded-lg transition-all duration-300 group-hover:scale-110" style={{ backgroundColor: `${color}15` }}>
@@ -427,15 +422,15 @@ const CISODashboard = () => {
             </div>
           )}
         </div>
-        
+
         <h3 className="text-gray-500 text-sm font-medium mb-1 group-hover:text-gray-600 transition-colors">
           {title}
         </h3>
-        
+
         <div className="text-2xl font-bold text-gray-900 mb-1 group-hover:text-purple-900 transition-colors">
           {value}
         </div>
-        
+
         {description && (
           <p className="text-xs text-gray-500 group-hover:text-gray-600 transition-colors leading-relaxed">
             {description}
@@ -501,7 +496,7 @@ const CISODashboard = () => {
     const ChartContainer = ({ children }) => (
       <div className="bg-gradient-to-br from-white via-gray-50 to-purple-50 rounded-2xl p-8 border border-gray-200 shadow-xl hover:shadow-2xl transition-all duration-500 hover:transform hover:scale-[1.02] relative overflow-hidden group">
         <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white to-transparent opacity-0 group-hover:opacity-10 transform -skew-x-12 -translate-x-full group-hover:translate-x-full transition-transform duration-1000"></div>
-        
+
         <div className="flex items-center justify-between mb-6 relative z-10">
           <div>
             <h3 className="text-gray-900 text-xl font-bold mb-2">{title}</h3>
@@ -520,7 +515,7 @@ const CISODashboard = () => {
             </div>
           </div>
         </div>
-        
+
         {children}
       </div>
     );
@@ -557,19 +552,19 @@ const CISODashboard = () => {
                   animationEasing="ease-out"
                 >
                   {chartData.map((entry, index) => (
-                    <Cell 
-                      key={`cell-${index}`} 
-                      fill={colors.chart[index % colors.chart.length]} 
+                    <Cell
+                      key={`cell-${index}`}
+                      fill={colors.chart[index % colors.chart.length]}
                       stroke={colors.primary}
                       strokeWidth={1}
                     />
                   ))}
                 </Pie>
-                <Tooltip 
+                <Tooltip
                   formatter={(value, name, props) => [`${value} (${((value / chartData.reduce((sum, item) => sum + item.value, 0)) * 100).toFixed(1)}%)`, props.payload.fullName]}
                   contentStyle={enhancedTooltipStyle}
                 />
-                <Legend 
+                <Legend
                   wrapperStyle={{ fontSize: '12px', fontWeight: '600', marginTop: '10px' }}
                   formatter={(value) => value.length > 15 ? value.substring(0, 15) + '...' : value}
                   iconType="circle"
@@ -589,22 +584,22 @@ const CISODashboard = () => {
                 margin={{ top: 20, right: 30, left: 20, bottom: 60 }}
               >
                 <CartesianGrid strokeDasharray="3 3" stroke="#e5e7eb" strokeOpacity={0.7} vertical={false} />
-                <XAxis 
-                  dataKey="name" 
-                  angle={-45} 
-                  textAnchor="end" 
-                  height={80} 
+                <XAxis
+                  dataKey="name"
+                  angle={-45}
+                  textAnchor="end"
+                  height={80}
                   tick={{ fontSize: 12, fill: colors.dark }}
                   tickLine={{ stroke: colors.medium }}
                   axisLine={{ stroke: colors.medium, strokeWidth: 1 }}
                 />
-                <YAxis 
+                <YAxis
                   tick={{ fontSize: 12, fill: colors.dark }}
                   tickLine={{ stroke: colors.medium }}
                   axisLine={{ stroke: colors.medium, strokeWidth: 1 }}
                   tickFormatter={(value) => value >= 1000 ? `${(value / 1000).toFixed(1)}k` : value}
                 />
-                <Tooltip 
+                <Tooltip
                   formatter={(value, name, props) => [value, props.payload.fullName]}
                   contentStyle={enhancedTooltipStyle}
                 />
@@ -619,9 +614,9 @@ const CISODashboard = () => {
                   animationEasing="ease-out"
                 >
                   {chartData.map((entry, index) => (
-                    <Cell 
-                      key={`cell-${index}`} 
-                      fill={colors.chart[index % colors.chart.length]} 
+                    <Cell
+                      key={`cell-${index}`}
+                      fill={colors.chart[index % colors.chart.length]}
                       fillOpacity={0.9}
                     />
                   ))}
@@ -640,22 +635,22 @@ const CISODashboard = () => {
                 margin={{ top: 20, right: 30, left: 20, bottom: 60 }}
               >
                 <CartesianGrid strokeDasharray="3 3" stroke="#e5e7eb" strokeOpacity={0.7} vertical={false} />
-                <XAxis 
-                  dataKey="name" 
-                  angle={-45} 
-                  textAnchor="end" 
-                  height={80} 
+                <XAxis
+                  dataKey="name"
+                  angle={-45}
+                  textAnchor="end"
+                  height={80}
                   tick={{ fontSize: 12, fill: colors.dark }}
                   tickLine={{ stroke: colors.medium }}
                   axisLine={{ stroke: colors.medium, strokeWidth: 1 }}
                 />
-                <YAxis 
+                <YAxis
                   tick={{ fontSize: 12, fill: colors.dark }}
                   tickLine={{ stroke: colors.medium }}
                   axisLine={{ stroke: colors.medium, strokeWidth: 1 }}
                   tickFormatter={(value) => value >= 1000 ? `${(value / 1000).toFixed(1)}k` : value}
                 />
-                <Tooltip 
+                <Tooltip
                   formatter={(value, name, props) => [value, props.payload.fullName]}
                   contentStyle={enhancedTooltipStyle}
                 />
@@ -664,17 +659,17 @@ const CISODashboard = () => {
                   dataKey="value"
                   stroke={colors.primary}
                   strokeWidth={3}
-                  dot={{ 
-                    fill: 'white', 
-                    strokeWidth: 2, 
-                    r: 5, 
-                    stroke: colors.primary 
+                  dot={{
+                    fill: 'white',
+                    strokeWidth: 2,
+                    r: 5,
+                    stroke: colors.primary
                   }}
-                  activeDot={{ 
-                    r: 8, 
-                    stroke: colors.primary, 
-                    strokeWidth: 2, 
-                    fill: colors.accent 
+                  activeDot={{
+                    r: 8,
+                    stroke: colors.primary,
+                    strokeWidth: 2,
+                    fill: colors.accent
                   }}
                   animationDuration={1500}
                   animationBegin={300}
@@ -701,7 +696,7 @@ const CISODashboard = () => {
     <div className="min-h-screen bg-gradient-to-br from-slate-50 to-purple-50 relative overflow-hidden">
       {/* Notification System */}
       <NotificationSystem />
-      
+
       {/* Background pattern */}
       <div
         className="absolute inset-0 opacity-5"
@@ -723,7 +718,7 @@ const CISODashboard = () => {
             >
               <ArrowLeft size={24} className="text-gray-600" />
             </button>
-            
+
             <div className="p-6 bg-gradient-to-br from-purple-500 to-purple-700 rounded-2xl shadow-xl relative">
               <TrendingUp size={40} className="text-white" />
               <div className="absolute -top-1 -right-1 w-4 h-4 bg-green-400 rounded-full animate-pulse"></div>
@@ -735,7 +730,7 @@ const CISODashboard = () => {
           <p className="text-gray-600 text-xl font-medium mb-4">
             INWI - Niveau 2 Pilotage & Management
           </p>
-          
+
           {/* Status bar */}
           <div className="flex items-center justify-center space-x-8 mt-6 p-4 bg-white/50 backdrop-blur-sm rounded-xl border border-white/20 shadow-lg max-w-4xl mx-auto">
             <div className="flex items-center text-sm">
@@ -813,11 +808,11 @@ const CISODashboard = () => {
                     <XCircle size={20} className="absolute -top-2 -right-2 text-red-500 bg-white rounded-full" />
                   )}
                 </div>
-                
+
                 <p className="text-gray-900 text-lg font-medium mb-2">
                   {file ? file.name : 'Glissez votre fichier CSV ici'}
                 </p>
-                
+
                 {file && (
                   <div className="mb-3">
                     <p className="text-sm text-gray-600 mb-1">
@@ -830,13 +825,13 @@ const CISODashboard = () => {
                     )}
                   </div>
                 )}
-                
+
                 {!file && (
                   <p className="text-gray-500 text-sm mb-4">
                     ou cliquez pour sélectionner (max 10MB)
                   </p>
                 )}
-                
+
                 {isLoading && uploadProgress > 0 && (
                   <div className="mb-4">
                     <div className="flex justify-between text-sm text-gray-600 mb-1">
@@ -846,7 +841,7 @@ const CISODashboard = () => {
                     <ProgressBar progress={uploadProgress} />
                   </div>
                 )}
-                
+
                 <input
                   ref={fileInputRef}
                   type="file"
@@ -854,7 +849,7 @@ const CISODashboard = () => {
                   onChange={handleFileSelect}
                   className="hidden"
                 />
-                
+
                 <div className="flex gap-2 justify-center">
                   <button
                     onClick={() => fileInputRef.current?.click()}
@@ -862,7 +857,7 @@ const CISODashboard = () => {
                   >
                     {file ? 'Changer le fichier' : 'Sélectionner un fichier'}
                   </button>
-                  
+
                   {file && (
                     <button
                       onClick={() => {
@@ -925,7 +920,7 @@ const CISODashboard = () => {
                 className="px-12 py-4 bg-gradient-to-r from-purple-600 to-purple-700 text-white font-semibold rounded-xl hover:from-purple-700 hover:to-purple-800 transition-all duration-300 shadow-lg hover:shadow-xl disabled:opacity-50 disabled:cursor-not-allowed transform hover:scale-105 disabled:transform-none text-lg relative overflow-hidden group"
               >
                 <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white to-transparent opacity-0 group-hover:opacity-20 transform -skew-x-12 -translate-x-full group-hover:translate-x-full transition-transform duration-1000"></div>
-                
+
                 {isLoading ? (
                   <div className="flex items-center relative z-10">
                     <div className="animate-spin rounded-full h-6 w-6 border-b-2 border-white mr-3"></div>
@@ -938,7 +933,7 @@ const CISODashboard = () => {
                   </span>
                 )}
               </button>
-              
+
               {/* Status indicators */}
               <div className="flex justify-center space-x-6 text-sm">
                 <div className={`flex items-center ${file ? 'text-green-600' : 'text-gray-400'}`}>
@@ -950,9 +945,9 @@ const CISODashboard = () => {
                   Type de rapport
                 </div>
                 <div className={`flex items-center ${fileValidation.isValid ? 'text-green-600' : fileValidation.isValid === false ? 'text-red-600' : 'text-gray-400'}`}>
-                  {fileValidation.isValid ? <CheckCircle size={16} className="mr-1" /> : 
-                   fileValidation.isValid === false ? <XCircle size={16} className="mr-1" /> : 
-                   <HelpCircle size={16} className="mr-1" />}
+                  {fileValidation.isValid ? <CheckCircle size={16} className="mr-1" /> :
+                    fileValidation.isValid === false ? <XCircle size={16} className="mr-1" /> :
+                      <HelpCircle size={16} className="mr-1" />}
                   Validation
                 </div>
               </div>
