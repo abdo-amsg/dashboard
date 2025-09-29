@@ -10,7 +10,7 @@ import CustomNode from './mindmap/CustomNode';
 import { initialNodes, initialEdges } from './mindmap/kpi_data';
 import { X, Target, Shield, AlertCircle, Info, BarChart3 } from 'lucide-react';
 import '@xyflow/react/dist/style.css';
-import './KpiMindmap.css';
+import '../styles/KpiMindmap.css';
 import DescriptionCard from './mindmap/DescriptionCard';
 
 import { useState, useMemo, useCallback } from 'react';

@@ -8,7 +8,6 @@ import { Alert, AlertDescription } from "../ui/alert"
 import Managerial from './levels/Managerial';
 import Operational from './levels/Operational';
 import Strategic from './levels/Strategic';
-import { dashboardApi } from "../../services/dashboardApi"
 import {
   Shield,
   BarChart3,
@@ -187,7 +186,7 @@ function DashboardContent({ user, user_role, loading }) {
 
     return (
       <Card
-        className={`group hover:shadow-xl transition-all duration-300 hover:-translate-y-1 border-2 ${statusBorder} bg-gradient-to-br from-white to-slate-50`}
+        className={`group hover:shadow-xl transition-all duration-300 hover:-translate-y-1 border-2 ${statusBorder} bg-gradient-to-br background-color to-hover-color`}
       >
         <CardHeader className="pb-3">
           <div className="flex items-center justify-between">

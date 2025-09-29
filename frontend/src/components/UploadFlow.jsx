@@ -21,7 +21,7 @@ import {
 import { dashboardApi } from '../services/dashboardApi';
 import api from '../services/api';
 
-const UploadFlow = ({ isOpen, onClose }) => {
+const UploadFlow = ({ isOpen, onClose, setActiveItem }) => {
     const [currentStep, setCurrentStep] = useState(1);
     const [selectedTool, setSelectedTool] = useState(null);
     const [file, setFile] = useState(null);
@@ -356,7 +356,7 @@ const UploadFlow = ({ isOpen, onClose }) => {
                                         key={category.id}
                                         onClick={() => setSelectedCategory(category.id)}
                                         className={`px-4 py-2 rounded-lg text-sm font-medium whitespace-nowrap transition-all
-                      ${selectedCategory === category.id
+                                            ${selectedCategory === category.id
                                                 ? 'bg-blue-600 text-white'
                                                 : 'bg-gray-100 text-gray-600 hover:bg-gray-200'}`}
                                     >
@@ -645,22 +645,6 @@ const UploadFlow = ({ isOpen, onClose }) => {
                                 <p className="text-gray-600">Your security report has been successfully analyzed</p>
                             </div>
 
-                            {/* Summary Stats */}
-                            <div className="grid grid-cols-3 gap-4">
-                                <div className="bg-gray-50 rounded-xl p-4 text-center">
-                                    <p className="text-3xl font-bold text-blue-600">247</p>
-                                    <p className="text-sm text-gray-600 mt-1">Findings Processed</p>
-                                </div>
-                                <div className="bg-gray-50 rounded-xl p-4 text-center">
-                                    <p className="text-3xl font-bold text-red-600">12</p>
-                                    <p className="text-sm text-gray-600 mt-1">Critical Issues</p>
-                                </div>
-                                <div className="bg-gray-50 rounded-xl p-4 text-center">
-                                    <p className="text-3xl font-bold text-green-600">8</p>
-                                    <p className="text-sm text-gray-600 mt-1">KPIs Updated</p>
-                                </div>
-                            </div>
-
                             {/* Action Buttons */}
                             <div className="flex justify-center space-x-4">
                                 <button
@@ -673,6 +657,7 @@ const UploadFlow = ({ isOpen, onClose }) => {
                                     onClick={() => {
                                         onClose();
                                         // Navigate to dashboard
+                                        setActiveItem(0);
                                     }}
                                     className="px-6 py-3 rounded-xl font-medium bg-blue-600 text-white hover:bg-blue-700 shadow-lg transition-all duration-200 flex items-center space-x-2"
                                 >

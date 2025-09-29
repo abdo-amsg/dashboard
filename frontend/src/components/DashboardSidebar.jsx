@@ -1,6 +1,4 @@
-import React, { useState } from 'react';
-import { LayoutGrid, Settings, Globe, FileText, ChevronLeft, ChevronRight } from 'lucide-react';
-import { Map } from '@mui/icons-material';
+import { Map, Language, FolderOutlined, SettingsOutlined, AutoAwesomeMosaicOutlined, ChevronLeft, ChevronRight } from '@mui/icons-material';
 
 // Accepts activeItem (string or number) and onSelect (function) as props
 function DashboardSidebar({ activeItem, onSelect, is_superuser, isOpen, onToggle }) {
@@ -8,26 +6,26 @@ function DashboardSidebar({ activeItem, onSelect, is_superuser, isOpen, onToggle
     {
       id: 0,
       label: 'Overview',
-      icon: LayoutGrid
+      icon: AutoAwesomeMosaicOutlined
     },
     {
       id: 1,
       label: 'Settings',
-      icon: Settings
+      icon: SettingsOutlined
     },
     {
       id: 2,
       label: 'Sources',
-      icon: Globe
+      icon: Language
     },
     {
       id: 3,
       label: 'Files',
-      icon: FileText
+      icon: FolderOutlined
     },
     {
       id: 5,
-      label: 'KPI Mapping',
+      label: 'MindMap',
       icon: Map
     }
   ];
@@ -36,50 +34,46 @@ function DashboardSidebar({ activeItem, onSelect, is_superuser, isOpen, onToggle
     if (onSelect) onSelect(itemId);
   };
 
-  const toggleSidebar = () => {
-    if (onToggle) {
-      onToggle();
-    }
-  };
-
   return (
-    <div className={`relative bg-gray-50 border-r border-gray-200 transition-all duration-300 ${!isOpen ? 'w-16' : 'w-48'} h-screen`}>
-      {/* Navigation Items */}
-      <div className="py-4">
+    // The parent div is relative to position the absolute button inside it
+    <div className={`relative bg-bg-background border-r border-border transition-all duration-300 ${!isOpen ? 'w-16' : 'w-48'} h-full flex flex-col`}>
+      {/* Navigation Items - takes up remaining space */}
+      <div className="flex-grow py-4">
         {menuItems.map((item) => {
-          if (!is_superuser && item.label === "Files") return;
+          if (!is_superuser && item.label === "Files") return null; // Return null for cleaner rendering
           const IconComponent = item.icon;
           const isActive = activeItem === item.id;
           return (
             <button
               key={item.id}
               onClick={() => handleItemClick(item.id)}
-              className={`w-full flex items-center px-4 py-3 text-left transition-colors ${
-                isActive
-                  ? 'bg-blue-50 text-blue-600 border-r-2 border-blue-600'
-                  : 'text-gray-600 hover:text-gray-900 hover:bg-gray-100'
-              }`}
+              className={`w-full flex items-center px-4 py-3 text-left transition-colors ${isActive
+                  ? 'bg-highlight text-brand border-r-4 border-brand-light' // Made border thicker
+                  : 'text-text-primary hover:bg-hover'
+                }`}
             >
-              <IconComponent className={`w-5 h-5 ${!isOpen ? 'mx-auto' : 'mr-3'}`} />
+              <IconComponent className={`w-5 h-5 ${isOpen ? 'mr-3' : 'mx-auto'}`} />
               {isOpen && (
-                <span className="text-sm font-medium">{item.label}</span>
+                <span className="text-sm font-medium whitespace-nowrap">{item.label}</span>
               )}
             </button>
           );
         })}
       </div>
 
-      {/* Collapse/Expand Button */}
-      <button
-        onClick={toggleSidebar}
-        className="absolute right-0 top-1/2 transform translate-x-1/2 -translate-y-1/2 bg-white border border-gray-300 rounded-full p-1 hover:bg-gray-50 transition-colors"
-      >
-        {!isOpen ? (
-          <ChevronRight className="w-4 h-4 text-gray-600" />
-        ) : (
-          <ChevronLeft className="w-4 h-4 text-gray-600" />
-        )}
-      </button>
+      {/* Collapse/Expand Button - positioned at the bottom */}
+      <div className="p-4 border-t border-border">
+        <button
+          onClick={onToggle} // Directly use onToggle
+          className="w-full flex items-center justify-center p-2 rounded-lg text-text-primary hover:bg-hover transition-colors"
+        >
+          {isOpen ? (
+            <ChevronLeft className="w-5 h-5" />
+          ) : (
+            <ChevronRight className="w-5 h-5" />
+          )}
+        </button>
+      </div>
     </div>
   );
 }
