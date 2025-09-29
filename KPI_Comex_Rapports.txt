@@ -1,0 +1,39 @@
+KPI: Posture de Risque Cyber
+  Rapport Source: Risk Scoring consolidé (SIEM + GRC)
+  Champs (Headers): asset_id, asset_criticality, vuln_severity, incident_count, patch_status, coverage_security_tools, score_risk
+
+KPI: Impact Financier - Coût Incidents
+  Rapport Source: Incident Cost Report (Ticketing / Finance)
+  Champs (Headers): incident_id, incident_type, start_time, end_time, duration_hours, business_unit, cost_per_hour, total_cost
+
+KPI: Impact Financier - Pertes évitées
+  Rapport Source: Risk Register / Assurance
+  Champs (Headers): scenario_id, asset_value, threat_type, probability_percent, mitigation_effectiveness_percent, loss_expected, loss_avoided
+
+KPI: Conformité Réglementaire
+  Rapport Source: Audit conformité (ISO/NIS2/PCI/RGPD)
+  Champs (Headers): control_id, framework, domain, status, evidence_ref, audit_date
+
+KPI: Programme Sécurité
+  Rapport Source: Programme sécurité interne
+  Champs (Headers): domain, maturity_score, budget_planned, budget_used, resources_allocated_fte, resources_needed_fte
+
+KPI: Résolution des Incidents
+  Rapport Source: Ticketing SOC (TheHive, ServiceNow, JIRA SOC)
+  Champs (Headers): incident_id, severity, created_at, detected_at, resolved_at, assigned_to, status
+
+KPI: Benchmark Sectoriel
+  Rapport Source: Benchmark externe (cabinet sectoriel)
+  Champs (Headers): company_id, sector, score_global, percentile
+
+KPI: Paysage des Menaces
+  Rapport Source: Threat Intelligence Feed (MISP, Anomali, Recorded Future)
+  Champs (Headers): threat_id, threat_type, timestamp, industry_targeted, count_incidents, ioc_indicator
+
+KPI: Exposition au Risque
+  Rapport Source: Risk Register + Vuln Scanner (Nessus, Rapid7, OpenVAS)
+  Champs (Headers): asset_id, asset_value, asset_owner, risk_level, probability_percent, impact_value, exposure_amount
+
+KPI: Alignement Stratégique
+  Rapport Source: Projet stratégique sécurité
+  Champs (Headers): initiative_id, initiative_name, planned_milestones, progress_percent, security_coverage_percent

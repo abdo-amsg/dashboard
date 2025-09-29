@@ -1,0 +1,11 @@
+IOC_Type;IOC_Value;First_Seen;Last_Seen;Source;Campaign_Name;Detected_By
+IP;192.0.2.100;2024-01-15 08:00:00;2024-01-15 18:00:00;Threat Intel;APT29;SIEM
+Domain;malicious-site.com;2024-01-15 09:30:00;2024-01-15 17:45:00;Internal;Phishing Campaign;Email Security
+Hash;d41d8cd98f00b204e9800998ecf8427e;2024-01-15 10:15:00;2024-01-15 16:20:00;Sandbox;Malware Family X;Antivirus
+IP;203.0.113.50;2024-01-15 11:00:00;2024-01-15 19:30:00;External Feed;Botnet C2;Firewall
+URL;http://evil-domain.net/payload;2024-01-15 12:45:00;2024-01-15 15:10:00;Honeypot;Drive-by Download;Web Proxy
+Domain;command-control.org;2024-01-15 13:20:00;2024-01-15 20:15:00;Threat Intel;APT28;DNS Monitor
+Hash;5d41402abc4b2a76b9719d911017c592;2024-01-15 14:30:00;2024-01-15 18:45:00;Internal;Ransomware;EDR
+IP;198.51.100.75;2024-01-15 15:15:00;2024-01-15 21:00:00;Partner Feed;Cryptocurrency Miner;IDS
+Email;attacker@evil.com;2024-01-15 16:00:00;2024-01-15 19:20:00;Internal;Spear Phishing;Email Security
+Domain;data-exfil.net;2024-01-15 17:30:00;2024-01-15 22:10:00;Threat Intel;Data Theft;DLP

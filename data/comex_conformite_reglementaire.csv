@@ -1,0 +1,16 @@
+control_id,framework,domain,status,evidence_ref,audit_date
+CTRL-001,ISO27001,Access Control,Compliant,DOC-001,2024-01-15
+CTRL-002,ISO27001,Cryptography,Compliant,DOC-002,2024-01-15
+CTRL-003,ISO27001,Physical Security,Non-Compliant,DOC-003,2024-01-15
+CTRL-004,GDPR,Data Protection,Compliant,DOC-004,2024-02-01
+CTRL-005,GDPR,Privacy Rights,Compliant,DOC-005,2024-02-01
+CTRL-006,GDPR,Data Breach,Partially Compliant,DOC-006,2024-02-01
+CTRL-007,PCI-DSS,Network Security,Compliant,DOC-007,2024-02-15
+CTRL-008,PCI-DSS,Access Control,Compliant,DOC-008,2024-02-15
+CTRL-009,PCI-DSS,Monitoring,Non-Compliant,DOC-009,2024-02-15
+CTRL-010,NIS2,Incident Response,Compliant,DOC-010,2024-03-01
+CTRL-011,NIS2,Risk Management,Partially Compliant,DOC-011,2024-03-01
+CTRL-012,NIS2,Supply Chain,Non-Compliant,DOC-012,2024-03-01
+CTRL-013,ISO27001,Incident Management,Compliant,DOC-013,2024-03-15
+CTRL-014,ISO27001,Business Continuity,Compliant,DOC-014,2024-03-15
+CTRL-015,GDPR,Data Minimization,Compliant,DOC-015,2024-04-01

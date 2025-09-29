@@ -1,0 +1,15 @@
+date,new_threats,ip_indicators,domain_indicators,hash_indicators,automation_rate,mttr_min,incidents_prevented,campaign_name
+2025-01-26,28,142,87,215,78,18,142,BlackCat Ransomware
+2025-01-25,25,138,84,208,77,19,138,APT29 Phishing
+2025-01-24,22,135,82,202,76,20,135,Qakbot Banking Trojan
+2025-01-23,20,132,80,198,75,21,132,Emotet Botnet
+2025-01-22,18,128,78,195,74,22,128,Cobalt Strike
+2025-01-21,16,125,76,192,73,23,125,LockBit Ransomware
+2025-01-20,14,122,74,188,72,24,122,Lazarus Group
+2025-01-19,12,118,72,185,71,25,118,FIN7
+2025-01-18,10,115,70,182,70,26,115,Conti Ransomware
+2025-01-17,8,112,68,178,69,27,112,DarkHalo
+2025-01-16,6,108,66,175,68,28,108,REvil Ransomware
+2025-01-15,4,105,64,172,67,29,105,Carbanak
+2025-01-14,2,102,62,168,66,30,102,Maze Ransomware
+2025-01-13,1,98,60,165,65,31,98,APT40

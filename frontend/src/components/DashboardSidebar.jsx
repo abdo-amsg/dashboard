@@ -27,6 +27,11 @@ function DashboardSidebar({ activeItem, onSelect, is_superuser, isOpen, onToggle
       id: 5,
       label: 'MindMap',
       icon: Map
+    },
+    {
+      id: 6,
+      label: 'INWI Security',
+      icon: Shield
     }
   ];
 

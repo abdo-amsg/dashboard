@@ -2,6 +2,10 @@ from datetime import datetime
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from contextlib import asynccontextmanager
+from app.inwi.inwi import router as inwi_router
+from app.inwi.inwi2 import router as inwi2_router
+from app.inwi.inwi3 import router as inwi3_router
+from app.inwi.export_service import router as export_router
 from sqlalchemy import text
 
 # Rate limiting imports
@@ -106,3 +110,7 @@ from .dashboard.dashbord_routes import router as dashboard_router
 app.include_router(auth_router, prefix='/api', tags=["auth"])
 app.include_router(admin_router, prefix='/api', tags=["admin"])
 app.include_router(dashboard_router, prefix='/api', tags=["dashboard"])
+app.include_router(inwi_router, prefix='/api', tags=["inwi"])
+app.include_router(inwi2_router, prefix='/api', tags=["inwi2"])
+app.include_router(inwi3_router, prefix='/api', tags=["inwi3"])
+app.include_router(export_router, prefix='/api', tags=["export"])
