@@ -8,7 +8,7 @@ import {
 } from '@xyflow/react';
 import CustomNode from './mindmap/CustomNode';
 import { initialNodes, initialEdges } from './mindmap/kpi_data';
-import { X, Target, Shield, AlertCircle, Info, BarChart3 } from 'lucide-react';
+import { Target } from 'lucide-react';
 import '@xyflow/react/dist/style.css';
 import '../styles/KpiMindmap.css';
 import DescriptionCard from './mindmap/DescriptionCard';
@@ -186,9 +186,9 @@ const KpiMindmap = () => {
                 <Controls />
                 <Background gap={16} />
                 {/* Legend Panel */}
-                <Panel position="top-left" className="bg-white/90 backdrop-blur-sm rounded-lg shadow-lg p-4 m-4">
-                    <div className="space-y-3">
-                        <h4 className="font-semibold text-gray-800 flex items-center gap-2">
+                <Panel position="top-left" className="bg-white/30 backdrop-blur-sm rounded-lg shadow-lg p-4 m-4">
+                    <div className="space-y-3 text-text-primary">
+                        <h4 className="font-semibold text-black flex items-center gap-2">
                             <Target className="w-4 h-4" />
                             KPI Hierarchy Legend
                         </h4>

@@ -25,8 +25,8 @@ const FilesPage = () => {
   };
 
   useEffect(() => {
-    if(files.length === 0)
-    fetchFiles();
+    if (files.length === 0)
+      fetchFiles();
     // Fetch all users for mapping userId to name
     const fetchUsers = async () => {
       try {
@@ -41,7 +41,7 @@ const FilesPage = () => {
         setUsers({});
       }
     };
-    
+
     fetchUsers();
     // Set up polling for status updates
     // const interval = setInterval(fetchFiles, 10000); // Poll every 10 seconds
@@ -56,25 +56,25 @@ const FilesPage = () => {
     switch (status.toLowerCase()) {
       case 'pending':
         return {
-          color: 'bg-yellow-100 text-yellow-800 border-yellow-200',
+          color: 'bg-[var(--stat-card-background4)] text-[var(--stat-card-color4)] border-[var(--stat-card-color4)]',
           icon: <Clock className="w-4 h-4" />,
           label: 'Processing'
         };
       case 'processed':
         return {
-          color: 'bg-green-100 text-green-800 border-green-200',
+          color: 'bg-[var(--stat-card-background2)] text-[var(--stat-card-color2)] border-[var(--stat-card-color2)]',
           icon: <CheckCircle className="w-4 h-4" />,
           label: 'Completed'
         };
-              case 'failed':
+      case 'failed':
         return {
-          color: 'bg-red-100 text-red-800 border-red-200',
+          color: 'bg-danger-light text-danger border-danger',
           icon: <AlertCircle className="w-4 h-4" />,
           label: 'Failed'
         };
       default:
         return {
-          color: 'bg-gray-100 text-gray-800 border-gray-200',
+          color: 'bg-border text-text-primary border-border',
           icon: <FileText className="w-4 h-4" />,
           label: 'Unknown'
         };
@@ -102,12 +102,12 @@ const FilesPage = () => {
 
   if (loading) {
     return (
-      <div className="bg-white rounded-xl shadow-sm p-6">
+      <div className="bg-background rounded-xl shadow-sm p-6">
         <div className="animate-pulse space-y-4">
-          <div className="h-8 bg-gray-200 rounded w-1/4"></div>
+          <div className="h-8 bg-card-background rounded w-1/4"></div>
           <div className="space-y-3">
             {[...Array(5)].map((_, i) => (
-              <div key={i} className="h-16 bg-gray-200 rounded"></div>
+              <div key={i} className="h-16 bg-card-background rounded"></div>
             ))}
           </div>
         </div>
@@ -117,8 +117,8 @@ const FilesPage = () => {
 
   if (error) {
     return (
-      <div className="bg-white rounded-xl shadow-sm p-6">
-        <div className="flex items-center space-x-3 text-red-600">
+      <div className="bg-background rounded-xl shadow-sm p-6">
+        <div className="flex items-center space-x-3 text-danger">
           <AlertCircle className="w-6 h-6" />
           <span className="font-medium">{error}</span>
         </div>
@@ -127,21 +127,21 @@ const FilesPage = () => {
   }
 
   return (
-    <div className="space-y-6">
+    <div className="bg-main-background p-6">
       {/* Header */}
-      <div className="bg-white rounded-xl shadow-sm p-6">
+      <div className="bg-background rounded-xl shadow-sm p-6 mb-6">
         <div className="flex items-center justify-between">
           <div>
-            <h1 className="text-2xl font-bold text-gray-900 mb-2">File Management</h1>
-            <p className="text-gray-600">
+            <h1 className="text-2xl font-bold text-text-primary mb-2">File Management</h1>
+            <p className="text-text-secondary">
               View and manage your uploaded security reports. Use the upload button in the header to add new files.
             </p>
           </div>
           <div className="flex items-center space-x-4">
-            <div className="text-sm text-gray-500">
+            <div className="text-sm text-text-secondary">
               <span className="font-medium">{files.length}</span> files uploaded
             </div>
-            <div className="flex items-center space-x-2 text-blue-600">
+            <div className="flex items-center space-x-2 text-brand">
               <Upload className="w-5 h-5" />
               <span className="text-sm font-medium">Upload in header</span>
             </div>
@@ -150,71 +150,71 @@ const FilesPage = () => {
       </div>
 
       {/* Files List */}
-      <div className="bg-white rounded-xl shadow-sm overflow-hidden">
+      <div className="bg-background rounded-xl shadow-sm overflow-hidden">
         {files.length === 0 ? (
           <div className="p-12 text-center">
-            <FileText className="w-16 h-16 text-gray-300 mx-auto mb-4" />
-            <h3 className="text-lg font-medium text-gray-900 mb-2">No files uploaded yet</h3>
-            <p className="text-gray-600 mb-4">
+            <FileText className="w-16 h-16 text-text-secondary mx-auto mb-4" />
+            <h3 className="text-lg font-medium text-text-primary mb-2">No files uploaded yet</h3>
+            <p className="text-text-secondary mb-4">
               Start by uploading a security report using the upload button in the header
             </p>
-            <div className="inline-flex items-center space-x-2 text-blue-600">
+            <div className="inline-flex items-center space-x-2 text-link">
               <Upload className="w-5 h-5" />
               <span className="font-medium">Click the upload button above</span>
             </div>
           </div>
         ) : (
           <div className="overflow-x-auto">
-            <table className="min-w-full divide-y divide-gray-200">
-              <thead className="bg-gray-50">
+            <table className="min-w-full divide-y divide-border">
+              <thead className="bg-background">
                 <tr>
-                  <th className="px-6 py-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                  <th className="px-6 py-4 text-left text-xs font-medium text-text-primary uppercase tracking-wider">
                     File
                   </th>
-                  <th className="px-6 py-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                  <th className="px-6 py-4 text-left text-xs font-medium text-text-primary uppercase tracking-wider">
                     Upload Date
                   </th>
-                  <th className="px-6 py-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                  <th className="px-6 py-4 text-left text-xs font-medium text-text-primary uppercase tracking-wider">
                     Size
                   </th>
-                  <th className="px-6 py-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                  <th className="px-6 py-4 text-left text-xs font-medium text-text-primary uppercase tracking-wider">
                     Status
                   </th>
-                  {user.is_superuser && (<th className="px-6 py-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                  {user.is_superuser && (<th className="px-6 py-4 text-left text-xs font-medium text-text-primary uppercase tracking-wider">
                     Uploaded By
                   </th>)}
-                  <th className="px-6 py-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                  <th className="px-6 py-4 text-left text-xs font-medium text-text-primary uppercase tracking-wider">
                     Actions
                   </th>
                 </tr>
               </thead>
-              <tbody className="bg-white divide-y divide-gray-200">
+              <tbody className="bg-background divide-y divide-border">
                 {files.map((file) => {
                   const statusInfo = getStatusInfo(file.status);
                   return (
-                    <tr key={file.id} className="hover:bg-gray-50 transition-colors">
+                    <tr key={file.id} className="hover:bg-hover transition-colors">
                       <td className="px-6 py-4 whitespace-nowrap">
                         <div className="flex items-center">
-                          <div className="w-10 h-10 bg-blue-100 rounded-lg flex items-center justify-center mr-3">
-                            <FileText className="w-5 h-5 text-blue-600" />
+                          <div className="w-10 h-10 bg-border-light rounded-lg flex items-center justify-center mr-3">
+                            <FileText className="w-5 h-5 text-brand-dark" />
                           </div>
                           <div>
-                            <div className="text-sm font-medium text-gray-900">
+                            <div className="text-sm font-medium text-text-primary">
                               {file.filename}
                             </div>
-                            <div className="text-sm text-gray-500">
+                            <div className="text-sm text-text-secondary">
                               {file.file_type}
                             </div>
                           </div>
                         </div>
                       </td>
                       <td className="px-6 py-4 whitespace-nowrap">
-                        <div className="text-sm text-gray-900">
+                        <div className="text-sm text-text-primary">
                           {formatDate(file.created_at)}
                         </div>
                       </td>
                       <td className="px-6 py-4 whitespace-nowrap">
-                        <div className="text-sm text-gray-900">
+                        <div className="text-sm text-text-primary">
                           {formatFileSize(file.size)}
                         </div>
                       </td>
@@ -225,7 +225,7 @@ const FilesPage = () => {
                         </span>
                       </td>
                       {user.is_superuser && (<td className="px-6 py-4 whitespace-nowrap">
-                        <div className="text-sm text-gray-900">
+                        <div className="text-sm text-text-primary">
                           {file.uploaded_by ? getUserName(file.uploaded_by) : 'Unknown'}
                         </div>
                       </td>)}
@@ -236,7 +236,7 @@ const FilesPage = () => {
                               // Navigate to file details or logs
                               console.log('View file details:', file.id);
                             }}
-                            className="text-blue-600 hover:text-blue-700 p-1 rounded-lg hover:bg-blue-50 transition-colors"
+                            className="text-brand hover:text-brand-dark p-1 rounded-lg transition-colors"
                             title="View Details"
                           >
                             <Eye className="w-4 h-4" />
@@ -247,7 +247,7 @@ const FilesPage = () => {
                                 // Download or export functionality
                                 console.log('Download file:', file.id);
                               }}
-                              className="text-green-600 hover:text-green-700 p-1 rounded-lg hover:bg-green-50 transition-colors"
+                              className="text-green-600 hover:text-green-700 p-1 rounded-lg transition-colors"
                               title="Download Results"
                             >
                               <Download className="w-4 h-4" />
@@ -266,45 +266,45 @@ const FilesPage = () => {
 
       {/* Statistics Cards */}
       {files.length > 0 && (
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-          <div className="bg-white rounded-xl shadow-sm p-6">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mt-4">
+          <div className="bg-card-background rounded-xl shadow-sm p-6">
             <div className="flex items-center">
-              <div className="w-12 h-12 bg-blue-100 rounded-lg flex items-center justify-center mr-4">
-                <FileText className="w-6 h-6 text-blue-600" />
+              <div className="w-12 h-12 bg-border-light rounded-lg flex items-center justify-center mr-4">
+                <FileText className="w-6 h-6 text-brand-dark" />
               </div>
               <div>
-                <div className="text-2xl font-bold text-gray-900">
+                <div className="text-2xl font-bold text-text-primary">
                   {files.length}
                 </div>
-                <div className="text-sm text-gray-600">Total Files</div>
+                <div className="text-sm text-text-secondary">Total Files</div>
               </div>
             </div>
           </div>
 
-          <div className="bg-white rounded-xl shadow-sm p-6">
+          <div className="bg-card-background rounded-xl shadow-sm p-6">
             <div className="flex items-center">
-              <div className="w-12 h-12 bg-green-100 rounded-lg flex items-center justify-center mr-4">
-                <CheckCircle className="w-6 h-6 text-green-600" />
+              <div className="w-12 h-12 bg-[var(--stat-card-background2)] rounded-lg flex items-center justify-center mr-4">
+                <CheckCircle className="w-6 h-6 text-[var(--stat-card-color2)]" />
               </div>
               <div>
-                <div className="text-2xl font-bold text-gray-900">
+                <div className="text-2xl font-bold text-text-primary">
                   {files.filter(f => f.status === 'processed').length}
                 </div>
-                <div className="text-sm text-gray-600">Processed</div>
+                <div className="text-sm text-text-secondary">Processed</div>
               </div>
             </div>
           </div>
 
-          <div className="bg-white rounded-xl shadow-sm p-6">
+          <div className="bg-card-background rounded-xl shadow-sm p-6">
             <div className="flex items-center">
-              <div className="w-12 h-12 bg-yellow-100 rounded-lg flex items-center justify-center mr-4">
-                <Clock className="w-6 h-6 text-yellow-600" />
+              <div className="w-12 h-12 bg-[var(--stat-card-background4)] rounded-lg flex items-center justify-center mr-4">
+                <Clock className="w-6 h-6 text-[var(--stat-card-color4)]" />
               </div>
               <div>
-                <div className="text-2xl font-bold text-gray-900">
+                <div className="text-2xl font-bold text-text-primary">
                   {files.filter(f => f.status === 'pending').length}
                 </div>
-                <div className="text-sm text-gray-600">Processing</div>
+                <div className="text-sm text-text-secondary">Processing</div>
               </div>
             </div>
           </div>

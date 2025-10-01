@@ -33,7 +33,7 @@ const DescriptionCard = ({ nodeData, onClose }) => {
       <div
         style={{
           position: 'relative',
-          background: 'white',
+          background: 'var(--card-background-color)',
           borderRadius: '8px',
           padding: '2rem',
           width: '90%',
@@ -53,14 +53,14 @@ const DescriptionCard = ({ nodeData, onClose }) => {
             cursor: 'pointer',
           }}
         >
-          <X className="text-gray-500 hover:text-gray-800" />
+          <X className="text-text-secondary hover:text-text-primary" />
         </button>
 
         {/* Card Content */}
-        <h3 style={{ marginTop: 0, marginBottom: '1rem', fontSize: '1.5rem' }}>
+        <h3 style={{ marginTop: 0, marginBottom: '1rem', fontSize: '1.5rem', color: 'var(--text-color)' }}>
           {nodeData.label}
         </h3>
-        <p style={{ whiteSpace: 'pre-wrap', color: '#333' }}>
+        <p style={{ whiteSpace: 'pre-wrap', color: 'var(--text-color-light)' }}>
           {nodeData.description || 'No description available.'}
         </p>
       </div>

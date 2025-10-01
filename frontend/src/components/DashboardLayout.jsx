@@ -26,7 +26,7 @@ function DashboardLayout({user, loading, user_role, fetchUserRole}) {
 
   return (
     <div className="flex flex-col min-h-screen ">
-      <div className="fixed top-0 left-0 right-0 z-50 transition-all duration-300">
+      <div className="fixed top-0 left-0 right-0 z-50 transition-all ">
         <DashboardHeader setSwitch={setSwitch} setActiveItem={setActiveItem} user={user} logout={logout}/>
       </div>
       <div className='flex flex-1 pt-16'>
@@ -39,7 +39,7 @@ function DashboardLayout({user, loading, user_role, fetchUserRole}) {
             onToggle={() => setIsSidebarOpen(!isSidebarOpen)}
           />
         </div>
-        <div className={`flex-1 transition-all duration-300 ${isSidebarOpen ? 'ml-48' : 'ml-16'}`}>
+        <div className={`flex-1 transition-all  ${isSidebarOpen ? 'ml-48' : 'ml-16'}`}>
           {activeItem === 0 ? (
             (CanAccess === true ? 
               (

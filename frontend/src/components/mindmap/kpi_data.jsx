@@ -7,7 +7,7 @@ export const initialNodes = [
             type: 'group',
         },
         position: { x: 0, y: -480 },
-        style: { width: 2500, height: 430, backgroundColor: 'rgba(0, 255, 0, 0.1)' },
+        style: { width: 2500, height: 430, backgroundColor: 'rgba(0, 255, 0, 0.2)' },
         draggable: false
     },
     {

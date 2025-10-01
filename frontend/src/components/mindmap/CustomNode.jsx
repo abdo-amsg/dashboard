@@ -11,10 +11,10 @@ const CustomNode = ({ data, isConnectable, targetPosition = Position.Top, source
       borderRadius: '8px',
       maxWidth: '200px',
       fontSize: '12px',
-      color: '#1a1a1a',
+      color: 'var(--text-color)',
       textAlign: 'center',
-      boxShadow: '0 2px 5px rgba(0,0,0,0.1)',
-      background: 'white',
+      boxShadow: '0 2px 5px var(--text-color-light)',
+      background: 'var(--card-background-color)',
       border: '2px solid transparent',
       transition: 'all 0.2s ease'
     };
@@ -27,8 +27,8 @@ const CustomNode = ({ data, isConnectable, targetPosition = Position.Top, source
   const getHandleStyle = (position) => ({
     width: '8px',
     height: '8px',
-    backgroundColor: '#9CA3AF',
-    border: '2px solid white',
+    backgroundColor: 'var(--brand-color)',
+    border: '2px solid var(--background-color)',
     borderRadius: '50%'
   });
 
@@ -60,7 +60,7 @@ const CustomNode = ({ data, isConnectable, targetPosition = Position.Top, source
         isConnectable={isConnectable}
         style={getHandleStyle(targetPosition)}
       />
-      <Info className="absolute top-0 left-1 text-gray-400 hover:text-gray-600 cursor-pointer w-4" onClick={handleInfoClick} />
+      <Info className="absolute top-0 left-1 text-brand-light hover:text-brand cursor-pointer w-4" onClick={handleInfoClick} />
       {/* Node Content */}
       <div style={{ position: 'relative', zIndex: 1 }}>
         <span style={{ fontWeight: data.type === 'main' ? '600' : '400' }}>

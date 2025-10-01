@@ -6,11 +6,11 @@ import DashboardLayout from './components/DashboardLayout';
 import { AuthProvider } from './contexts/AuthContext';
 import { Signup } from './components/auth/Signup';
 import { Login } from './components/auth/Login';
-import './App.css';
-import { useEffect, useContext } from 'react';
+import { useEffect } from 'react';
 import { useAuth } from './contexts/AuthContext';
 import { useNavigate } from 'react-router-dom';
-import { ThemeContextProvider, ThemeContext } from './contexts/ThemeContext';
+import { ThemeContextProvider } from './contexts/ThemeContext';
+import HomePage from './pages/HomePage';
 
 function AppContent() {
   const { user, loading, user_role, fetchUserRole } = useAuth();
@@ -19,6 +19,7 @@ function AppContent() {
     <Router>
       <ToastContainer position="bottom-right" />
       <Routes>
+        <Route path="/" element={<HomePage />} />
         <Route path="/login" element={<LoginRedirect user={user} loading={loading} />} />
         <Route path="/signup" element={<Signup />} />
         <Route path="/verify-email" element={<VerifyEmailNotice />} />
@@ -30,7 +31,7 @@ function AppContent() {
             </PrivateRoute>
           }
         />
-        <Route path="/*" element={<Navigate to="/login" replace />} />
+        <Route path="/*" element={<Navigate to="/" replace />} />
       </Routes>
     </Router>
   );

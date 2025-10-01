@@ -13,7 +13,9 @@ export default {
         'text-primary': 'var(--text-color)',
         'text-secondary': 'var(--text-color-light)',
         'background': 'var(--background-color)',
+        'main-background': 'var(--main-background)',
         'border': 'var(--border-color)',
+        'border-light': 'var(--border-light)',
         'hover': 'var(--hover-color)',
         'button': 'var(--button-color)',
         'button-light': 'var(--button-color-light)',
@@ -30,6 +32,8 @@ export default {
         'danger': 'var(--danger-color)',
         'danger-light': 'var(--danger-color-light)',
         'highlight': 'var(--highlight-background)',
+        'status-bg': 'var(--status-background)',
+        'bg1': 'var(--stat-card-background1)',
       }
     },
   },

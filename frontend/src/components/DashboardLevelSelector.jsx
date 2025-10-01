@@ -120,7 +120,7 @@ const DashboardLevelSelector = () => {
                 return (
                   <div
                     key={level.id}
-                    className={`relative bg-white rounded-2xl p-8 border border-gray-200 shadow-xl hover:shadow-2xl transition-all duration-500 transform hover:scale-105 group cursor-pointer ${level.comingSoon ? 'opacity-75' : ''
+                    className={`relative bg-white rounded-2xl p-8 border border-gray-200 shadow-xl hover:shadow-2xl transition-all  transform hover:scale-105 group cursor-pointer ${level.comingSoon ? 'opacity-75' : ''
                       }`}
                     onClick={() => !level.comingSoon && setSelectedLevel(level.id)}
                   >
@@ -132,11 +132,11 @@ const DashboardLevelSelector = () => {
                     )}
 
                     {/* Background gradient effect */}
-                    <div className={`absolute inset-0 bg-gradient-to-br ${level.color} opacity-0 group-hover:opacity-5 transition-opacity duration-300 rounded-2xl`}></div>
+                    <div className={`absolute inset-0 bg-gradient-to-br ${level.color} opacity-0 group-hover:opacity-5 transition-opacity  rounded-2xl`}></div>
 
                     <div className="relative z-10">
                       {/* Icon */}
-                      <div className={`p-4 bg-gradient-to-br ${level.color} rounded-2xl shadow-lg mb-6 inline-block group-hover:scale-110 transition-transform duration-300`}>
+                      <div className={`p-4 bg-gradient-to-br ${level.color} rounded-2xl shadow-lg mb-6 inline-block group-hover:scale-110 transition-transform `}>
                         <IconComponent size={40} className="text-white" />
                       </div>
 
@@ -170,7 +170,7 @@ const DashboardLevelSelector = () => {
 
                       {/* Action Button */}
                       <button
-                        className={`w-full py-4 px-6 bg-gradient-to-r ${level.color} text-white font-semibold rounded-xl hover:shadow-lg transition-all duration-300 transform group-hover:scale-105 flex items-center justify-center ${level.comingSoon ? 'cursor-not-allowed opacity-50' : 'hover:shadow-xl'
+                        className={`w-full py-4 px-6 bg-gradient-to-r ${level.color} text-white font-semibold rounded-xl hover:shadow-lg transition-all  transform group-hover:scale-105 flex items-center justify-center ${level.comingSoon ? 'cursor-not-allowed opacity-50' : 'hover:shadow-xl'
                           }`}
                         disabled={level.comingSoon}
                       >

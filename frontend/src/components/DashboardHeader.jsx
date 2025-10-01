@@ -28,7 +28,7 @@ function DashboardHeader({ setSwitch, setActiveItem, user, logout }) {
 
   return (
     <>
-      <header className="bg-background text-text-primary px-6 py-3 border-b border-border shadow-sm transition-all duration-300">
+      <header className="bg-background text-text-primary px-6 py-3 border-b border-border shadow-sm transition-all ">
         <div className="flex items-center justify-between">
           {/* Logo Section */}
           <div className="flex items-center space-x-3">
@@ -111,7 +111,7 @@ function DashboardHeader({ setSwitch, setActiveItem, user, logout }) {
                 />
                 <div className="text-left">
                   <p className="text-sm font-medium text-text-primary">
-                    {user.email}
+                    {user.username}
                   </p>
                   <p className="text-xs text-text-secondary">
                     {user.is_superuser ? 'Admin' : 'User'}
@@ -134,7 +134,7 @@ function DashboardHeader({ setSwitch, setActiveItem, user, logout }) {
                   <a
                     onClick={(e) => {
                       e.preventDefault();
-                      logout();
+                      setActiveItem(1);
                       setIsDropdownOpen(false);
                     }}
                     className="block px-4 py-2 text-sm text-text-primary hover:bg-hover cursor-pointer transition-colors"

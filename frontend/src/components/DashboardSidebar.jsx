@@ -1,4 +1,4 @@
-import { Map, Language, FolderOutlined, SettingsOutlined, AutoAwesomeMosaicOutlined, ChevronLeft, ChevronRight } from '@mui/icons-material';
+import { Map, Language, FolderOutlined, SettingsOutlined, AutoAwesomeMosaicOutlined, ChevronLeft, ChevronRight, ShieldOutlined } from '@mui/icons-material';
 
 // Accepts activeItem (string or number) and onSelect (function) as props
 function DashboardSidebar({ activeItem, onSelect, is_superuser, isOpen, onToggle }) {
@@ -31,7 +31,7 @@ function DashboardSidebar({ activeItem, onSelect, is_superuser, isOpen, onToggle
     {
       id: 6,
       label: 'INWI Security',
-      icon: Shield
+      icon: ShieldOutlined
     }
   ];
 
@@ -41,7 +41,7 @@ function DashboardSidebar({ activeItem, onSelect, is_superuser, isOpen, onToggle
 
   return (
     // The parent div is relative to position the absolute button inside it
-    <div className={`relative bg-bg-background border-r border-border transition-all duration-300 ${!isOpen ? 'w-16' : 'w-48'} h-full flex flex-col`}>
+    <div className={`relative bg-bg-background border-r border-border transition-all  ${!isOpen ? 'w-16' : 'w-48'} h-full flex flex-col`}>
       {/* Navigation Items - takes up remaining space */}
       <div className="flex-grow py-4">
         {menuItems.map((item) => {

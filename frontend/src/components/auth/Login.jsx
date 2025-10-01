@@ -4,15 +4,7 @@ import { useAuth } from '../../contexts/AuthContext';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
 import { toast } from 'react-toastify';
-import {
-  Box,
-  Button,
-  TextField,
-  Typography,
-  Container,
-  Paper,
-  Link,
-} from '@mui/material';
+import AuthLayout from './AuthLayout';
 
 const loginSchema = z.object({
   email: z.string().email('Invalid email address'),
@@ -51,74 +43,68 @@ export const Login = () => {
   };
 
   return (
-    <Container component="main" maxWidth="xs">
-      <Box
-        sx={{
-          marginTop: 8,
-          display: 'flex',
-          flexDirection: 'column',
-          alignItems: 'center',
-        }}
-      >
-        <Paper
-          elevation={3}
-          sx={{
-            padding: 4,
-            display: 'flex',
-            flexDirection: 'column',
-            alignItems: 'center',
-            width: '100%',
-          }}
-        >
-          <Typography component="h1" variant="h5">
-            Sign in
-          </Typography>
-          <Box
-            component="form"
-            onSubmit={handleSubmit(onSubmit)}
-            sx={{ mt: 1, width: '100%' }}
+    <AuthLayout
+      title="Sign in"
+      linkTo="/signup"
+      linkText="Sign Up"
+      promptText="Don't have an account?"
+    >
+      <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
+        <div>
+          <label
+            htmlFor="email"
+            className="block text-sm font-medium text-text-secondary"
           >
-            <TextField
-              margin="normal"
-              required
-              fullWidth
-              id="email"
-              label="Email Address"
-              autoComplete="email"
-              autoFocus
-              {...register('email')}
-              error={!!errors.email}
-              helperText={errors.email?.message}
-            />
-            <TextField
-              margin="normal"
-              required
-              fullWidth
-              label="Password"
-              type="password"
-              id="password"
-              autoComplete="current-password"
-              {...register('password')}
-              error={!!errors.password}
-              helperText={errors.password?.message}
-            />
-            <Button
-              type="submit"
-              fullWidth
-              variant="contained"
-              sx={{ mt: 3, mb: 2 }}
-              disabled={isSubmitting}
-            >
-              Sign In
-            </Button>
-            <Box sx={{ textAlign: 'center' }}>
-              <Link href="/signup" variant="body2">
-                {"Don't have an account? Sign Up"}
-              </Link>
-            </Box>
-          </Box>
-        </Paper>
-      </Box>
-    </Container>
+            Email Address
+          </label>
+          <input
+            id="email"
+            type="email"
+            autoComplete="email"
+            autoFocus
+            {...register('email')}
+            className={`mt-1 block w-full px-3 py-2 bg-input-background border border-input-border rounded-md text-sm shadow-sm placeholder-slate-400
+              focus:outline-none focus:border-brand focus:ring-1 focus:ring-brand
+              ${errors.email ? 'border-danger' : ''}`}
+          />
+          {errors.email && (
+            <p className="mt-2 text-sm text-danger">{errors.email.message}</p>
+          )}
+        </div>
+
+        <div>
+          <label
+            htmlFor="password"
+            className="block text-sm font-medium text-text-secondary"
+          >
+            Password
+          </label>
+          <input
+            id="password"
+            type="password"
+            autoComplete="current-password"
+            {...register('password')}
+            className={`mt-1 block w-full px-3 py-2 bg-input-background border border-input-border rounded-md text-sm shadow-sm placeholder-slate-400
+            focus:outline-none focus:border-brand focus:ring-1 focus:ring-brand
+            ${errors.password ? 'border-danger' : ''}`}
+          />
+          {errors.password && (
+            <p className="mt-2 text-sm text-danger">
+              {errors.password.message}
+            </p>
+          )}
+        </div>
+
+        <div>
+          <button
+            type="submit"
+            disabled={isSubmitting}
+            className="w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-button-text bg-button hover:bg-button-light focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-brand-dark disabled:opacity-50"
+          >
+            {isSubmitting ? 'Signing In...' : 'Sign In'}
+          </button>
+        </div>
+      </form>
+    </AuthLayout>
   );
 };
