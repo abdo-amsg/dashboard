@@ -20,7 +20,7 @@ jobs:
         run: pip install semgrep
       - name: Run Semgrep Scan (exclude venv)
         run: |
-          semgrep --config=auto --exclude-dir=venv --output=semgrep-results.json
+          semgrep --config=auto --exclude=venv --output=semgrep-results.json
       - name: Upload Semgrep Results
         if: always()
         uses: actions/upload-artifact@v4
