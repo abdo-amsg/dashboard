@@ -67,7 +67,7 @@ function DashboardSidebar({ activeItem, onSelect, is_superuser, isOpen, onToggle
       </div>
 
       {/* Collapse/Expand Button - positioned at the bottom */}
-      <div className="p-4 border-t border-border">
+      <div className="p-1 border-t border-border">
         <button
           onClick={onToggle} // Directly use onToggle
           className="w-full flex items-center justify-center p-2 rounded-lg text-text-primary hover:bg-hover transition-colors"
