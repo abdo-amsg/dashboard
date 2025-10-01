@@ -6,6 +6,7 @@ matplotlib.use('Agg')  # Use non-interactive backend
 import matplotlib.pyplot as plt
 import matplotlib.patches as patches
 from matplotlib.backends.backend_pdf import PdfPages
+from werkzeug.utils import secure_filename
 import seaborn as sns
 import pandas as pd
 import numpy as np
@@ -410,8 +411,8 @@ class DashboardExporter:
         """Export dashboard analysis to PNG (summary view)"""
         if not filename:
             timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
-            filename = f"dashboard_soc_{report_type}_{timestamp}.png"
-        
+            safe_report_type = secure_filename(report_type)
+            filename = f"dashboard_soc_{safe_report_type}_{timestamp}.png"
         # Create temporary file
         temp_dir = tempfile.gettempdir()
         png_path = os.path.join(temp_dir, filename)
