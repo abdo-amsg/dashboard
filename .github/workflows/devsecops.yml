@@ -6,6 +6,10 @@ on:
   pull_request:
     branches: [ master ]
 
+permissions:
+  contents: read
+  security-events: write
+  
 jobs:
   build-and-scan-backend:
     runs-on: ubuntu-latest
@@ -141,6 +145,7 @@ jobs:
         uses: github/codeql-action/analyze@v3
 
   dependency-review:
+    if: github.event_name == 'pull_request' || github.event_name == 'pull_request_target' || github.event_name == 'merge_group'
     runs-on: ubuntu-latest
     steps:
       - name: 'Checkout Repository'
@@ -148,7 +153,5 @@ jobs:
       - name: 'Dependency Review'
         uses: actions/dependency-review-action@v4
         with:
-          # Check for vulnerabilities in dependencies
           fail-on-severity: high
-          # Allow dependencies from GitHub-owned repositories
           allow-licenses: MIT, Apache-2.0, GPL-3.0
