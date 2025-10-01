@@ -358,7 +358,8 @@ class DashboardExporter:
         """Export dashboard analysis to PDF"""
         if not filename:
             timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
-            filename = f"rapport_soc_{report_type}_{timestamp}.pdf"
+            safe_report_type = secure_filename(report_type)
+            filename = f"dashboard_soc_{safe_report_type}_{timestamp}.png"
         
         # Create temporary file
         temp_dir = tempfile.gettempdir()

@@ -322,7 +322,7 @@ class KasperskyAVParser:
         if struct_match:
             struct_data = struct_match.group(1)
             # Extract key="value" pairs with proper handling of complex JSON
-            kv_pattern = r'(\w+)="([^"]*(?:\\.[^"]*)*)"'
+            kv_pattern = r'(\w+)="((?:[^"\\]|\\.)*)"'
             for key, value in re.findall(kv_pattern, struct_data):
                 # Handle escaped characters
                 value = value.replace('\\"', '"').replace('\\\\', '\\')
