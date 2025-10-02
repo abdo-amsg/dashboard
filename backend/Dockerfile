@@ -12,6 +12,10 @@ RUN apt-get update && apt-get install -y \
 COPY requirements.txt .
 RUN pip wheel --no-cache-dir --no-deps --wheel-dir /app/wheels -r requirements.txt
 
+# Ensure PyJWT is installed in the builder stage
+RUN pip install --no-cache-dir --upgrade \
+    PyJWT>=2.4.0
+
 # Runtime stage
 FROM python:3.11-slim
 
@@ -47,5 +51,4 @@ HEALTHCHECK --interval=30s --timeout=30s --start-period=60s --retries=3 \
 
 EXPOSE 8000
 
-# ✅ FIXED: Remove --reload to prevent memory issues in containers
 CMD ["uvicorn", "app.main:app", "--host", "0.0.0.0", "--port", "8000"]
