@@ -1,12 +1,13 @@
 # Core dependencies
-fastapi==0.104.1
-uvicorn==0.24.0
+fastapi>=0.115.0
+starlette>=0.40.0
+uvicorn[standard]>=0.32.0
 pydantic==2.5.0
 pydantic_settings==2.1.0
 httpx==0.25.2
 
 # For logging and utilities
-python-multipart==0.0.6
+python-multipart>=0.0.18
 
 # For datetime handling
 python-dateutil==2.8.2
