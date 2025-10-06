@@ -1,5 +1,5 @@
 // ComexDashboard.jsx
-import React, { useState, useRef, useEffect, useCallback } from 'react';
+import React, { useState, useRef, useCallback } from 'react';
 import {
   Upload, ArrowLeft, BarChart3, PieChart as PieChartIcon, CheckCircle, XCircle, AlertCircle, Info,
   TrendingUp, Shield, Activity, Eye, Zap, Users, Server, Target, RefreshCw, Clock, Settings,
@@ -16,11 +16,11 @@ const ComexDashboard = ({returnToSelector}) => {
   const [analysisResult, setAnalysisResult] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
   const [notifications, setNotifications] = useState([]);
-  const [isRefreshing, setIsRefreshing] = useState(false);
-  const [refreshingChart, setRefreshingChart] = useState(null);
   const [lastUpdated, setLastUpdated] = useState(new Date());
   const [dragActive, setDragActive] = useState(false);
   const [fileValidation, setFileValidation] = useState({ isValid: null, message: '' });
+  const [isRefreshing, setIsRefreshing] = useState(false);
+  const [refreshingChart, setRefreshingChart] = useState(null);
   const fileRef = useRef();
 
   // Enhanced color palette for COMEX level (executive/strategic)
@@ -51,20 +51,7 @@ const ComexDashboard = ({returnToSelector}) => {
     ]
   };
 
-  // Auto-refresh functionality (moins fréquent pour niveau COMEX)
-  useEffect(() => {
-    let interval;
-    if (analysisResult && !isLoading) {
-      interval = setInterval(() => {
-        setLastUpdated(new Date());
-        // Pas de re-fetch automatique pour éviter les clignotements
-      }, 300000); // Update timestamp every 5 minutes for COMEX level
-    }
-
-    return () => {
-      if (interval) clearInterval(interval);
-    };
-  }, [analysisResult, isLoading]);
+  // Removed auto-refresh functionality to prevent chart flickering
 
   // Notification system
   const addNotification = (type, message, duration = 5000) => {
@@ -131,17 +118,18 @@ const ComexDashboard = ({returnToSelector}) => {
     { value: 'strategic_alignment', label: 'Alignement Stratégique' }
   ];
 
-  const validateFile = (f) => {
-    if (!f) return false;
-    if (!f.name.endsWith('.csv')) return false;
-    if (f.size > 10 * 1024 * 1024) return false;
-    return true;
-  };
+
 
   const handleFileSelect = (e) => {
     const f = e.target.files[0];
-    if (validateFile(f)) setFile(f);
-    else addNotification('error', 'Fichier invalide (CSV <10MB requis)', 4000);
+    if (f) {
+      setFile(f);
+      if (validateFileAdvanced(f)) {
+        addNotification('success', `Fichier "${f.name}" sélectionné avec succès`);
+      } else {
+        addNotification('error', 'Fichier invalide (CSV <10MB requis)', 4000);
+      }
+    }
   };
 
   const adaptBackendData = (backendData, reportType) => {
@@ -296,9 +284,8 @@ const ComexDashboard = ({returnToSelector}) => {
 
     if (e.dataTransfer.files && e.dataTransfer.files[0]) {
       const droppedFile = e.dataTransfer.files[0];
-      if (validateFile(droppedFile)) {
-        setFile(droppedFile);
-        setFileValidation({ isValid: true, message: 'Fichier valide et prêt pour l\'analyse' });
+      setFile(droppedFile);
+      if (validateFileAdvanced(droppedFile)) {
         addNotification('success', `Fichier "${droppedFile.name}" ajouté avec succès`);
       } else {
         addNotification('error', 'Fichier non valide. Veuillez sélectionner un fichier CSV.');
@@ -346,11 +333,13 @@ const ComexDashboard = ({returnToSelector}) => {
     else setIsRefreshing(true);
 
     setLastUpdated(new Date());
+    addNotification('info', 'Actualisation des données...', 2000);
 
     setTimeout(() => {
       setIsRefreshing(false);
       setRefreshingChart(null);
-    }, 1500);
+      addNotification('success', 'Données actualisées avec succès !', 3000);
+    }, 2000);
   };
 
   // Enhanced KPI rendering with executive styling
@@ -485,14 +474,7 @@ const ComexDashboard = ({returnToSelector}) => {
             <p className="text-blue-600 text-sm font-semibold">Analyse Stratégique COMEX</p>
           </div>
           <div className="flex items-center space-x-3">
-            <button
-              onClick={() => handleRefresh(title)}
-              disabled={refreshingChart === title}
-              className="p-3 text-gray-400 hover:text-blue-600 hover:bg-blue-50 rounded-xl transition-all duration-300 hover:scale-110"
-            >
-              <RefreshCw size={18} className={refreshingChart === title ? 'animate-spin' : ''} />
-            </button>
-            <div className="p-2 rounded-lg bg-blue-500/10">
+            <div className="p-2 rounded-lg bg-blue-500/10" title="Informations sur le graphique">
               <Info size={16} className="text-blue-600" />
             </div>
           </div>
@@ -543,8 +525,19 @@ const ComexDashboard = ({returnToSelector}) => {
                   ))}
                 </Pie>
                 <Tooltip 
-                  formatter={(value, name, props) => [`${value} (${((value / chartData.reduce((sum, item) => sum + item.value, 0)) * 100).toFixed(1)}%)`, props.payload.fullName]}
-                  contentStyle={enhancedTooltipStyle}
+                  formatter={(value, name, props) => {
+                    const total = chartData.reduce((sum, item) => sum + item.value, 0);
+                    const percentage = ((value / total) * 100).toFixed(1);
+                    return [`${value} (${percentage}%)`, props.payload.fullName || name];
+                  }}
+                  labelFormatter={(label) => `Catégorie: ${label}`}
+                  contentStyle={{
+                    ...enhancedTooltipStyle,
+                    padding: '12px 16px',
+                    lineHeight: '1.5',
+                    border: '1px solid #dbeafe'
+                  }}
+                  cursor={{ fill: 'rgba(30, 64, 175, 0.1)' }}
                 />
                 <Legend 
                   wrapperStyle={{ fontSize: '12px', fontWeight: '600', marginTop: '20px' }}
@@ -582,8 +575,18 @@ const ComexDashboard = ({returnToSelector}) => {
                   tickFormatter={(value) => value >= 1000 ? `${(value / 1000).toFixed(1)}k` : value}
                 />
                 <Tooltip 
-                  formatter={(value, name, props) => [value, props.payload.fullName]}
-                  contentStyle={enhancedTooltipStyle}
+                  formatter={(value, name, props) => {
+                    const formattedValue = value >= 1000 ? `${(value / 1000).toFixed(1)}k` : value;
+                    return [formattedValue, props.payload.fullName || name];
+                  }}
+                  labelFormatter={(label) => `Élément: ${label}`}
+                  contentStyle={{
+                    ...enhancedTooltipStyle,
+                    padding: '12px 16px',
+                    lineHeight: '1.5',
+                    border: '1px solid #dbeafe'
+                  }}
+                  cursor={{ fill: 'rgba(30, 64, 175, 0.1)' }}
                 />
                 <Bar
                   dataKey="value"
@@ -758,7 +761,7 @@ const ComexDashboard = ({returnToSelector}) => {
                 {file && (
                   <div className="mb-3">
                     <p className="text-sm text-gray-600 mb-1">
-                      Taille: {(file.size / 1024 / 1024).toFixed(2)} MB
+                      Taille: {file.size ? (file.size / 1024 / 1024).toFixed(2) : '0.00'} MB
                     </p>
                     {fileValidation.message && (
                       <p className={`text-sm font-medium ${fileValidation.isValid ? 'text-green-600' : 'text-red-600'}`}>

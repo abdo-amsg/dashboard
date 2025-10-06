@@ -1,11 +1,16 @@
 import React, { useState } from 'react';
-import { Shield, TrendingUp, Users, Settings, ChevronRight, BarChart3, Eye, Brain } from 'lucide-react';
+import { Shield, TrendingUp, Users, Settings, ChevronRight, BarChart3, Eye, Brain, Sparkles, Zap, Target } from 'lucide-react';
 import SOCAnalyzerDashboard from './inwi';
 import CISODashboard from './CISODashboard';
 import COMEXDashboard from './COMEXDashboard';
+import AuthWrapper from './AuthWrapper';
 
 const DashboardLevelSelector = () => {
   const [selectedLevel, setSelectedLevel] = useState(null);
+  const [hoveredCard, setHoveredCard] = useState(null);
+  const [animationPhase, setAnimationPhase] = useState(0);
+
+  // Animation removed to prevent chart flickering
 
   const dashboardLevels = [
     {
@@ -15,6 +20,8 @@ const DashboardLevelSelector = () => {
       description: 'Dashboard pour les analystes SOC avec métriques opérationnelles en temps réel',
       icon: Shield,
       color: 'from-blue-500 to-blue-700',
+      accentColor: 'blue',
+      bgPattern: 'radial-gradient(circle at 20% 80%, rgba(59, 130, 246, 0.3) 0%, transparent 50%)',
       features: [
         'Alertes temps réel',
         'Traitement d\'événements',
@@ -33,6 +40,8 @@ const DashboardLevelSelector = () => {
       description: 'Dashboard exécutif pour les responsables sécurité avec KPIs stratégiques',
       icon: TrendingUp,
       color: 'from-purple-500 to-purple-700',
+      accentColor: 'purple',
+      bgPattern: 'radial-gradient(circle at 80% 20%, rgba(147, 51, 234, 0.3) 0%, transparent 50%)',
       features: [
         'Rapport d\'incidents',
         'Gestion des vulnérabilités',
@@ -51,6 +60,8 @@ const DashboardLevelSelector = () => {
       description: 'Dashboard stratégique pour la direction avec indicateurs business et KPIs COMEX',
       icon: Users,
       color: 'from-green-500 to-green-700',
+      accentColor: 'green',
+      bgPattern: 'radial-gradient(circle at 50% 50%, rgba(34, 197, 94, 0.3) 0%, transparent 50%)',
       features: [
         'Posture de Risque Cyber',
         'Impact Financier',
@@ -69,11 +80,19 @@ const DashboardLevelSelector = () => {
   };
 
   if (selectedLevel === 1) {
-    return <SOCAnalyzerDashboard returnToSelector={returnToSelector} />;
+    return (
+      <AuthWrapper>
+        <SOCAnalyzerDashboard returnToSelector={returnToSelector} />
+      </AuthWrapper>
+    );
   }
 
   if (selectedLevel === 2) {
-    return <CISODashboard returnToSelector={returnToSelector} />;
+    return (
+      <AuthWrapper>
+        <CISODashboard returnToSelector={returnToSelector} />
+      </AuthWrapper>
+    );
   }
 
   if (selectedLevel === 3) {
@@ -82,17 +101,131 @@ const DashboardLevelSelector = () => {
   if (selectedLevel === null) {
 
     return (
-      <div className="min-h-screen bg-gradient-to-br from-slate-50 to-blue-50 relative overflow-hidden">
-        {/* Background pattern */}
+      <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-100 relative overflow-hidden">
+        {/* Enhanced Background pattern */}
         <div
-          className="absolute inset-0 opacity-5"
+          className="absolute inset-0 opacity-10"
           style={{
-            backgroundImage: `radial-gradient(circle at 25% 25%, #1e3a8a 1px, transparent 1px),
-                           radial-gradient(circle at 75% 75%, #3b82f6 1px, transparent 1px)`,
-            backgroundSize: '50px 50px',
-            animation: 'float 20s ease-in-out infinite'
+            backgroundImage: `radial-gradient(circle at 25% 25%, #1e3a8a 2px, transparent 2px),
+                           radial-gradient(circle at 75% 75%, #3b82f6 1px, transparent 1px),
+                           radial-gradient(circle at 50% 10%, #8b5cf6 1px, transparent 1px)`,
+            backgroundSize: '60px 60px, 40px 40px, 80px 80px',
+            animation: 'float 25s ease-in-out infinite'
           }}
         />
+        
+        {/* Enhanced floating geometric shapes */}
+        <div className="absolute inset-0 overflow-hidden pointer-events-none">
+          <div 
+            className="absolute w-64 h-64 bg-gradient-to-br from-blue-400/20 to-purple-400/20 rounded-full blur-3xl"
+            style={{
+              top: '10%',
+              left: '10%',
+              animation: 'float 20s ease-in-out infinite',
+              animationDelay: '0s'
+            }}
+          />
+          <div 
+            className="absolute w-48 h-48 bg-gradient-to-br from-green-400/20 to-blue-400/20 rounded-full blur-3xl"
+            style={{
+              top: '60%',
+              right: '15%',
+              animation: 'float 25s ease-in-out infinite reverse',
+              animationDelay: '5s'
+            }}
+          />
+          <div 
+            className="absolute w-32 h-32 bg-gradient-to-br from-purple-400/20 to-pink-400/20 rounded-full blur-2xl"
+            style={{
+              bottom: '20%',
+              left: '20%',
+              animation: 'float 30s ease-in-out infinite',
+              animationDelay: '10s'
+            }}
+          />
+          
+          {/* Additional floating particles */}
+          <div 
+            className="absolute w-16 h-16 bg-gradient-to-br from-yellow-400/30 to-orange-400/30 rounded-full blur-xl"
+            style={{
+              top: '30%',
+              left: '70%',
+              animation: 'float 18s ease-in-out infinite',
+              animationDelay: '3s'
+            }}
+          />
+          <div 
+            className="absolute w-20 h-20 bg-gradient-to-br from-indigo-400/25 to-cyan-400/25 rounded-full blur-xl"
+            style={{
+              bottom: '40%',
+              right: '60%',
+              animation: 'float 22s ease-in-out infinite reverse',
+              animationDelay: '7s'
+            }}
+          />
+          <div 
+            className="absolute w-12 h-12 bg-gradient-to-br from-rose-400/35 to-pink-400/35 rounded-full blur-lg"
+            style={{
+              top: '80%',
+              left: '40%',
+              animation: 'float 16s ease-in-out infinite',
+              animationDelay: '12s'
+            }}
+          />
+        </div>
+
+        {/* Enhanced CSS animations */}
+        <style jsx>{`
+          @keyframes float {
+            0%, 100% { transform: translateY(0px) rotate(0deg); }
+            25% { transform: translateY(-20px) rotate(1deg); }
+            50% { transform: translateY(-10px) rotate(-1deg); }
+            75% { transform: translateY(-15px) rotate(0.5deg); }
+          }
+          
+          @keyframes cardExpand {
+            0% { transform: scale(1) translateY(0px); }
+            100% { transform: scale(1.1) translateY(-16px); }
+          }
+          
+          @keyframes cardShrink {
+            0% { transform: scale(1) translateY(0px); }
+            100% { transform: scale(0.95) translateY(0px); }
+          }
+          
+          @keyframes glowPulse {
+            0%, 100% { box-shadow: 0 0 20px rgba(59, 130, 246, 0.3); }
+            50% { box-shadow: 0 0 40px rgba(59, 130, 246, 0.6); }
+          }
+          
+          @keyframes shimmer {
+            0% { background-position: -200px 0; }
+            100% { background-position: calc(200px + 100%) 0; }
+          }
+          
+          .shadow-3xl {
+            box-shadow: 0 35px 60px -12px rgba(0, 0, 0, 0.25);
+          }
+          
+          .card-expanded {
+            animation: cardExpand 0.7s ease-out forwards;
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.4);
+          }
+          
+          .card-shrunk {
+            animation: cardShrink 0.7s ease-out forwards;
+          }
+          
+          .shimmer-effect {
+            background: linear-gradient(90deg, transparent 25%, rgba(255,255,255,0.4) 50%, transparent 75%);
+            background-size: 200px 100%;
+            animation: shimmer 2s infinite;
+          }
+          
+          .glow-effect {
+            animation: glowPulse 2s ease-in-out infinite;
+          }
+        `}</style>
 
         <div className="relative p-6" style={{ zIndex: 1 }}>
           {/* Header */}
@@ -120,9 +253,28 @@ const DashboardLevelSelector = () => {
                 return (
                   <div
                     key={level.id}
-                    className={`relative bg-white rounded-2xl p-8 border border-gray-200 shadow-xl hover:shadow-2xl transition-all duration-500 transform hover:scale-105 group cursor-pointer ${level.comingSoon ? 'opacity-75' : ''
-                      }`}
+                    className={`relative bg-white rounded-3xl p-8 border-2 border-gray-100 shadow-2xl hover:shadow-3xl transition-all duration-700 transform group cursor-pointer overflow-hidden ${
+                      level.comingSoon ? 'opacity-75' : ''
+                    } ${
+                      hoveredCard === level.id 
+                        ? 'scale-110 -translate-y-4 z-20 border-opacity-50' 
+                        : hoveredCard !== null 
+                          ? 'scale-95 opacity-75' 
+                          : 'hover:scale-105 hover:-translate-y-2'
+                    }`}
                     onClick={() => !level.comingSoon && setSelectedLevel(level.id)}
+                    onMouseEnter={() => setHoveredCard(level.id)}
+                    onMouseLeave={() => setHoveredCard(null)}
+                    style={{
+                      background: hoveredCard === level.id 
+                        ? `linear-gradient(135deg, rgba(255,255,255,0.95) 0%, rgba(255,255,255,0.8) 100%), ${level.bgPattern}`
+                        : 'white',
+                      borderColor: hoveredCard === level.id 
+                        ? level.accentColor === 'blue' ? '#3b82f6' 
+                        : level.accentColor === 'purple' ? '#8b5cf6' 
+                        : '#10b981'
+                        : '#f3f4f6'
+                    }}
                   >
                     {/* Coming Soon Badge */}
                     {level.comingSoon && (
@@ -131,13 +283,43 @@ const DashboardLevelSelector = () => {
                       </div>
                     )}
 
-                    {/* Background gradient effect */}
-                    <div className={`absolute inset-0 bg-gradient-to-br ${level.color} opacity-0 group-hover:opacity-5 transition-opacity duration-300 rounded-2xl`}></div>
+                    {/* Animated background elements */}
+                    <div className="absolute inset-0 overflow-hidden rounded-3xl">
+                      <div 
+                        className={`absolute w-32 h-32 bg-gradient-to-br ${level.color} opacity-10 rounded-full blur-xl transition-all duration-1000`}
+                        style={{
+                          transform: hoveredCard === level.id 
+                            ? `translate(30px, 15px) scale(1.2)`
+                            : `translate(20px, 10px) scale(1)`,
+                          animation: hoveredCard === level.id ? 'float 3s ease-in-out infinite' : 'none'
+                        }}
+                      />
+                      <div 
+                        className={`absolute w-24 h-24 bg-gradient-to-br ${level.color} opacity-5 rounded-full blur-lg transition-all duration-1000`}
+                        style={{
+                          right: '20px',
+                          bottom: '20px',
+                          transform: hoveredCard === level.id 
+                            ? `translate(-15px, -8px) scale(1.3)`
+                            : 'translate(-10px, -5px) scale(1)',
+                          animation: hoveredCard === level.id ? 'float 3s ease-in-out infinite reverse' : 'none'
+                        }}
+                      />
+                    </div>
 
                     <div className="relative z-10">
-                      {/* Icon */}
-                      <div className={`p-4 bg-gradient-to-br ${level.color} rounded-2xl shadow-lg mb-6 inline-block group-hover:scale-110 transition-transform duration-300`}>
-                        <IconComponent size={40} className="text-white" />
+                      {/* Icon with enhanced animation */}
+                      <div className={`p-5 bg-gradient-to-br ${level.color} rounded-3xl shadow-2xl mb-6 inline-block group-hover:scale-110 group-hover:rotate-3 transition-all duration-500 relative overflow-hidden ${hoveredCard === level.id ? 'glow-effect' : ''}`}>
+                        <div className="absolute inset-0 bg-white opacity-0 group-hover:opacity-20 transition-opacity duration-300"></div>
+                        {hoveredCard === level.id && (
+                          <div className="absolute inset-0 shimmer-effect"></div>
+                        )}
+                        <IconComponent size={44} className="text-white relative z-10" />
+                        {hoveredCard === level.id && (
+                          <div className="absolute top-1 right-1">
+                            <Sparkles size={16} className="text-white animate-pulse" />
+                          </div>
+                        )}
                       </div>
 
                       {/* Title and Subtitle */}
@@ -153,37 +335,64 @@ const DashboardLevelSelector = () => {
                         {level.description}
                       </p>
 
-                      {/* Features */}
-                      <div className="mb-8">
-                        <h4 className="text-sm font-semibold text-gray-700 mb-3 uppercase tracking-wide">
+                      {/* Features with enhanced styling */}
+                      <div className={`mb-8 transition-all duration-500 ${hoveredCard === level.id ? 'transform scale-105' : ''}`}>
+                        <h4 className="text-sm font-semibold text-gray-700 mb-4 uppercase tracking-wide flex items-center">
+                          <Zap size={16} className={`mr-2 text-yellow-500 ${hoveredCard === level.id ? 'animate-pulse' : ''}`} />
                           Fonctionnalités incluses
                         </h4>
-                        <div className="grid grid-cols-2 gap-2">
-                          {level.features.map((feature, index) => (
-                            <div key={index} className="flex items-center text-sm text-gray-600">
-                              <div className="w-2 h-2 bg-blue-500 rounded-full mr-2 flex-shrink-0"></div>
-                              <span className="truncate">{feature}</span>
+                        <div className="grid grid-cols-1 gap-3 max-h-48 overflow-hidden transition-all duration-700">
+                          {level.features.slice(0, hoveredCard === level.id ? level.features.length : 4).map((feature, index) => (
+                            <div 
+                              key={index} 
+                              className={`flex items-center text-sm text-gray-600 p-2 rounded-lg transition-all duration-500 ${
+                                hoveredCard === level.id ? 'bg-gray-50 transform translate-x-2 shadow-sm' : ''
+                              }`}
+                              style={{
+                                transitionDelay: hoveredCard === level.id ? `${index * 80}ms` : '0ms',
+                                opacity: hoveredCard === level.id || index < 4 ? 1 : 0,
+                                transform: hoveredCard === level.id || index < 4 ? 'translateY(0)' : 'translateY(-10px)'
+                              }}
+                            >
+                              <div className={`w-2 h-2 bg-gradient-to-r ${level.color} rounded-full mr-3 flex-shrink-0 transition-all duration-300 ${
+                                hoveredCard === level.id ? 'scale-150 animate-pulse' : ''
+                              }`}></div>
+                              <span className={`font-medium transition-colors duration-300 ${
+                                hoveredCard === level.id ? 'text-gray-800' : ''
+                              }`}>{feature}</span>
                             </div>
                           ))}
+                          {hoveredCard !== level.id && level.features.length > 4 && (
+                            <div className="text-xs text-gray-400 italic pl-5 transition-opacity duration-300">
+                              +{level.features.length - 4} autres fonctionnalités...
+                            </div>
+                          )}
                         </div>
                       </div>
 
-                      {/* Action Button */}
+                      {/* Enhanced Action Button */}
                       <button
-                        className={`w-full py-4 px-6 bg-gradient-to-r ${level.color} text-white font-semibold rounded-xl hover:shadow-lg transition-all duration-300 transform group-hover:scale-105 flex items-center justify-center ${level.comingSoon ? 'cursor-not-allowed opacity-50' : 'hover:shadow-xl'
+                        className={`w-full py-4 px-6 bg-gradient-to-r ${level.color} text-white font-bold rounded-2xl shadow-lg hover:shadow-2xl transition-all duration-500 transform hover:scale-105 flex items-center justify-center relative overflow-hidden group ${level.comingSoon ? 'cursor-not-allowed opacity-50' : ''
                           }`}
                         disabled={level.comingSoon}
                       >
-                        {level.comingSoon ? (
-                          <>
-                            <Settings size={20} className="mr-2" />
-                            En développement
-                          </>
-                        ) : (
-                          <>
-                            Accéder au Dashboard
-                            <ChevronRight size={20} className="ml-2 group-hover:translate-x-1 transition-transform" />
-                          </>
+                        <div className="absolute inset-0 bg-white opacity-0 group-hover:opacity-20 transition-opacity duration-300"></div>
+                        <div className="relative z-10 flex items-center">
+                          {level.comingSoon ? (
+                            <>
+                              <Settings size={20} className="mr-2 animate-spin" />
+                              En développement
+                            </>
+                          ) : (
+                            <>
+                              <Target size={20} className="mr-2" />
+                              Accéder au Dashboard
+                              <ChevronRight size={20} className="ml-2 group-hover:translate-x-2 transition-transform duration-300" />
+                            </>
+                          )}
+                        </div>
+                        {!level.comingSoon && (
+                          <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white to-transparent opacity-0 group-hover:opacity-30 transform -skew-x-12 -translate-x-full group-hover:translate-x-full transition-transform duration-700"></div>
                         )}
                       </button>
                     </div>

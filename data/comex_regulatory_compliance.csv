@@ -1,11 +1,11 @@
 regulation,compliance_score,last_audit_date,next_audit_date,non_conformities,critical_gaps,remediation_status,cost_compliance,risk_level
-GDPR,95,2024-03-15,2024-09-15,2,0,In Progress,450000,Low
-ISO27001,92,2024-02-20,2024-08-20,3,1,Completed,380000,Medium
-SOX,98,2024-01-10,2024-07-10,1,0,Completed,320000,Low
-PCI-DSS,89,2024-04-05,2024-10-05,4,2,In Progress,290000,Medium
-HIPAA,94,2024-03-25,2024-09-25,2,0,Completed,210000,Low
-NIS2,87,2024-05-12,2024-11-12,5,2,Planning,180000,High
-DORA,91,2024-02-28,2024-08-28,3,1,In Progress,350000,Medium
-Cyber Resilience Act,85,2024-06-01,2024-12-01,6,3,Planning,420000,High
-NIST Framework,93,2024-01-30,2024-07-30,2,0,Completed,280000,Low
-Local Banking Regs,96,2024-04-15,2024-10-15,1,0,Completed,190000,Low
+GDPR,95,2025-03-15,2025-09-15,2,0,In Progress,450000,Low
+ISO27001,92,2025-02-20,2025-08-20,3,1,Completed,380000,Medium
+SOX,98,2025-01-10,2025-07-10,1,0,Completed,320000,Low
+PCI-DSS,89,2025-04-05,2025-10-05,4,2,In Progress,290000,Medium
+HIPAA,94,2025-03-25,2025-09-25,2,0,Completed,210000,Low
+NIS2,87,2025-05-12,2025-11-12,5,2,Planning,180000,High
+DORA,91,2025-02-28,2025-08-28,3,1,In Progress,350000,Medium
+Cyber Resilience Act,85,2025-06-01,2025-12-01,6,3,Planning,420000,High
+NIST Framework,93,2025-01-30,2025-07-30,2,0,Completed,280000,Low
+Local Banking Regs,96,2025-04-15,2025-10-15,1,0,Completed,190000,Low

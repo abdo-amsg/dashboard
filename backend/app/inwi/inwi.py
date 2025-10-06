@@ -28,12 +28,12 @@ class SOCAnalyzer:
         }
     
     def analyze_realtime_alerts(self, df: pd.DataFrame) -> Dict[str, Any]:
-        """Analyze real-time alerts data for SOC dashboard"""
+        """Analyze real-time alerts data for SOC dashboard - Enhanced for 3 key KPIs"""
         try:
             df['timestamp'] = pd.to_datetime(df['timestamp'])
             df['minutes_ago'] = pd.to_numeric(df['minutes_ago'], errors='coerce')
             
-            # Current active alerts
+            # Current active alerts by severity
             critical_alerts = len(df[df['severity'] == 'Critical'])
             high_alerts = len(df[df['severity'] == 'High'])
             medium_alerts = len(df[df['severity'] == 'Medium'])
@@ -42,12 +42,64 @@ class SOCAnalyzer:
             # Recent alerts (last 30 minutes)
             recent_alerts = len(df[df['minutes_ago'] <= 30])
             
-            # Alert types distribution
-            alert_types = df['alert_type'].value_counts().head(10).to_dict()
+            # KPI 1: Distribution par Gravité - Enhanced with percentages and colors
+            total_alerts = len(df)
+            severity_distribution = []
+            severity_colors = {
+                'Critical': '#dc2626',  # Rouge foncé
+                'High': '#ea580c',      # Orange foncé
+                'Medium': '#d97706',    # Orange
+                'Low': '#059669'        # Vert
+            }
             
-            # Time-based distribution
+            for severity in ['Critical', 'High', 'Medium', 'Low']:
+                count = len(df[df['severity'] == severity])
+                percentage = (count / total_alerts * 100) if total_alerts > 0 else 0
+                severity_distribution.append({
+                    'name': severity,
+                    'value': count,
+                    'percentage': round(percentage, 1),
+                    'color': severity_colors[severity]
+                })
+            
+            # KPI 2: Types d'Alertes - Top 8 most frequent alert types
+            alert_types_raw = df['alert_type'].value_counts().head(8)
+            alert_types_distribution = []
+            type_colors = ['#1e3a8a', '#1e40af', '#1d4ed8', '#2563eb', '#3b82f6', '#60a5fa', '#93c5fd', '#bfdbfe']
+            
+            for i, (alert_type, count) in enumerate(alert_types_raw.items()):
+                percentage = (count / total_alerts * 100) if total_alerts > 0 else 0
+                alert_types_distribution.append({
+                    'name': alert_type,
+                    'value': count,
+                    'percentage': round(percentage, 1),
+                    'color': type_colors[i % len(type_colors)]
+                })
+            
+            # KPI 3: Distribution Horaire - Enhanced hourly analysis
             df['hour'] = df['timestamp'].dt.hour
-            hourly_distribution = df.groupby('hour').size().to_dict()
+            hourly_data = []
+            
+            # Create complete 24-hour distribution
+            for hour in range(24):
+                count = len(df[df['hour'] == hour])
+                percentage = (count / total_alerts * 100) if total_alerts > 0 else 0
+                
+                # Determine peak hours (higher activity)
+                is_peak = count > (total_alerts / 24 * 1.5) if total_alerts > 0 else False
+                
+                hourly_data.append({
+                    'hour': f"{hour:02d}:00",
+                    'hour_num': hour,
+                    'alerts': count,
+                    'percentage': round(percentage, 1),
+                    'is_peak': is_peak,
+                    'color': '#dc2626' if is_peak else '#3b82f6'
+                })
+            
+            # Calculate additional metrics
+            peak_hours = [h for h in hourly_data if h['is_peak']]
+            avg_hourly = total_alerts / 24 if total_alerts > 0 else 0
             
             return {
                 'kpis': {
@@ -56,20 +108,20 @@ class SOCAnalyzer:
                     'medium_alerts': medium_alerts,
                     'low_alerts': low_alerts,
                     'recent_alerts_30min': recent_alerts,
-                    'total_active_alerts': len(df)
+                    'total_active_alerts': total_alerts,
+                    'peak_hours_count': len(peak_hours),
+                    'avg_hourly_alerts': round(avg_hourly, 1),
+                    'most_common_type': alert_types_raw.index[0] if len(alert_types_raw) > 0 else 'N/A',
+                    'severity_ratio_critical': round((critical_alerts / total_alerts * 100), 1) if total_alerts > 0 else 0
                 },
                 'charts': {
-                    'severity_distribution': {
-                        'Critical': critical_alerts,
-                        'High': high_alerts,
-                        'Medium': medium_alerts,
-                        'Low': low_alerts
-                    },
-                    'alert_types': alert_types,
-                    'hourly_distribution': hourly_distribution
+                    'severity_distribution': severity_distribution,
+                    'alert_types': alert_types_distribution,
+                    'hourly_distribution': hourly_data
                 }
             }
         except Exception as e:
+            logger.error(f"Error analyzing real-time alerts: {str(e)}")
             return {'error': f'Error analyzing real-time alerts: {str(e)}'}
     
     def analyze_event_processing(self, df: pd.DataFrame) -> Dict[str, Any]:

@@ -179,7 +179,7 @@ function DashboardHeader({ setSwitch, setActiveItem, user, logout }) {
         onClose={() => setIsUploadModalOpen(false)}
       />
 
-      <style jsx="true">{`
+      <style jsx>{`
         @keyframes fadeIn {
           from {
             opacity: 0;

@@ -1,13 +1,13 @@
 incident_id,date,severity,category,detection_time_hours,resolution_time_hours,business_impact_eur,affected_systems,root_cause,status
-INC-2024-001,2024-01-15,Critical,Data Breach,2.5,48,850000,CRM Database,Phishing Attack,Closed
-INC-2024-002,2024-01-28,High,System Outage,1.2,12,320000,Email Server,Hardware Failure,Closed
-INC-2024-003,2024-02-10,Medium,Malware,4.0,8,45000,Workstations,USB Drive,Closed
-INC-2024-004,2024-02-25,High,Unauthorized Access,3.5,24,180000,File Server,Weak Password,Closed
-INC-2024-005,2024-03-08,Low,Policy Violation,6.0,4,5000,Email,User Error,Closed
-INC-2024-006,2024-03-22,Critical,Ransomware,1.8,72,1200000,Production Systems,Email Attachment,Closed
-INC-2024-007,2024-04-05,Medium,Data Loss,5.2,16,75000,Backup System,Configuration Error,Closed
-INC-2024-008,2024-04-18,High,DDoS Attack,0.5,6,95000,Web Services,External Attack,Closed
-INC-2024-009,2024-05-02,Low,Spam,8.0,2,2000,Email Gateway,Filter Bypass,Closed
-INC-2024-010,2024-05-15,Medium,Insider Threat,12.0,36,150000,HR Database,Privilege Abuse,Closed
-INC-2024-011,2024-06-01,High,SQL Injection,2.8,18,220000,Web Application,Code Vulnerability,Closed
-INC-2024-012,2024-06-14,Critical,APT Campaign,24.0,96,2100000,Multiple Systems,Spear Phishing,Open
+INC-2024-001,2025-01-15,Critical,Data Breach,2.5,48,850000,CRM Database,Phishing Attack,Closed
+INC-2024-002,2025-01-28,High,System Outage,1.2,12,320000,Email Server,Hardware Failure,Closed
+INC-2024-003,2025-02-10,Medium,Malware,4.0,8,45000,Workstations,USB Drive,Closed
+INC-2024-004,2025-02-25,High,Unauthorized Access,3.5,24,180000,File Server,Weak Password,Closed
+INC-2024-005,2025-03-08,Low,Policy Violation,6.0,4,5000,Email,User Error,Closed
+INC-2024-006,2025-03-22,Critical,Ransomware,1.8,72,1200000,Production Systems,Email Attachment,Closed
+INC-2024-007,2025-04-05,Medium,Data Loss,5.2,16,75000,Backup System,Configuration Error,Closed
+INC-2024-008,2025-04-18,High,DDoS Attack,0.5,6,95000,Web Services,External Attack,Closed
+INC-2024-009,2025-05-02,Low,Spam,8.0,2,2000,Email Gateway,Filter Bypass,Closed
+INC-2024-010,2025-05-15,Medium,Insider Threat,12.0,36,150000,HR Database,Privilege Abuse,Closed
+INC-2024-011,2025-06-01,High,SQL Injection,2.8,18,220000,Web Application,Code Vulnerability,Closed
+INC-2024-012,2025-06-14,Critical,APT Campaign,24.0,96,2100000,Multiple Systems,Spear Phishing,Open

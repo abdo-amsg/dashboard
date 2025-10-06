@@ -1,10 +1,10 @@
 import React, { useState, useRef, useCallback, useEffect } from 'react';
 import { Upload, FileText, TrendingUp, Shield, AlertTriangle, Activity, BarChart3, Eye, Zap, Brain, Users, Server, RefreshCw, Calendar, Filter, Info, Clock, Download, FileImage, CheckCircle, XCircle, AlertCircle, HelpCircle, Settings, ArrowLeft, Target, TrendingDown } from 'lucide-react';
 import { LineChart, Line, AreaChart, Area, BarChart, Bar, PieChart, Pie, Cell, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts';
-import { useAuth } from '../contexts/AuthContext';
 
-const CISODashboard = ({ returnToSelector }) => {
-  const { user, isAuthenticated } = useAuth();
+const CISODashboard = ({ returnToSelector, authData = {} }) => {
+  // Utiliser les données d'auth passées en props
+  const { user = null, isAuthenticated = false } = authData;
   const [selectedReport, setSelectedReport] = useState('');
   const [file, setFile] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
@@ -12,28 +12,16 @@ const CISODashboard = ({ returnToSelector }) => {
   const [dragActive, setDragActive] = useState(false);
   const [timeFilter, setTimeFilter] = useState('30d');
   const [isRefreshing, setIsRefreshing] = useState(false);
-  const [lastUpdated, setLastUpdated] = useState(new Date());
   const [refreshingChart, setRefreshingChart] = useState(null);
+  const [lastUpdated, setLastUpdated] = useState(new Date());
+
   const [isExporting, setIsExporting] = useState(false);
   const [notifications, setNotifications] = useState([]);
   const [uploadProgress, setUploadProgress] = useState(0);
   const [fileValidation, setFileValidation] = useState({ isValid: null, message: '' });
   const fileInputRef = useRef(null);
 
-  // Auto-refresh functionality (corrigé pour éviter les clignotements)
-  useEffect(() => {
-    let interval;
-    if (analysisResult && !isLoading) {
-      interval = setInterval(() => {
-        setLastUpdated(new Date());
-        // Pas de re-fetch automatique pour éviter les clignotements
-      }, 120000); // Update timestamp every 2 minutes for CISO level
-    }
-
-    return () => {
-      if (interval) clearInterval(interval);
-    };
-  }, [analysisResult, isLoading]);
+  // Removed auto-refresh functionality to prevent chart flickering
 
   // Enhanced color palette for CISO level (more professional/executive)
   const colors = {
@@ -405,40 +393,75 @@ const CISODashboard = ({ returnToSelector }) => {
     </div>
   );
 
-  const renderKPICard = (title, value, IconComponent, trend, color = colors.primary, description = '') => (
-    <div className="bg-white rounded-xl p-6 border border-gray-200 hover:border-purple-300 shadow-lg hover:shadow-xl transition-all duration-300 hover:transform hover:scale-105 group relative overflow-hidden">
-      {/* Background gradient effect */}
-      <div className="absolute inset-0 bg-gradient-to-br from-transparent via-purple-50/30 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+  const renderKPICard = (title, value, IconComponent, trend, color = colors.primary, description = '') => {
+    const [showTooltip, setShowTooltip] = useState(false);
+    
+    // CISO KPI descriptions
+    const kpiDescriptions = {
+      'INCIDENTS CRITIQUES': 'Nombre d\'incidents de sécurité de niveau critique nécessitant une réponse immédiate.',
+      'TEMPS MOYEN RÉSOLUTION': 'Délai moyen pour résoudre complètement un incident de sécurité.',
+      'TAUX CONFORMITÉ': 'Pourcentage de conformité aux politiques de sécurité de l\'organisation.',
+      'VULNÉRABILITÉS CRITIQUES': 'Nombre de vulnérabilités critiques identifiées et non corrigées.',
+      'COUVERTURE MITRE': 'Pourcentage de couverture des techniques MITRE ATT&CK par nos contrôles.',
+      'DISPONIBILITÉ SYSTÈMES': 'Pourcentage de disponibilité des systèmes critiques de sécurité.'
+    };
 
-      <div className="relative z-10">
+    const tooltipText = kpiDescriptions[title] || description || 'Métrique de sécurité importante pour la gouvernance CISO.';
+
+    return (
+      <div className="bg-white rounded-lg p-6 border border-gray-200 shadow-sm">
         <div className="flex items-center justify-between mb-4">
-          <div className="p-3 rounded-lg transition-all duration-300 group-hover:scale-110" style={{ backgroundColor: `${color}15` }}>
+          <div className="p-3 rounded-lg" style={{ backgroundColor: `${color}15` }}>
             <IconComponent size={24} style={{ color }} />
           </div>
-          {trend && (
-            <div className={`text-sm font-semibold ${trend > 0 ? 'text-green-600' : 'text-red-600'} flex items-center transition-all duration-300 group-hover:scale-110`}>
-              {trend > 0 ? '+' : ''}{trend}%
-              <TrendingUp size={16} className={`ml-1 ${trend > 0 ? '' : 'rotate-180'}`} />
+          <div className="flex items-center space-x-2">
+            {trend && (
+              <div className={`text-sm font-semibold ${trend > 0 ? 'text-green-600' : 'text-red-600'} flex items-center`}>
+                {trend > 0 ? '+' : ''}{trend}%
+                <TrendingUp size={16} className={`ml-1 ${trend > 0 ? '' : 'rotate-180'}`} />
+              </div>
+            )}
+            
+            {/* Info icon with tooltip */}
+            <div className="relative">
+              <button
+                onMouseEnter={() => setShowTooltip(true)}
+                onMouseLeave={() => setShowTooltip(false)}
+                className="p-1 rounded-full bg-gray-100 hover:bg-purple-100"
+              >
+                <Info size={14} className="text-gray-500" />
+              </button>
+              
+              {/* Simple tooltip */}
+              {showTooltip && (
+                <div className="absolute right-0 top-8 w-64 bg-white border border-gray-200 rounded-lg shadow-lg p-3 z-50">
+                  <div className="text-sm text-gray-700">
+                    {tooltipText}
+                  </div>
+                  {/* Arrow */}
+                  <div className="absolute -top-2 right-4 w-4 h-4 bg-white border-l border-t border-gray-200 transform rotate-45"></div>
+                </div>
+              )}
             </div>
-          )}
+          </div>
         </div>
 
-        <h3 className="text-gray-500 text-sm font-medium mb-1 group-hover:text-gray-600 transition-colors">
+        <h3 className="text-gray-500 text-sm font-medium mb-1">
           {title}
         </h3>
 
-        <div className="text-2xl font-bold text-gray-900 mb-1 group-hover:text-purple-900 transition-colors">
+        <div className="text-2xl font-bold text-gray-900 mb-1">
           {value}
         </div>
 
         {description && (
-          <p className="text-xs text-gray-500 group-hover:text-gray-600 transition-colors leading-relaxed">
+          <p className="text-xs text-gray-500">
             {description}
           </p>
         )}
       </div>
-    </div>
-  );
+    );
+  };
 
   // Get optimal chart type based on data and title
   const getOptimalChartType = (title, reportType) => {
@@ -492,33 +515,71 @@ const CISODashboard = ({ returnToSelector }) => {
       return null;
     }
 
-    // Common chart container and header
-    const ChartContainer = ({ children }) => (
-      <div className="bg-gradient-to-br from-white via-gray-50 to-purple-50 rounded-2xl p-8 border border-gray-200 shadow-xl hover:shadow-2xl transition-all duration-500 hover:transform hover:scale-[1.02] relative overflow-hidden group">
-        <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white to-transparent opacity-0 group-hover:opacity-10 transform -skew-x-12 -translate-x-full group-hover:translate-x-full transition-transform duration-1000"></div>
+    // Simple chart container with tooltips
+    const ChartContainer = ({ children }) => {
+      const [showChartTooltip, setShowChartTooltip] = useState(false);
+      
+      // CISO Chart descriptions for tooltips
+      const chartTooltips = {
+        'INCIDENTS BY CRITICALITY': 'Répartition des incidents de sécurité par niveau de criticité. Permet d\'évaluer la charge de travail et les priorités.',
+        'MONTHLY TRENDS': 'Évolution mensuelle des incidents de sécurité. Aide à identifier les tendances et patterns.',
+        'RESPONSE METRICS': 'Métriques de temps de réponse aux incidents par niveau de gravité.',
+        'VULNERABILITY BY CRITICALITY': 'Distribution des vulnérabilités par niveau de criticité dans l\'infrastructure.',
+        'PATCHING PERFORMANCE': 'Performance du processus de correction des vulnérabilités.',
+        'MONTHLY AVAILABILITY': 'Disponibilité mensuelle des systèmes de sécurité critiques.',
+        'OUTAGES TREND': 'Tendance des pannes et interruptions de service.',
+        'AVAILABILITY VS TARGET': 'Comparaison entre la disponibilité réelle et les objectifs SLA.',
+        'RULE MANAGEMENT TRENDS': 'Évolution de la gestion des règles de sécurité.',
+        'MITRE COVERAGE BY TACTIC': 'Couverture des tactiques MITRE ATT&CK par nos contrôles de sécurité.',
+        'COVERAGE EVOLUTION': 'Évolution de la couverture de sécurité dans le temps.',
+        'IOC BY TYPE': 'Répartition des indicateurs de compromission par type.',
+        'MONTHLY INTELLIGENCE': 'Intelligence de menaces collectée mensuellement.',
+        'TOP THREAT ACTORS': 'Principaux acteurs de menaces identifiés.',
+        'MONTHLY PARTICIPATION': 'Participation mensuelle aux programmes de sensibilisation.',
+        'PHISHING SIMULATION TRENDS': 'Résultats des simulations de phishing dans le temps.',
+        'DEPARTMENT COMPLETION': 'Taux de completion des formations par département.',
+        'EXPOSURE TRENDS': 'Évolution de l\'exposition aux risques de sécurité.',
+        'ASSET EXPOSURE BY TYPE': 'Exposition des actifs par type de risque.'
+      };
 
-        <div className="flex items-center justify-between mb-6 relative z-10">
-          <div>
-            <h3 className="text-gray-900 text-xl font-bold mb-2">{title}</h3>
-            <p className="text-gray-600 text-sm font-medium">Analyse des données CISO</p>
-          </div>
-          <div className="flex items-center space-x-3">
-            <button
-              onClick={() => handleRefresh(title)}
-              disabled={refreshingChart === title}
-              className="p-3 text-gray-400 hover:text-purple-600 hover:bg-purple-50 rounded-xl transition-all duration-300 hover:scale-110"
-            >
-              <RefreshCw size={18} className={refreshingChart === title ? 'animate-spin' : ''} />
-            </button>
-            <div className="p-2 rounded-lg bg-purple-500/10">
-              <Info size={16} className="text-purple-600" />
+      const tooltipText = chartTooltips[title] || 'Analyse des données de sécurité pour la gouvernance CISO.';
+
+      return (
+        <div className="bg-white rounded-lg p-6 border border-gray-200 shadow-sm">
+          <div className="flex items-center justify-between mb-6">
+            <div>
+              <h3 className="text-gray-900 text-xl font-bold mb-2">{title}</h3>
+              <p className="text-gray-600 text-sm">Analyse des données CISO</p>
+            </div>
+            <div className="flex items-center space-x-3">
+              {/* Info icon with tooltip */}
+              <div className="relative">
+                <button
+                  onMouseEnter={() => setShowChartTooltip(true)}
+                  onMouseLeave={() => setShowChartTooltip(false)}
+                  className="p-1 rounded-full bg-gray-100 hover:bg-purple-100"
+                >
+                  <Info size={14} className="text-gray-500" />
+                </button>
+                
+                {/* Chart tooltip */}
+                {showChartTooltip && (
+                  <div className="absolute right-0 top-8 w-72 bg-white border border-gray-200 rounded-lg shadow-lg p-3 z-50">
+                    <div className="text-sm text-gray-700">
+                      {tooltipText}
+                    </div>
+                    {/* Arrow */}
+                    <div className="absolute -top-2 right-4 w-4 h-4 bg-white border-l border-t border-gray-200 transform rotate-45"></div>
+                  </div>
+                )}
+              </div>
             </div>
           </div>
-        </div>
 
-        {children}
-      </div>
-    );
+          {children}
+        </div>
+      );
+    };
 
     // Enhanced tooltip style
     const enhancedTooltipStyle = {
@@ -561,8 +622,19 @@ const CISODashboard = ({ returnToSelector }) => {
                   ))}
                 </Pie>
                 <Tooltip
-                  formatter={(value, name, props) => [`${value} (${((value / chartData.reduce((sum, item) => sum + item.value, 0)) * 100).toFixed(1)}%)`, props.payload.fullName]}
-                  contentStyle={enhancedTooltipStyle}
+                  formatter={(value, name, props) => {
+                    const total = chartData.reduce((sum, item) => sum + item.value, 0);
+                    const percentage = ((value / total) * 100).toFixed(1);
+                    return [`${value} (${percentage}%)`, props.payload.fullName || name];
+                  }}
+                  labelFormatter={(label) => `Catégorie: ${label}`}
+                  contentStyle={{
+                    ...enhancedTooltipStyle,
+                    padding: '12px 16px',
+                    lineHeight: '1.5',
+                    border: '1px solid #d8b4fe'
+                  }}
+                  cursor={{ fill: 'rgba(147, 51, 234, 0.1)' }}
                 />
                 <Legend
                   wrapperStyle={{ fontSize: '12px', fontWeight: '600', marginTop: '10px' }}
@@ -600,8 +672,18 @@ const CISODashboard = ({ returnToSelector }) => {
                   tickFormatter={(value) => value >= 1000 ? `${(value / 1000).toFixed(1)}k` : value}
                 />
                 <Tooltip
-                  formatter={(value, name, props) => [value, props.payload.fullName]}
-                  contentStyle={enhancedTooltipStyle}
+                  formatter={(value, name, props) => {
+                    const formattedValue = value >= 1000 ? `${(value / 1000).toFixed(1)}k` : value;
+                    return [formattedValue, props.payload.fullName || name];
+                  }}
+                  labelFormatter={(label) => `Élément: ${label}`}
+                  contentStyle={{
+                    ...enhancedTooltipStyle,
+                    padding: '12px 16px',
+                    lineHeight: '1.5',
+                    border: '1px solid #d8b4fe'
+                  }}
+                  cursor={{ fill: 'rgba(147, 51, 234, 0.1)' }}
                 />
                 <Bar
                   dataKey="value"
@@ -651,8 +733,18 @@ const CISODashboard = ({ returnToSelector }) => {
                   tickFormatter={(value) => value >= 1000 ? `${(value / 1000).toFixed(1)}k` : value}
                 />
                 <Tooltip
-                  formatter={(value, name, props) => [value, props.payload.fullName]}
-                  contentStyle={enhancedTooltipStyle}
+                  formatter={(value, name, props) => {
+                    const formattedValue = value >= 1000 ? `${(value / 1000).toFixed(1)}k` : value;
+                    return [formattedValue, props.payload.fullName || name];
+                  }}
+                  labelFormatter={(label) => `Élément: ${label}`}
+                  contentStyle={{
+                    ...enhancedTooltipStyle,
+                    padding: '12px 16px',
+                    lineHeight: '1.5',
+                    border: '1px solid #d8b4fe'
+                  }}
+                  cursor={{ fill: 'rgba(147, 51, 234, 0.1)' }}
                 />
                 <Line
                   type="monotone"
@@ -714,14 +806,14 @@ const CISODashboard = ({ returnToSelector }) => {
           <div className="flex justify-center items-center mb-6">
             <button
               onClick={returnToSelector}
-              className="absolute left-6 top-6 p-3 bg-white rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-105 border border-gray-200"
+              className="absolute left-6 top-6 p-3 bg-white rounded-lg shadow-sm border border-gray-200"
             >
               <ArrowLeft size={24} className="text-gray-600" />
             </button>
 
             <div className="p-6 bg-gradient-to-br from-purple-500 to-purple-700 rounded-2xl shadow-xl relative">
               <TrendingUp size={40} className="text-white" />
-              <div className="absolute -top-1 -right-1 w-4 h-4 bg-green-400 rounded-full animate-pulse"></div>
+              <div className="absolute -top-1 -right-1 w-4 h-4 bg-green-400 rounded-full"></div>
             </div>
           </div>
           <h1 className="text-5xl font-bold bg-gradient-to-r from-purple-900 to-purple-600 bg-clip-text text-transparent mb-3">
@@ -734,7 +826,7 @@ const CISODashboard = ({ returnToSelector }) => {
           {/* Status bar */}
           <div className="flex items-center justify-center space-x-8 mt-6 p-4 bg-white/50 backdrop-blur-sm rounded-xl border border-white/20 shadow-lg max-w-4xl mx-auto">
             <div className="flex items-center text-sm">
-              <div className="w-2 h-2 bg-green-400 rounded-full mr-2 animate-pulse"></div>
+              <div className="w-2 h-2 bg-green-400 rounded-full mr-2"></div>
               <span className="text-gray-600">Système Opérationnel</span>
             </div>
             <div className="flex items-center text-sm text-gray-500">
@@ -758,7 +850,7 @@ const CISODashboard = ({ returnToSelector }) => {
         <div className="max-w-6xl mx-auto mb-8">
           <div className="grid md:grid-cols-3 gap-6">
             {/* Report type */}
-            <div className="bg-white rounded-xl p-6 border border-gray-200 shadow-lg hover:shadow-xl transition-all duration-300">
+            <div className="bg-white rounded-lg p-6 border border-gray-200 shadow-sm">
               <h2 className="text-gray-900 text-xl font-semibold mb-4 flex items-center">
                 <BarChart3 className="mr-3 text-purple-600" />
                 Type de Rapport CISO
@@ -816,7 +908,7 @@ const CISODashboard = ({ returnToSelector }) => {
                 {file && (
                   <div className="mb-3">
                     <p className="text-sm text-gray-600 mb-1">
-                      Taille: {(file.size / 1024 / 1024).toFixed(2)} MB
+                      Taille: {file.size ? (file.size / 1024 / 1024).toFixed(2) : '0.00'} MB
                     </p>
                     {fileValidation.message && (
                       <p className={`text-sm font-medium ${fileValidation.isValid ? 'text-green-600' : 'text-red-600'}`}>
@@ -853,7 +945,7 @@ const CISODashboard = ({ returnToSelector }) => {
                 <div className="flex gap-2 justify-center">
                   <button
                     onClick={() => fileInputRef.current?.click()}
-                    className="px-6 py-3 bg-gradient-to-r from-purple-600 to-purple-700 hover:from-purple-700 hover:to-purple-800 text-white rounded-lg transition-all duration-300 shadow-md hover:shadow-lg transform hover:scale-105"
+                    className="px-6 py-3 bg-purple-600 hover:bg-purple-700 text-white rounded-lg"
                   >
                     {file ? 'Changer le fichier' : 'Sélectionner un fichier'}
                   </button>
@@ -865,7 +957,7 @@ const CISODashboard = ({ returnToSelector }) => {
                         setFileValidation({ isValid: null, message: '' });
                         addNotification('info', 'Fichier supprimé');
                       }}
-                      className="px-4 py-3 bg-gray-100 hover:bg-gray-200 text-gray-700 rounded-lg transition-all duration-300"
+                      className="px-4 py-3 bg-gray-100 hover:bg-gray-200 text-gray-700 rounded-lg"
                     >
                       <XCircle size={16} />
                     </button>
@@ -875,7 +967,7 @@ const CISODashboard = ({ returnToSelector }) => {
             </div>
 
             {/* Controls */}
-            <div className="bg-white rounded-xl p-6 border border-gray-200 shadow-lg hover:shadow-xl transition-all duration-300">
+            <div className="bg-white rounded-lg p-6 border border-gray-200 shadow-sm">
               <h2 className="text-gray-900 text-xl font-semibold mb-4 flex items-center">
                 <Filter className="mr-3 text-purple-600" />
                 Contrôles
@@ -917,17 +1009,15 @@ const CISODashboard = ({ returnToSelector }) => {
               <button
                 onClick={analyzeData}
                 disabled={!file || !selectedReport || isLoading || fileValidation.isValid === false}
-                className="px-12 py-4 bg-gradient-to-r from-purple-600 to-purple-700 text-white font-semibold rounded-xl hover:from-purple-700 hover:to-purple-800 transition-all duration-300 shadow-lg hover:shadow-xl disabled:opacity-50 disabled:cursor-not-allowed transform hover:scale-105 disabled:transform-none text-lg relative overflow-hidden group"
+                className="px-12 py-4 bg-purple-600 hover:bg-purple-700 text-white font-semibold rounded-lg disabled:opacity-50 disabled:cursor-not-allowed text-lg"
               >
-                <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white to-transparent opacity-0 group-hover:opacity-20 transform -skew-x-12 -translate-x-full group-hover:translate-x-full transition-transform duration-1000"></div>
-
                 {isLoading ? (
-                  <div className="flex items-center relative z-10">
+                  <div className="flex items-center">
                     <div className="animate-spin rounded-full h-6 w-6 border-b-2 border-white mr-3"></div>
                     Analyse CISO en cours...
                   </div>
                 ) : (
-                  <span className="relative z-10 flex items-center justify-center">
+                  <span className="flex items-center justify-center">
                     <TrendingUp size={20} className="mr-2" />
                     Analyser les données CISO
                   </span>
