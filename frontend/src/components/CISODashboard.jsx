@@ -367,7 +367,7 @@ const CISODashboard = ({ returnToSelector, authData = {} }) => {
         return (
           <div
             key={notification.id}
-            className={`flex items-center p-4 rounded-lg border shadow-lg backdrop-blur-sm transition-all duration-300 transform hover:scale-105 ${colors[notification.type]}`}
+            className={`flex items-center p-4 rounded-lg border shadow-lg backdrop-blur-sm transition-all  transform hover:scale-105 ${colors[notification.type]}`}
           >
             <IconComponent size={20} className="mr-3 flex-shrink-0" />
             <span className="text-sm font-medium flex-1">{notification.message}</span>
@@ -387,7 +387,7 @@ const CISODashboard = ({ returnToSelector, authData = {} }) => {
   const ProgressBar = ({ progress, className = '' }) => (
     <div className={`w-full bg-gray-200 rounded-full h-2 overflow-hidden ${className}`}>
       <div
-        className="h-full bg-gradient-to-r from-purple-500 to-purple-600 transition-all duration-300 ease-out"
+        className="h-full bg-gradient-to-r from-purple-500 to-purple-600 transition-all  ease-out"
         style={{ width: `${progress}%` }}
       />
     </div>
@@ -884,7 +884,7 @@ const CISODashboard = ({ returnToSelector, authData = {} }) => {
 
             {/* Upload area */}
             <div
-              className={`bg-white rounded-xl p-6 border-2 border-dashed shadow-lg hover:shadow-xl transition-all duration-300 ${dragActive ? 'border-purple-400 bg-purple-50 scale-105' : 'border-gray-300'}`}
+              className={`bg-white rounded-xl p-6 border-2 border-dashed shadow-lg hover:shadow-xl transition-all  ${dragActive ? 'border-purple-400 bg-purple-50 scale-105' : 'border-gray-300'}`}
               onDragEnter={handleDrag}
               onDragLeave={handleDrag}
               onDragOver={handleDrag}
@@ -994,7 +994,7 @@ const CISODashboard = ({ returnToSelector, authData = {} }) => {
                 <button
                   onClick={handleRefresh}
                   disabled={isRefreshing || !analysisResult}
-                  className="w-full px-4 py-2 bg-gray-100 hover:bg-gray-200 text-gray-700 rounded-lg transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center"
+                  className="w-full px-4 py-2 bg-gray-100 hover:bg-gray-200 text-gray-700 rounded-lg transition-all  disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center"
                 >
                   <RefreshCw size={16} className={`mr-2 ${isRefreshing ? 'animate-spin' : ''}`} />
                   {isRefreshing ? 'Actualisation...' : 'Actualiser'}

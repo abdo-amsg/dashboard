@@ -1,0 +1,171 @@
+name: DevSecOps Pipeline
+
+on:
+  push:
+    branches: [ master ]
+  pull_request:
+    branches: [ master ]
+
+permissions:
+  contents: read
+  security-events: write
+
+jobs:
+  semgrep:
+    name: Static Code Analysis (Semgrep)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install Semgrep
+        run: pip install semgrep
+      - name: Run Semgrep Scan (exclude venv)
+        run: |
+          semgrep --config=auto --exclude=venv --output=semgrep-results.json
+      - name: Upload Semgrep Results
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: semgrep-results
+          path: semgrep-results.json
+          if-no-files-found: warn
+          retention-days: 7
+
+  build-and-scan-backend:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: docker/setup-buildx-action@v3
+      - name: Build backend image
+        uses: docker/build-push-action@v5
+        with:
+          context: ./backend
+          file: ./backend/Dockerfile
+          push: false
+          tags: backend:latest
+          load: true
+      - name: Scan backend with Trivy
+        uses: aquasecurity/trivy-action@master
+        with:
+          image-ref: 'backend:latest'
+          format: 'json'
+          output: 'trivy-backend.json'
+          exit-code: '0'
+          ignore-unfixed: true
+          vuln-type: 'os,library'
+          severity: 'CRITICAL,HIGH'
+      - name: Upload Trivy backend results
+        uses: actions/upload-artifact@v4
+        with:
+          name: trivy-backend-results
+          path: trivy-backend.json
+          retention-days: 7
+
+  build-and-scan-frontend:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: docker/setup-buildx-action@v3
+      - name: Build frontend image
+        uses: docker/build-push-action@v5
+        with:
+          context: ./frontend
+          file: ./frontend/Dockerfile
+          push: false
+          tags: frontend:latest
+          load: true
+      - name: Scan frontend with Trivy
+        uses: aquasecurity/trivy-action@master
+        with:
+          image-ref: 'frontend:latest'
+          format: 'json'
+          output: 'trivy-frontend.json'
+          exit-code: '0'
+          ignore-unfixed: true
+          vuln-type: 'os,library'
+          severity: 'CRITICAL,HIGH'
+      - name: Upload Trivy frontend results
+        uses: actions/upload-artifact@v4
+        with:
+          name: trivy-frontend-results
+          path: trivy-frontend.json
+          retention-days: 7
+
+  build-and-scan-parser-backend:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: docker/setup-buildx-action@v3
+      - name: Build parser backend image
+        uses: docker/build-push-action@v5
+        with:
+          context: ./parser_backend
+          file: ./parser_backend/Dockerfile
+          push: false
+          tags: parser-backend:latest
+          load: true
+      - name: Scan parser backend with Trivy
+        uses: aquasecurity/trivy-action@master
+        with:
+          image-ref: 'parser-backend:latest'
+          format: 'json'
+          output: 'trivy-parser.json'
+          exit-code: '0'
+          ignore-unfixed: true
+          vuln-type: 'os,library'
+          severity: 'CRITICAL,HIGH'
+      - name: Upload Trivy parser results
+        uses: actions/upload-artifact@v4
+        with:
+          name: trivy-parser-results
+          path: trivy-parser.json
+          retention-days: 7
+
+  build-and-scan-calculator-backend:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: docker/setup-buildx-action@v3
+      - name: Build calculator backend image
+        uses: docker/build-push-action@v5
+        with:
+          context: ./calculator_backend
+          file: ./calculator_backend/Dockerfile
+          push: false
+          tags: calculator-backend:latest
+          load: true
+      - name: Scan calculator backend with Trivy
+        uses: aquasecurity/trivy-action@master
+        with:
+          image-ref: 'calculator-backend:latest'
+          format: 'json'
+          output: 'trivy-calculator.json'
+          exit-code: '0'
+          ignore-unfixed: true
+          vuln-type: 'os,library'
+          severity: 'CRITICAL,HIGH'
+      - name: Upload Trivy calculator results
+        uses: actions/upload-artifact@v4
+        with:
+          name: trivy-calculator-results
+          path: trivy-calculator.json
+          retention-days: 7
+
+  sast:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: github/codeql-action/init@v3
+        with:
+          languages: javascript, python
+      - uses: github/codeql-action/autobuild@v3
+      - uses: github/codeql-action/analyze@v3
+
+  dependency-review:
+    if: github.event_name == 'pull_request' || github.event_name == 'pull_request_target' || github.event_name == 'merge_group'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/dependency-review-action@v4
+        with:
+          fail-on-severity: high
+          allow-licenses: MIT, Apache-2.0, GPL-3.0

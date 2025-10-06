@@ -1,42 +1,16 @@
 import 'react-toastify/dist/ReactToastify.css';
 import { ToastContainer } from 'react-toastify';
-import { ThemeProvider, createTheme } from '@mui/material';
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
 import VerifyEmailNotice from './components/auth/VerifyEmailNotice';
 import DashboardLayout from './components/DashboardLayout';
 import { AuthProvider } from './contexts/AuthContext';
 import { Signup } from './components/auth/Signup';
 import { Login } from './components/auth/Login';
-import './App.css';
 import { useEffect } from 'react';
 import { useAuth } from './contexts/AuthContext';
 import { useNavigate } from 'react-router-dom';
-
-const theme = createTheme({
-  palette: {
-    primary: {
-      main: '#1976d2',
-    },
-    secondary: {
-      main: '#dc004e',
-    },
-  },
-});
-
-const PrivateRoute = ({ user, loading, children }) => {
-  if (loading) return null;
-  return user ? children : <Navigate to="/login" />;
-};
-
-const LoginRedirect = ({user, loading}) => {
-  const navigate = useNavigate();
-  useEffect(() => {
-    if (!loading && user) {
-      navigate('/dashboard', { replace: true });
-    }
-  }, [user, loading, navigate]);
-  return <Login />;
-};
+import { ThemeContextProvider } from './contexts/ThemeContext';
+import HomePage from './pages/HomePage';
 
 function AppContent() {
   const { user, loading, user_role, fetchUserRole } = useAuth();
@@ -45,6 +19,7 @@ function AppContent() {
     <Router>
       <ToastContainer position="bottom-right" />
       <Routes>
+        <Route path="/" element={<HomePage />} />
         <Route path="/login" element={<LoginRedirect user={user} loading={loading} />} />
         <Route path="/signup" element={<Signup />} />
         <Route path="/verify-email" element={<VerifyEmailNotice />} />
@@ -56,19 +31,34 @@ function AppContent() {
             </PrivateRoute>
           }
         />
-        <Route path="/*" element={<Navigate to="/login" replace />} />
+        <Route path="/*" element={<Navigate to="/" replace />} />
       </Routes>
     </Router>
   );
 }
 
+const PrivateRoute = ({ user, loading, children }) => {
+  if (loading) return null;
+  return user ? children : <Navigate to="/login" />;
+};
+
+const LoginRedirect = ({ user, loading }) => {
+  const navigate = useNavigate();
+  useEffect(() => {
+    if (!loading && user) {
+      navigate('/dashboard', { replace: true });
+    }
+  }, [user, loading, navigate]);
+  return <Login />;
+};
+
 function App() {
   return (
-    <ThemeProvider theme={theme}>
+    <ThemeContextProvider>
       <AuthProvider>
         <AppContent />
       </AuthProvider>
-    </ThemeProvider>
+    </ThemeContextProvider>
   );
 }
 

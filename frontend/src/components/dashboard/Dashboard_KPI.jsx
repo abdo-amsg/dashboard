@@ -8,7 +8,6 @@ import { Alert, AlertDescription } from "../ui/alert"
 import Managerial from './levels/Managerial';
 import Operational from './levels/Operational';
 import Strategic from './levels/Strategic';
-import { dashboardApi } from "../../services/dashboardApi"
 import {
   Shield,
   BarChart3,
@@ -104,13 +103,13 @@ function DashboardContent({ user, user_role, loading }) {
 
   const getIcon = (iconName) => {
     const iconMap = {
-      trendingup: <TrendingUp className="w-5 h-5 text-blue-600" />,
-      trendingdown: <TrendingDown className="w-5 h-5 text-red-600" />,
-      dollar: <DollarSign className="w-5 h-5 text-blue-600" />,
-      bar: <BarChart3 className="w-5 h-5 text-blue-600" />,
-      line: <LineChart className="w-5 h-5 text-blue-600" />,
-      activity: <Activity className="w-5 h-5 text-blue-600" />,
-      shield: <Shield className="w-5 h-5 text-red-600" />,
+      trendingup: <TrendingUp className="w-5 h-5 text-brand" />,
+      trendingdown: <TrendingDown className="w-5 h-5 text-danger" />,
+      dollar: <DollarSign className="w-5 h-5 text-brand" />,
+      bar: <BarChart3 className="w-5 h-5 text-brand" />,
+      line: <LineChart className="w-5 h-5 text-brand" />,
+      activity: <Activity className="w-5 h-5 text-brand" />,
+      shield: <Shield className="w-5 h-5 text-danger" />,
     }
     return iconMap[iconName] || iconMap["shield"]
   }
@@ -127,9 +126,9 @@ function DashboardContent({ user, user_role, loading }) {
     }
 
     let status = "neutral"
-    let statusColor = "bg-slate-400"
-    let statusBorder = "border-slate-200"
-    let statusBg = "bg-slate-50"
+    let statusColor = "bg-text-secondary"
+    let statusBorder = "border-border"
+    let statusBg = "bg-status-bg"
     let trendIndicator = null
 
     const percentageChange = previous_value ? ((current_value - previous_value) / previous_value) * 100 : 0
@@ -137,48 +136,48 @@ function DashboardContent({ user, user_role, loading }) {
     if (target === "increasing") {
       if (threshold && current_value >= threshold) {
         status = "excellent"
-        statusColor = "bg-blue-600"
-        statusBorder = "border-blue-200"
-        statusBg = "bg-blue-50"
+        statusColor = "bg-brand"
+        statusBorder = "border-brand-light"
+        statusBg = "bg-status-bg"
       } else if (percentageChange > 0) {
         status = "good"
-        statusColor = "bg-blue-400"
-        statusBorder = "border-blue-100"
-        statusBg = "bg-blue-50"
+        statusColor = "bg-brand"
+        statusBorder = "border-border"
+        statusBg = "bg-status-bg"
       } else {
         status = "bad"
-        statusColor = "bg-red-600"
-        statusBorder = "border-red-200"
-        statusBg = "bg-red-50"
+        statusColor = "bg-danger"
+        statusBorder = "border-danger-light"
+        statusBg = "bg-danger-light"
       }
       trendIndicator =
         percentageChange >= 0 ? (
-          <ArrowUp className="w-4 h-4 text-blue-600" />
+          <ArrowUp className="w-4 h-4 text-brand" />
         ) : (
-          <ArrowDown className="w-4 h-4 text-red-600" />
+          <ArrowDown className="w-4 h-4 text-danger" />
         )
     } else if (target === "decreasing") {
       if (threshold && current_value <= threshold) {
         status = "excellent"
-        statusColor = "bg-blue-600"
-        statusBorder = "border-blue-200"
-        statusBg = "bg-blue-50"
+        statusColor = "bg-brand"
+        statusBorder = "border-border-light"
+        statusBg = "bg-hover"
       } else if (percentageChange < 0) {
         status = "good"
-        statusColor = "bg-blue-400"
-        statusBorder = "border-blue-100"
-        statusBg = "bg-blue-50"
+        statusColor = "bg-brand"
+        statusBorder = "border-border-light"
+        statusBg = "bg-hover"
       } else {
         status = "bad"
-        statusColor = "bg-red-600"
-        statusBorder = "border-red-200"
-        statusBg = "bg-red-50"
+        statusColor = "bg-danger"
+        statusBorder = "border-red-100"
+        statusBg = "bg-danger-light"
       }
       trendIndicator =
         percentageChange <= 0 ? (
-          <ArrowDown className="w-4 h-4 text-blue-600" />
+          <ArrowDown className="w-4 h-4 text-brand" />
         ) : (
-          <ArrowUp className="w-4 h-4 text-red-600" />
+          <ArrowUp className="w-4 h-4 text-danger" />
         )
     }
 
@@ -187,14 +186,14 @@ function DashboardContent({ user, user_role, loading }) {
 
     return (
       <Card
-        className={`group hover:shadow-xl transition-all duration-300 hover:-translate-y-1 border-2 ${statusBorder} bg-gradient-to-br from-white to-slate-50`}
+        className={`group hover:shadow-xl transition-all  hover:-translate-y-1 border-2 ${statusBorder} bg-card-background`}
       >
         <CardHeader className="pb-3">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-3">
               <div className={`p-2 rounded-lg ${statusBg} shadow-sm`}>{iconElement}</div>
               <div className="flex-1">
-                <CardTitle className="text-sm font-semibold text-slate-700 group-hover:text-slate-900 transition-colors">
+                <CardTitle className="text-lg font-semibold text-text-primary group-hover:text-text-secondary transition-colors">
                   {title}
                 </CardTitle>
               </div>
@@ -210,16 +209,16 @@ function DashboardContent({ user, user_role, loading }) {
           {/* If top_items exists, show a table. Otherwise, show the value as before. */}
           {Array.isArray(top_items) && top_items.length > 0 ? (
             <div className="overflow-x-auto">
-              <table className="min-w-full text-sm text-left border border-slate-200 rounded-lg">
+              <table className="min-w-full text-sm text-left border border-card-border rounded-lg">
                 <thead>
-                  <tr className="bg-slate-100">
-                    <th className="px-3 py-2 font-semibold text-slate-700">Type</th>
-                    <th className="px-3 py-2 font-semibold text-slate-700 text-right">Count</th>
+                  <tr className="bg-main-background">
+                    <th className="px-3 py-2 font-semibold text-text-primary">Type</th>
+                    <th className="px-3 py-2 font-semibold text-text-primary text-right">Count</th>
                   </tr>
                 </thead>
                 <tbody>
                   {top_items.map((item, idx) => (
-                    <tr key={idx} className="border-t border-slate-200">
+                    <tr key={idx} className="border-t border-card-border">
                       <td className="px-3 py-2 whitespace-nowrap">{item.name}</td>
                       <td className="px-3 py-2 text-right font-mono font-bold">{item.count}</td>
                     </tr>
@@ -229,40 +228,40 @@ function DashboardContent({ user, user_role, loading }) {
             </div>
           ) : (
             <div className="flex items-end justify-center gap-2">
-              <span className="text-3xl font-bold text-slate-900">{current_value?.toLocaleString?.() ?? current_value}</span>
-              <span className="text-lg font-medium text-slate-600 mb-1">{unit}</span>
+              <span className="text-3xl font-bold text-text-primary">{current_value?.toLocaleString?.() ?? current_value}</span>
+              <span className="text-lg font-medium text-text-secondary mb-1">{unit}</span>
             </div>
           )}
 
           {hasProgressBar && (
             <div className="space-y-2">
               <Progress value={progressWidth} className="h-2" />
-              <div className="flex justify-between text-xs text-slate-500">
+              <div className="flex justify-between text-xs text-text-secondary">
                 <span>0</span>
                 <span>{unit === "%" ? "100%" : "Target"}</span>
               </div>
             </div>
           )}
 
-          <div className="flex items-center justify-between pt-2 border-t border-slate-100">
-            <div className="flex items-center gap-1 text-xs text-slate-500">
+          <div className="flex items-center justify-between pt-2 border-t border-border">
+            <div className="flex items-center gap-1 text-xs text-text-secondary">
               <CalendarDays className="w-3 h-3" />
               <span>{new Date(last_calculated_date).toLocaleDateString()}</span>
             </div>
             {status === "excellent" && (
-              <Badge className="bg-blue-100 text-blue-700 border-blue-200 hover:bg-blue-100">
+              <Badge className="bg-hover text-brand-dark border-brand hover:bg-hover">
                 <CheckCircle className="w-3 h-3 mr-1" />
                 On Target
               </Badge>
             )}
             {status === "good" && (
-              <Badge className="bg-blue-50 text-blue-600 border-blue-100 hover:bg-blue-50">
+              <Badge className="bg-hover text-brand-dark border-brand hover:bg-hover">
                 <TrendingUp className="w-3 h-3 mr-1" />
                 Improving
               </Badge>
             )}
             {status === "bad" && (
-              <Badge className="bg-red-100 text-red-700 border-red-200 hover:bg-red-100">
+              <Badge className="bg-danger-light text-danger border-danger hover:bg-danger-light">
                 <AlertTriangle className="w-3 h-3 mr-1" />
                 Attention
               </Badge>
@@ -270,7 +269,7 @@ function DashboardContent({ user, user_role, loading }) {
           </div>
 
           {previous_value && (
-            <div className="text-xs text-slate-500 text-center">
+            <div className="text-xs text-text-secondary text-center">
               {percentageChange > 0 ? "+" : ""}
               {percentageChange.toFixed(1)}% from last period
             </div>
@@ -429,7 +428,7 @@ function DashboardContent({ user, user_role, loading }) {
               />
               <Tooltip 
                 content={<CustomTooltip />}
-                cursor={{ fill: '#f1f5f9' }}
+                cursor={{ fill: 'var(--hover-color)' }}
               />
               <Bar 
                 dataKey="value"
@@ -464,22 +463,22 @@ function DashboardContent({ user, user_role, loading }) {
     }
 
     return (
-      <Card className="group hover:shadow-xl transition-all duration-300 border-slate-200">
+      <Card className="group hover:shadow-xl transition-all  border-border bg-card-background">
         <CardHeader>
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-3">
-              <div className={`p-2 rounded-lg shadow-sm ${type === "bar" ? "bg-blue-100" : "bg-red-100"}`}>
+              <div className={`p-2 rounded-lg shadow-sm ${type === "bar" ? "bg-hover" : "bg-danger-light"}`}>
                 {type === "bar" ? (
-                  <BarChart3 className="w-5 h-5 text-blue-600" />
+                  <BarChart3 className="w-5 h-5 text-brand" />
                 ) : (
-                  <LineChart className="w-5 h-5 text-red-600" />
+                  <LineChart className="w-5 h-5 text-danger" />
                 )}
               </div>
-              <CardTitle className="text-lg font-semibold text-slate-900 group-hover:text-slate-700 transition-colors">
+              <CardTitle className="text-lg font-semibold text-text-primary group-hover:text-text-secondary transition-colors">
                 {title}
               </CardTitle>
             </div>
-            <Badge variant="outline" className="text-xs text-slate-500 border-slate-300">
+            <Badge variant="outline" className="text-xs text-text-secondary border-border">
               {data?.length} data points
             </Badge>
           </div>
@@ -491,11 +490,11 @@ function DashboardContent({ user, user_role, loading }) {
                 {renderChart()}
               </ResponsiveContainer>
             ) : (
-              <div className="flex items-center justify-center h-full bg-slate-50 rounded-lg border-2 border-dashed border-slate-200">
+              <div className="flex items-center justify-center h-full bg-background rounded-lg border-2 border-dashed border-border">
                 <div className="text-center space-y-2">
-                  <BarChart3 className="w-8 h-8 text-slate-400 mx-auto" />
-                  <p className="text-slate-500 font-medium">No data available</p>
-                  <p className="text-xs text-slate-400">Data will appear here when available</p>
+                  <BarChart3 className="w-8 h-8 text-text-secondary mx-auto" />
+                  <p className="text-text-primary font-medium">No data available</p>
+                  <p className="text-xs text-text-secondary">Data will appear here when available</p>
                 </div>
               </div>
             )}
@@ -507,7 +506,7 @@ function DashboardContent({ user, user_role, loading }) {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-slate-50 to-slate-100 p-6">
+      <div className="min-h-screen bg-gradient-to-br from-background to-main-background p-6">
         <div className="max-w-7xl mx-auto space-y-8">
           <Skeleton className="h-32 w-full rounded-2xl" />
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
@@ -526,11 +525,11 @@ function DashboardContent({ user, user_role, loading }) {
 
   if (!user) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-slate-50 to-slate-100 p-6">
+      <div className="min-h-screen bg-gradient-to-br from-background to-main-background p-6">
         <div className="max-w-7xl mx-auto">
-          <Alert className="border-red-200 bg-red-50">
-            <AlertTriangle className="h-4 w-4 text-red-600" />
-            <AlertDescription className="text-red-800">
+          <Alert className="border-danger bg-danger-light">
+            <AlertTriangle className="h-4 w-4 text-danger" />
+            <AlertDescription className="text-danger">
               Error: User not found. Please log in to access the dashboard.
             </AlertDescription>
           </Alert>
@@ -540,15 +539,15 @@ function DashboardContent({ user, user_role, loading }) {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-50 to-slate-100 p-6">
+    <div className="min-h-screen bg-gradient-to-br from-main-background to-main-background p-6">
       <div className="max-w-7xl mx-auto space-y-8">
         {/* Header */}
-        <Card className="bg-gradient-to-r from-blue-600 to-blue-700 text-white border-0 shadow-xl">
+        <Card className="bg-gradient-to-r from-brand-light to-brand text-white border-0 shadow-xl">
           <CardContent className="p-8">
             <div className="flex items-center justify-between">
               <div className="space-y-2">
                 <div className="flex items-center gap-3">
-                  <div className="p-3 bg-white/20 rounded-xl backdrop-blur-sm">
+                  <div className="p-3 bg-white/30 rounded-xl backdrop-blur-sm">
                     <BarChart3 className="w-8 h-8 text-white" />
                   </div>
                   <div>
@@ -583,8 +582,8 @@ function DashboardContent({ user, user_role, loading }) {
         <div className="space-y-6">
           <div className="flex items-center justify-between">
             <div>
-              <h2 className="text-2xl font-bold text-slate-900">Key Performance Indicators</h2>
-              <p className="text-slate-600 mt-1">Monitor your critical security metrics in real-time</p>
+              <h2 className="text-2xl font-bold text-text-primary">Key Performance Indicators</h2>
+              <p className="text-text-secondary mt-1">Monitor your critical security metrics in real-time</p>
             </div>
           </div>
 
@@ -613,8 +612,8 @@ function DashboardContent({ user, user_role, loading }) {
         <div className="space-y-6">
           <div className="flex items-center justify-between">
             <div>
-              <h2 className="text-2xl font-bold text-slate-900">Trends & Analytics</h2>
-              <p className="text-slate-600 mt-1">Visualize performance trends and identify patterns</p>
+              <h2 className="text-2xl font-bold text-text-primary">Trends & Analytics</h2>
+              <p className="text-text-secondary mt-1">Visualize performance trends and identify patterns</p>
             </div>
           </div>
 

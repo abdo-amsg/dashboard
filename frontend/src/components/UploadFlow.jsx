@@ -21,7 +21,7 @@ import {
 import { dashboardApi } from '../services/dashboardApi';
 import api from '../services/api';
 
-const UploadFlow = ({ isOpen, onClose }) => {
+const UploadFlow = ({ isOpen, onClose, setActiveItem }) => {
     const [currentStep, setCurrentStep] = useState(1);
     const [selectedTool, setSelectedTool] = useState(null);
     const [file, setFile] = useState(null);
@@ -261,8 +261,8 @@ const UploadFlow = ({ isOpen, onClose }) => {
     if (!isOpen) return null;
 
     return (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
-            <div className="bg-white rounded-3xl shadow-2xl w-full max-w-5xl max-h-[90vh] overflow-hidden">
+        <div className="fixed inset-0 bg-black bg-opacity-50 backdrop-blur-sm flex items-center justify-center z-50 p-4">
+            <div className="bg-card-background rounded-3xl shadow-2xl w-full max-w-5xl max-h-[90vh] overflow-hidden">
                 {/* Header */}
                 <div className="bg-gradient-to-r from-blue-600 to-blue-700 p-6 text-white">
                     <div className="flex items-center justify-between mb-6">
@@ -288,7 +288,7 @@ const UploadFlow = ({ isOpen, onClose }) => {
                                 <div key={step.id} className="flex items-center flex-1">
                                     <div className="flex flex-col items-center">
                                         <div className={`
-                                            w-12 h-12 rounded-full flex items-center justify-center transition-all duration-300
+                                            w-12 h-12 rounded-full flex items-center justify-center transition-all 
                                             ${status === 'completed' ?
                                                 'bg-white text-blue-600'
                                                 : status === 'active' ?
@@ -314,7 +314,7 @@ const UploadFlow = ({ isOpen, onClose }) => {
                                         <div className="flex-1 mx-4">
                                             <div className="h-1 bg-white/20 rounded-full overflow-hidden">
                                                 <div
-                                                    className={`h-full bg-white transition-all duration-500 ${status === 'completed' ? 'w-full' : 'w-0'
+                                                    className={`h-full bg-white transition-all  ${status === 'completed' ? 'w-full' : 'w-0'
                                                         }`}
                                                 />
                                             </div>
@@ -334,18 +334,18 @@ const UploadFlow = ({ isOpen, onClose }) => {
                             {/* Search and Filter Bar */}
                             <div className="flex gap-4">
                                 <div className="flex-1 relative">
-                                    <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5" />
+                                    <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-input-text w-5 h-5" />
                                     <input
                                         type="text"
                                         placeholder="Search tools by name or description..."
                                         value={searchQuery}
                                         onChange={(e) => setSearchQuery(e.target.value)}
-                                        className="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                                        className="w-full pl-10 pr-4 py-3 border border-input-border bg-input-background rounded-xl focus:outline-none focus:ring-2 focus:ring-brand focus:border-transparent"
                                     />
                                 </div>
                                 <div className="flex items-center space-x-2">
-                                    <Filter className="w-5 h-5 text-gray-500" />
-                                    <span className="text-sm text-gray-600">Filter:</span>
+                                    <Filter className="w-5 h-5 text-text-primary" />
+                                    <span className="text-sm text-text-secondary">Filter:</span>
                                 </div>
                             </div>
 
@@ -356,9 +356,9 @@ const UploadFlow = ({ isOpen, onClose }) => {
                                         key={category.id}
                                         onClick={() => setSelectedCategory(category.id)}
                                         className={`px-4 py-2 rounded-lg text-sm font-medium whitespace-nowrap transition-all
-                      ${selectedCategory === category.id
-                                                ? 'bg-blue-600 text-white'
-                                                : 'bg-gray-100 text-gray-600 hover:bg-gray-200'}`}
+                                            ${selectedCategory === category.id
+                                                ? 'bg-brand text-white'
+                                                : 'bg-highlight text-text-secondary hover:bg-border-light'}`}
                                     >
                                         {category.name} ({category.count})
                                     </button>
@@ -375,21 +375,21 @@ const UploadFlow = ({ isOpen, onClose }) => {
                                         <button
                                             key={tool.id}
                                             onClick={() => setSelectedTool(tool)}
-                                            className={`p-4 rounded-xl border-2 transition-all duration-200 text-left
+                                            className={`p-4 rounded-xl border-2 transition-all  text-left
                                                 ${isSelected
-                                                    ? 'border-blue-500 bg-blue-50 shadow-lg scale-105'
-                                                    : 'border-gray-200 hover:border-gray-300 hover:shadow-md'}`}
+                                                    ? 'border-brand bg-highlight shadow-lg scale-105'
+                                                    : 'border-border hover:border-border-light bg-background hover:shadow-md'}`}
                                         >
                                             <div className="flex items-start space-x-3">
                                                 <div className={`w-12 h-12 rounded-lg flex items-center justify-center ${getToolColorClasses(tool.color)}`}>
                                                     <Icon className="w-6 h-6" />
                                                 </div>
                                                 <div className="flex-1">
-                                                    <h3 className="font-semibold text-gray-900">{tool.name}</h3>
-                                                    <p className="text-sm text-gray-500 mt-1">{tool.description}</p>
+                                                    <h3 className="font-semibold text-text-primary">{tool.name}</h3>
+                                                    <p className="text-sm text-text-secondary mt-1">{tool.description}</p>
                                                 </div>
                                                 {isSelected && (
-                                                    <CheckCircle2 className="w-5 h-5 text-blue-600" />
+                                                    <CheckCircle2 className="w-5 h-5 text-brand" />
                                                 )}
                                             </div>
                                         </button>
@@ -402,10 +402,10 @@ const UploadFlow = ({ isOpen, onClose }) => {
                                 <button
                                     onClick={() => setCurrentStep(2)}
                                     disabled={!selectedTool}
-                                    className={`px-6 py-3 rounded-xl font-medium transition-all duration-200 flex items-center space-x-2
+                                    className={`px-6 py-3 rounded-xl font-medium transition-all  flex items-center space-x-2
                                         ${selectedTool
-                                            ? 'bg-blue-600 text-white hover:bg-blue-700 shadow-lg'
-                                            : 'bg-gray-200 text-gray-400 cursor-not-allowed'}`}
+                                            ? 'bg-brand text-white hover:bg-brand-light shadow-lg'
+                                            : 'bg-bg1 text-text-primary cursor-not-allowed'}`}
                                 >
                                     <span>Continue</span>
                                     <ChevronRight className="w-5 h-5" />
@@ -418,18 +418,18 @@ const UploadFlow = ({ isOpen, onClose }) => {
                     {currentStep === 2 && (
                         <div className="space-y-6">
                             {/* Selected Tool Display */}
-                            <div className="bg-gray-50 rounded-xl p-4 flex items-center space-x-3">
+                            <div className="bg-background border border-border rounded-xl p-4 flex items-center space-x-3">
                                 <div className={`w-10 h-10 rounded-lg flex items-center justify-center ${getToolColorClasses(selectedTool.color)}`}>
                                     <selectedTool.icon className="w-5 h-5" />
                                 </div>
                                 <div>
-                                    <p className="text-sm text-gray-500">Selected Tool</p>
-                                    <p className="font-semibold text-gray-900">{selectedTool.name}</p>
+                                    <p className="text-sm text-text-secondary">Selected Tool</p>
+                                    <p className="font-semibold text-text-primary">{selectedTool.name}</p>
                                 </div>
                             </div>
 
                             {/* Upload Area */}
-                            <div className="border-2 border-dashed border-gray-300 rounded-xl p-8 text-center hover:border-blue-400 transition-colors">
+                            <div className="border-2 border-dashed border-border rounded-xl p-8 text-center hover:border-brand transition-colors">
                                 <input
                                     type="file"
                                     id="file-upload"
@@ -438,17 +438,17 @@ const UploadFlow = ({ isOpen, onClose }) => {
                                     className="hidden"
                                 />
                                 <label htmlFor="file-upload" className="cursor-pointer">
-                                    <Upload className="w-16 h-16 text-gray-400 mx-auto mb-4" />
-                                    <p className="text-lg font-medium text-gray-700 mb-2">
+                                    <Upload className="w-16 h-16 text-text-secondary mx-auto mb-4" />
+                                    <p className="text-lg font-medium text-text-primary mb-2">
                                         {file ? file.name : 'Drop your file here or click to browse'}
                                     </p>
-                                    <p className="text-sm text-gray-500">
+                                    <p className="text-sm text-text-secondary">
                                         Supported formats: XML, TXT, JSON, CSV, LOG
                                     </p>
                                     {file && (
-                                        <div className="mt-4 inline-flex items-center space-x-2 bg-blue-50 px-4 py-2 rounded-lg">
-                                            <FileText className="w-5 h-5 text-blue-600" />
-                                            <span className="text-sm font-medium text-blue-700">
+                                        <div className="mt-4 inline-flex items-center space-x-2 bg-bg1 px-4 py-2 rounded-lg">
+                                            <FileText className="w-5 h-5 text-brand" />
+                                            <span className="text-sm font-medium text-brand">
                                                 {(file.size / 1024).toFixed(2)} KB
                                             </span>
                                         </div>
@@ -457,12 +457,12 @@ const UploadFlow = ({ isOpen, onClose }) => {
                             </div>
 
                             {/* File Requirements */}
-                            <div className="bg-blue-50 border border-blue-200 rounded-xl p-4">
+                            <div className="bg-highlight border border-border rounded-xl p-4">
                                 <div className="flex items-start space-x-2">
-                                    <AlertCircle className="w-5 h-5 text-blue-600 mt-0.5" />
+                                    <AlertCircle className="w-5 h-5 text-brand mt-0.5" />
                                     <div>
-                                        <h3 className="text-sm font-medium text-blue-900">File Requirements</h3>
-                                        <ul className="text-sm text-blue-700 mt-1 space-y-1">
+                                        <h3 className="text-sm font-medium text-link">File Requirements</h3>
+                                        <ul className="text-sm text-link-hover mt-1 space-y-1">
                                             <li>• Maximum file size: 100MB</li>
                                             <li>• Ensure the file matches the selected tool format</li>
                                             <li>• Files are processed securely and deleted after analysis</li>
@@ -475,7 +475,7 @@ const UploadFlow = ({ isOpen, onClose }) => {
                             <div className="flex justify-between pb-4">
                                 <button
                                     onClick={() => setCurrentStep(1)}
-                                    className="px-6 py-3 rounded-xl font-medium bg-gray-100 text-gray-700 hover:bg-gray-200 transition-colors"
+                                    className="px-6 py-3 rounded-xl font-medium bg-button text-button-text hover:bg-button-light transition-colors"
                                 >
                                     Back
                                 </button>
@@ -485,7 +485,7 @@ const UploadFlow = ({ isOpen, onClose }) => {
                                         handleUpload();
                                     }}
                                     disabled={!file}
-                                    className={`px-6 py-3 rounded-xl font-medium transition-all duration-200 flex items-center space-x-2
+                                    className={`px-6 py-3 rounded-xl font-medium transition-all  flex items-center space-x-2
                                         ${file
                                             ? 'bg-blue-600 text-white hover:bg-blue-700 shadow-lg'
                                             : 'bg-gray-200 text-gray-400 cursor-not-allowed'}`}
@@ -505,15 +505,15 @@ const UploadFlow = ({ isOpen, onClose }) => {
                                 <div className="relative w-32 h-32 mx-auto mb-8">
                                     {processingStatus !== 'failed' ? (
                                         <>
-                                            <div className="absolute inset-0 bg-blue-100 rounded-full animate-ping"></div>
-                                            <div className="absolute inset-0 bg-blue-200 rounded-full animate-ping animation-delay-200"></div>
-                                            <div className="relative bg-white rounded-full w-32 h-32 flex items-center justify-center shadow-lg">
-                                                <Loader2 className="w-12 h-12 text-blue-600 animate-spin" />
+                                            <div className="absolute inset-0 bg-bg1 rounded-full animate-ping"></div>
+                                            <div className="absolute inset-0 bg-bg1 rounded-full animate-ping animation-delay-200"></div>
+                                            <div className="relative bg-bg1 rounded-full w-32 h-32 flex items-center justify-center shadow-lg">
+                                                <Loader2 className="w-12 h-12 text-brand animate-spin" />
                                             </div>
                                         </>
                                     ) : (
-                                        <div className="relative bg-white rounded-full w-32 h-32 flex items-center justify-center shadow-lg border-2 border-red-500">
-                                            <AlertCircle className="w-12 h-12 text-red-600" />
+                                        <div className="relative bg-background rounded-full w-32 h-32 flex items-center justify-center shadow-lg border-2 border-danger">
+                                            <AlertCircle className="w-12 h-12 text-danger" />
                                         </div>
                                     )}
                                 </div>
@@ -521,25 +521,25 @@ const UploadFlow = ({ isOpen, onClose }) => {
                                 {/* Status Messages - Updated with error state */}
                                 <div className="space-y-4">
                                     {/* Upload Progress */}
-                                    <div className={`transition-all duration-500 ${processingStatus === 'uploading' || processingStatus === 'failed' ?
+                                    <div className={`transition-all  ${processingStatus === 'uploading' || processingStatus === 'failed' ?
                                         'opacity-100' : 'opacity-50'
                                         }`}>
                                         <div className="flex items-center justify-center space-x-2 mb-2">
                                             {processingStatus === 'uploading' ? (
-                                                <Loader2 className="w-5 h-5 text-blue-600 animate-spin" />
+                                                <Loader2 className="w-5 h-5 text-brand animate-spin" />
                                             ) : uploadProgress === 100 ? (
                                                 <CheckCircle2 className="w-5 h-5 text-green-600" />
                                             ) : processingStatus === 'failed' ? (
-                                                <AlertCircle className="w-5 h-5 text-red-600" />
+                                                <AlertCircle className="w-5 h-5 text-danger" />
                                             ) : null}
-                                            <span className="font-medium text-gray-900">
+                                            <span className="font-medium text-text-primary">
                                                 {processingStatus === 'failed' ? 'Upload Failed' : 'Uploading File'}
                                             </span>
                                         </div>
-                                        <div className="w-64 h-2 bg-gray-200 rounded-full mx-auto overflow-hidden">
+                                        <div className="w-64 h-2 bg-highlight rounded-full mx-auto overflow-hidden">
                                             <div
-                                                className={`h-full transition-all duration-300 ${processingStatus === 'failed' ?
-                                                    'bg-red-600' : 'bg-blue-600'
+                                                className={`h-full transition-all  ${processingStatus === 'failed' ?
+                                                    'bg-danger' : 'bg-brand'
                                                     }`}
                                                 style={{ width: `${uploadProgress}%` }}
                                             />
@@ -547,13 +547,13 @@ const UploadFlow = ({ isOpen, onClose }) => {
                                     </div>
 
                                     {/* Parsing Status */}
-                                    <div className={`transition-all duration-500 ${processingStatus === 'parsing' ? 'opacity-100' :
+                                    <div className={`transition-all  ${processingStatus === 'parsing' ? 'opacity-100' :
                                         ['calculating', 'complete'].includes(processingStatus) ? 'opacity-50' :
                                             processingStatus === 'failed' ? 'opacity-30' : 'opacity-30'
                                         }`}>
                                         <div className="flex items-center justify-center space-x-2">
                                             {processingStatus === 'parsing' ? (
-                                                <Loader2 className="w-5 h-5 text-blue-600 animate-spin" />
+                                                <Loader2 className="w-5 h-5 text-brand animate-spin" />
                                             ) : ['calculating', 'complete'].includes(processingStatus) ? (
                                                 <CheckCircle2 className="w-5 h-5 text-green-600" />
                                             ) : processingStatus === 'failed' ? (
@@ -561,18 +561,18 @@ const UploadFlow = ({ isOpen, onClose }) => {
                                             ) : (
                                                 <div className="w-5 h-5" />
                                             )}
-                                            <span className="font-medium text-gray-900">Parsing Security Data</span>
+                                            <span className="font-medium text-text-primary">Parsing Security Data</span>
                                         </div>
                                     </div>
 
                                     {/* KPI Calculation Status */}
-                                    <div className={`transition-all duration-500 ${processingStatus === 'calculating' ? 'opacity-100' :
+                                    <div className={`transition-all  ${processingStatus === 'calculating' ? 'opacity-100' :
                                         processingStatus === 'complete' ? 'opacity-50' :
                                             processingStatus === 'failed' ? 'opacity-30' : 'opacity-30'
                                         }`}>
                                         <div className="flex items-center justify-center space-x-2">
                                             {processingStatus === 'calculating' ? (
-                                                <Loader2 className="w-5 h-5 text-blue-600 animate-spin" />
+                                                <Loader2 className="w-5 h-5 text-brand animate-spin" />
                                             ) : processingStatus === 'complete' ? (
                                                 <CheckCircle2 className="w-5 h-5 text-green-600" />
                                             ) : processingStatus === 'failed' ? (
@@ -580,18 +580,18 @@ const UploadFlow = ({ isOpen, onClose }) => {
                                             ) : (
                                                 <div className="w-5 h-5" />
                                             )}
-                                            <span className="font-medium text-gray-900">Calculating KPIs</span>
+                                            <span className="font-medium text-text-primary">Calculating KPIs</span>
                                         </div>
                                     </div>
 
                                     {/* Error Message Display */}
                                     {processingStatus === 'failed' && (
-                                        <div className="mt-6 p-4 bg-red-50 border border-red-200 rounded-xl text-left">
+                                        <div className="mt-6 p-4 bg-danger-light border border-danger-light rounded-xl text-left">
                                             <div className="flex items-start space-x-2">
-                                                <AlertCircle className="w-5 h-5 text-red-600 mt-0.5 flex-shrink-0" />
+                                                <AlertCircle className="w-5 h-5 text-danger mt-0.5 flex-shrink-0" />
                                                 <div>
-                                                    <p className="text-sm font-medium text-red-800">Processing Error</p>
-                                                    <p className="text-sm text-red-700 mt-1">{errorMessage}</p>
+                                                    <p className="text-sm font-medium text-danger">Processing Error</p>
+                                                    <p className="text-sm text-danger mt-1">{errorMessage}</p>
                                                 </div>
                                             </div>
                                         </div>
@@ -599,7 +599,7 @@ const UploadFlow = ({ isOpen, onClose }) => {
                                 </div>
 
                                 {/* Processing Message */}
-                                <p className="text-gray-600 mt-8">
+                                <p className="text-text-primary mt-8">
                                     {processingStatus === 'uploading' && 'Securely uploading your file...'}
                                     {processingStatus === 'parsing' && 'Analyzing security data patterns...'}
                                     {processingStatus === 'calculating' && 'Computing performance metrics...'}
@@ -615,7 +615,7 @@ const UploadFlow = ({ isOpen, onClose }) => {
                                             setUploadProgress(0);
                                             setErrorMessage('');
                                         }}
-                                        className="px-6 py-3 rounded-xl font-medium bg-gray-100 text-gray-700 hover:bg-gray-200 transition-colors"
+                                        className="px-6 py-3 rounded-xl font-medium bg-highlight text-text-primary hover:bg-hover transition-colors"
                                     >
                                         Start Over
                                     </button>
@@ -623,7 +623,7 @@ const UploadFlow = ({ isOpen, onClose }) => {
                                     {processingStatus === 'failed' && (
                                         <button
                                             onClick={handleRetry}
-                                            className="px-6 py-3 rounded-xl font-medium bg-blue-600 text-white hover:bg-blue-700 shadow-lg transition-all duration-200 flex items-center space-x-2"
+                                            className="px-6 py-3 rounded-xl font-medium bg-brand text-white hover:bg-brand-dark shadow-lg transition-all  flex items-center space-x-2"
                                         >
                                             <RefreshCw className="w-5 h-5" />
                                             <span>Try Again</span>
@@ -638,34 +638,18 @@ const UploadFlow = ({ isOpen, onClose }) => {
                     {currentStep === 4 && (
                         <div className="space-y-6">
                             <div className="text-center py-8">
-                                <div className="w-20 h-20 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                                <div className="w-20 h-20 bg-[var(--stat-card-background2)] rounded-full flex items-center justify-center mx-auto mb-4">
                                     <CheckCircle2 className="w-10 h-10 text-green-600" />
                                 </div>
-                                <h3 className="text-2xl font-bold text-gray-900 mb-2">Processing Complete!</h3>
-                                <p className="text-gray-600">Your security report has been successfully analyzed</p>
-                            </div>
-
-                            {/* Summary Stats */}
-                            <div className="grid grid-cols-3 gap-4">
-                                <div className="bg-gray-50 rounded-xl p-4 text-center">
-                                    <p className="text-3xl font-bold text-blue-600">247</p>
-                                    <p className="text-sm text-gray-600 mt-1">Findings Processed</p>
-                                </div>
-                                <div className="bg-gray-50 rounded-xl p-4 text-center">
-                                    <p className="text-3xl font-bold text-red-600">12</p>
-                                    <p className="text-sm text-gray-600 mt-1">Critical Issues</p>
-                                </div>
-                                <div className="bg-gray-50 rounded-xl p-4 text-center">
-                                    <p className="text-3xl font-bold text-green-600">8</p>
-                                    <p className="text-sm text-gray-600 mt-1">KPIs Updated</p>
-                                </div>
+                                <h3 className="text-2xl font-bold text-text-primary mb-2">Processing Complete!</h3>
+                                <p className="text-text-secondary">Your security report has been successfully analyzed</p>
                             </div>
 
                             {/* Action Buttons */}
                             <div className="flex justify-center space-x-4">
                                 <button
                                     onClick={onClose}
-                                    className="px-6 py-3 rounded-xl font-medium bg-gray-100 text-gray-700 hover:bg-gray-200 transition-colors"
+                                    className="px-6 py-3 rounded-xl font-medium bg-status-bg text-text-primary hover:bg-hover transition-colors"
                                 >
                                     Close
                                 </button>
@@ -673,8 +657,9 @@ const UploadFlow = ({ isOpen, onClose }) => {
                                     onClick={() => {
                                         onClose();
                                         // Navigate to dashboard
+                                        setActiveItem(0);
                                     }}
-                                    className="px-6 py-3 rounded-xl font-medium bg-blue-600 text-white hover:bg-blue-700 shadow-lg transition-all duration-200 flex items-center space-x-2"
+                                    className="px-6 py-3 rounded-xl font-medium bg-brand text-white hover:bg-brand-dark shadow-lg transition-all  flex items-center space-x-2"
                                 >
                                     <span>View Dashboard</span>
                                     <BarChart3 className="w-5 h-5" />

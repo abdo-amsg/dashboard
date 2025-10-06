@@ -89,7 +89,7 @@ const ComexDashboard = ({returnToSelector}) => {
         return (
           <div
             key={notification.id}
-            className={`flex items-center p-4 rounded-lg border shadow-lg backdrop-blur-sm transition-all duration-300 transform hover:scale-105 ${colors[notification.type]}`}
+            className={`flex items-center p-4 rounded-lg border shadow-lg backdrop-blur-sm transition-all  transform hover:scale-105 ${colors[notification.type]}`}
           >
             <IconComponent size={20} className="mr-3 flex-shrink-0" />
             <span className="text-sm font-medium flex-1">{notification.message}</span>
@@ -344,17 +344,17 @@ const ComexDashboard = ({returnToSelector}) => {
 
   // Enhanced KPI rendering with executive styling
   const renderKPICard = (title, value, IconComponent, trend, color = colors.primary, description = '') => (
-    <div className="bg-gradient-to-br from-white via-blue-50/30 to-white rounded-2xl p-6 border border-blue-100 hover:border-blue-300 shadow-lg hover:shadow-2xl transition-all duration-500 hover:transform hover:scale-105 group relative overflow-hidden">
+    <div className="bg-gradient-to-br from-white via-blue-50/30 to-white rounded-2xl p-6 border border-blue-100 hover:border-blue-300 shadow-lg hover:shadow-2xl transition-all  hover:transform hover:scale-105 group relative overflow-hidden">
       {/* Background gradient effect */}
-      <div className="absolute inset-0 bg-gradient-to-br from-transparent via-blue-50/50 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
+      <div className="absolute inset-0 bg-gradient-to-br from-transparent via-blue-50/50 to-transparent opacity-0 group-hover:opacity-100 transition-opacity "></div>
       
       <div className="relative z-10">
         <div className="flex items-center justify-between mb-4">
-          <div className="p-3 rounded-xl transition-all duration-300 group-hover:scale-110 bg-gradient-to-br from-blue-500/10 to-blue-600/20">
+          <div className="p-3 rounded-xl transition-all  group-hover:scale-110 bg-gradient-to-br from-blue-500/10 to-blue-600/20">
             <IconComponent size={28} style={{ color }} />
           </div>
           {trend && (
-            <div className={`text-sm font-bold ${trend > 0 ? 'text-green-600' : 'text-red-600'} flex items-center transition-all duration-300 group-hover:scale-110`}>
+            <div className={`text-sm font-bold ${trend > 0 ? 'text-green-600' : 'text-red-600'} flex items-center transition-all  group-hover:scale-110`}>
               {trend > 0 ? '+' : ''}{trend}%
               <TrendingUp size={16} className={`ml-1 ${trend > 0 ? '' : 'rotate-180'}`} />
             </div>
@@ -465,8 +465,8 @@ const ComexDashboard = ({returnToSelector}) => {
 
     // Common chart container and header
     const ChartContainer = ({ children }) => (
-      <div className="bg-gradient-to-br from-white via-blue-50/20 to-white rounded-2xl p-8 border border-blue-100 shadow-xl hover:shadow-2xl transition-all duration-500 hover:transform hover:scale-[1.02] relative overflow-hidden group">
-        <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white to-transparent opacity-0 group-hover:opacity-10 transform -skew-x-12 -translate-x-full group-hover:translate-x-full transition-transform duration-1000"></div>
+      <div className="bg-gradient-to-br from-white via-blue-50/20 to-white rounded-2xl p-8 border border-blue-100 shadow-xl hover:shadow-2xl transition-all  hover:transform hover:scale-[1.02] relative overflow-hidden group">
+        <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white to-transparent opacity-0 group-hover:opacity-10 transform -skew-x-12 -translate-x-full group-hover:translate-x-full transition-transform "></div>
         
         <div className="flex items-center justify-between mb-6 relative z-10">
           <div>
@@ -668,7 +668,7 @@ const ComexDashboard = ({returnToSelector}) => {
           <div className="flex justify-center items-center mb-6">
             <button
               onClick={returnToSelector}
-              className="absolute left-6 top-6 p-3 bg-white rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-105 border border-gray-200"
+              className="absolute left-6 top-6 p-3 bg-white rounded-xl shadow-lg hover:shadow-xl transition-all  hover:scale-105 border border-gray-200"
             >
               <ArrowLeft size={24} className="text-gray-600" />
             </button>
@@ -706,7 +706,7 @@ const ComexDashboard = ({returnToSelector}) => {
         <div className="max-w-6xl mx-auto mb-8">
           <div className="grid md:grid-cols-3 gap-6">
             {/* Report type */}
-            <div className="bg-white rounded-xl p-6 border border-gray-200 shadow-lg hover:shadow-xl transition-all duration-300">
+            <div className="bg-white rounded-xl p-6 border border-gray-200 shadow-lg hover:shadow-xl transition-all ">
               <h2 className="text-gray-900 text-xl font-semibold mb-4 flex items-center">
                 <BarChart3 className="mr-3 text-blue-600" />
                 Type de Rapport COMEX
@@ -737,7 +737,7 @@ const ComexDashboard = ({returnToSelector}) => {
 
             {/* Upload area */}
             <div
-              className={`bg-white rounded-xl p-6 border-2 border-dashed shadow-lg hover:shadow-xl transition-all duration-300 ${dragActive ? 'border-blue-400 bg-blue-50 scale-105' : 'border-gray-300'}`}
+              className={`bg-white rounded-xl p-6 border-2 border-dashed shadow-lg hover:shadow-xl transition-all  ${dragActive ? 'border-blue-400 bg-blue-50 scale-105' : 'border-gray-300'}`}
               onDragEnter={handleDrag}
               onDragLeave={handleDrag}
               onDragOver={handleDrag}
@@ -788,7 +788,7 @@ const ComexDashboard = ({returnToSelector}) => {
                 <div className="flex gap-2 justify-center">
                   <button
                     onClick={() => fileRef.current?.click()}
-                    className="px-6 py-3 bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 text-white rounded-lg transition-all duration-300 shadow-md hover:shadow-lg transform hover:scale-105"
+                    className="px-6 py-3 bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 text-white rounded-lg transition-all  shadow-md hover:shadow-lg transform hover:scale-105"
                   >
                     {file ? 'Changer le fichier' : 'Sélectionner un fichier'}
                   </button>
@@ -800,7 +800,7 @@ const ComexDashboard = ({returnToSelector}) => {
                         setFileValidation({ isValid: null, message: '' });
                         addNotification('info', 'Fichier supprimé');
                       }}
-                      className="px-4 py-3 bg-gray-100 hover:bg-gray-200 text-gray-700 rounded-lg transition-all duration-300"
+                      className="px-4 py-3 bg-gray-100 hover:bg-gray-200 text-gray-700 rounded-lg transition-all "
                     >
                       <XCircle size={16} />
                     </button>
@@ -810,7 +810,7 @@ const ComexDashboard = ({returnToSelector}) => {
             </div>
 
             {/* Controls */}
-            <div className="bg-white rounded-xl p-6 border border-gray-200 shadow-lg hover:shadow-xl transition-all duration-300">
+            <div className="bg-white rounded-xl p-6 border border-gray-200 shadow-lg hover:shadow-xl transition-all ">
               <h2 className="text-gray-900 text-xl font-semibold mb-4 flex items-center">
                 <Settings className="mr-3 text-blue-600" />
                 Contrôles
@@ -820,7 +820,7 @@ const ComexDashboard = ({returnToSelector}) => {
                 <button
                   onClick={handleRefresh}
                   disabled={isRefreshing || !analysisResult}
-                  className="w-full px-4 py-2 bg-gray-100 hover:bg-gray-200 text-gray-700 rounded-lg transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center"
+                  className="w-full px-4 py-2 bg-gray-100 hover:bg-gray-200 text-gray-700 rounded-lg transition-all  disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center"
                 >
                   <RefreshCw size={16} className={`mr-2 ${isRefreshing ? 'animate-spin' : ''}`} />
                   {isRefreshing ? 'Actualisation...' : 'Actualiser'}
@@ -835,9 +835,9 @@ const ComexDashboard = ({returnToSelector}) => {
               <button
                 onClick={analyze}
                 disabled={!file || !selectedReport || isLoading || fileValidation.isValid === false}
-                className="px-12 py-4 bg-gradient-to-r from-blue-600 to-blue-700 text-white font-semibold rounded-xl hover:from-blue-700 hover:to-blue-800 transition-all duration-300 shadow-lg hover:shadow-xl disabled:opacity-50 disabled:cursor-not-allowed transform hover:scale-105 disabled:transform-none text-lg relative overflow-hidden group"
+                className="px-12 py-4 bg-gradient-to-r from-blue-600 to-blue-700 text-white font-semibold rounded-xl hover:from-blue-700 hover:to-blue-800 transition-all  shadow-lg hover:shadow-xl disabled:opacity-50 disabled:cursor-not-allowed transform hover:scale-105 disabled:transform-none text-lg relative overflow-hidden group"
               >
-                <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white to-transparent opacity-0 group-hover:opacity-20 transform -skew-x-12 -translate-x-full group-hover:translate-x-full transition-transform duration-1000"></div>
+                <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white to-transparent opacity-0 group-hover:opacity-20 transform -skew-x-12 -translate-x-full group-hover:translate-x-full transition-transform "></div>
                 
                 {isLoading ? (
                   <div className="flex items-center relative z-10">

@@ -7,6 +7,7 @@ from app.inwi.inwi2 import router as inwi2_router
 from app.inwi.inwi3 import router as inwi3_router
 from app.inwi.export_service import router as export_router
 from sqlalchemy import text
+import logging
 
 # Rate limiting imports
 from app.auth.auth_routes import limiter
@@ -85,10 +86,11 @@ async def health_check():
             "version": "1.0.0"
         }
     except Exception as e:
+        logging.error("Health check failed", exc_info=True)
         return {
             "status": "unhealthy",
             "timestamp": datetime.now().isoformat(),
-            "error": str(e)
+            "error": "An internal error has occurred!"
         }
 
 # Root endpoint

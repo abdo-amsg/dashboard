@@ -1,12 +1,13 @@
-import { useState, useRef, useEffect } from 'react';
+import { useState, useRef, useEffect, useContext } from 'react';
 import { Search, Download, Upload, Moon, Sun, ChevronDown } from 'lucide-react';
 import UploadFlow from './UploadFlow';
+import { ThemeContext } from '../contexts/ThemeContext';
 
 function DashboardHeader({ setSwitch, setActiveItem, user, logout }) {
   const [searchQuery, setSearchQuery] = useState('');
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const [isUploadModalOpen, setIsUploadModalOpen] = useState(false);
-  const [isDarkMode, setIsDarkMode] = useState(false);
+  const { theme, toggleTheme } = useContext(ThemeContext);
   const dropdownRef = useRef(null);
 
   useEffect(() => {
@@ -27,21 +28,17 @@ function DashboardHeader({ setSwitch, setActiveItem, user, logout }) {
 
   return (
     <>
-      <header
-        className="bg-white border-b border-gray-200 shadow-sm"
-      // style={{ backgroundColor: 'hsl(26, 41%, 96%)' }}
-      >
-        <div className="flex items-center justify-between px-6 py-3">
+      <header className="bg-background text-text-primary px-6 py-3 border-b border-border shadow-sm transition-all ">
+        <div className="flex items-center justify-between">
           {/* Logo Section */}
           <div className="flex items-center space-x-3">
-            {/* <img src='CybrSens logo.png' className='w-60 h-16 p-0 m-0'></img> */}
-            <div className="w-10 h-10 bg-gradient-to-br from-blue-500 to-blue-600 rounded-xl flex items-center justify-center shadow-lg">
-              <div className="w-6 h-6 bg-white rounded-full flex items-center justify-center">
-                <div className="w-3 h-3 bg-gradient-to-br from-blue-500 to-blue-600 rounded-full"></div>
+            <div className="w-10 h-10 bg-gradient-to-br bg-brand rounded-xl flex items-center justify-center shadow-lg">
+              <div className="w-6 h-6 bg-background rounded-full flex items-center justify-center">
+                <div className="w-3 h-3 bg-gradient-to-br bg-brand rounded-full"></div>
               </div>
             </div>
             <h1>
-              <span className="text-2xl font-bold bg-blue-600 bg-clip-text text-transparent">
+              <span className="text-2xl font-bold bg-brand bg-clip-text text-transparent">
                 Cybr
               </span>
               <span className="text-2xl font-bold bg-red-600 bg-clip-text text-transparent">
@@ -54,19 +51,19 @@ function DashboardHeader({ setSwitch, setActiveItem, user, logout }) {
           <div className="flex items-center space-x-4">
             {/* Search Bar */}
             <div className="relative">
-              <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-4 h-4" />
+              <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-text-secondary w-4 h-4" />
               <input
                 type="text"
                 placeholder="Search..."
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
-                className="w-80 pl-10 pr-4 py-2 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent text-sm bg-gray-50 transition-all duration-200"
+                className="w-80 pl-10 pr-4 py-2 border border-input-border rounded-xl focus:outline-none focus:ring-2 focus:ring-brand focus:border-transparent text-sm bg-input-background text-input-text"
               />
             </div>
 
             {/* Download Button */}
             <button
-              className="p-2.5 text-gray-500 hover:text-blue-600 hover:bg-blue-50 rounded-xl transition-all duration-200 relative group"
+              className="p-2.5 text-text-secondary hover:text-brand hover:bg-hover rounded-xl relative group"
               title="Export Reports"
             >
               <Download className="w-5 h-5" />
@@ -77,8 +74,8 @@ function DashboardHeader({ setSwitch, setActiveItem, user, logout }) {
 
             {/* Upload Button with Enhanced Styling */}
             <button
-              onClick={() => setIsUploadModalOpen(true)}
-              className="p-2.5 text-gray-500 hover:text-blue-600 hover:bg-blue-50 rounded-xl transition-all duration-200 relative group"
+              onClick={() => {setIsUploadModalOpen(true); console.log(isUploadModalOpen)}}
+              className="p-2.5 text-text-secondary hover:text-brand hover:bg-hover rounded-xl relative group"
               title="Upload Security Report"
             >
               <Upload className="w-5 h-5" />
@@ -90,58 +87,57 @@ function DashboardHeader({ setSwitch, setActiveItem, user, logout }) {
 
             {/* Theme Toggle */}
             <button
-              onClick={() => setIsDarkMode(!isDarkMode)}
-              className="p-2.5 text-gray-500 hover:text-yellow-600 hover:bg-yellow-50 rounded-xl transition-all duration-200 relative group"
+              onClick={toggleTheme}
+              className="p-2.5 text-text-secondary hover:text-yellow-600 hover:bg-yellow-100 rounded-xl relative group"
               title="Toggle Theme"
             >
-              {isDarkMode ? (
+              {theme === 'dark' ? (
                 <Sun className="w-5 h-5" />
               ) : (
                 <Moon className="w-5 h-5" />
               )}
-              <span className="absolute -bottom-8 left-1/2 transform -translate-x-1/2 bg-gray-800 text-white text-xs px-2 py-1 rounded opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap">
-                {isDarkMode ? 'Light Mode' : 'Dark Mode'}
-              </span>
             </button>
 
-            {/* User Profile */}
+            {/* Profile Dropdown */}
             <div className="relative" ref={dropdownRef}>
               <button
                 onClick={() => setIsDropdownOpen(!isDropdownOpen)}
-                className="flex items-center space-x-3 px-4 py-2 rounded-full bg-blue-50 hover:bg-blue-100 transition-all duration-200 border border-blue-100"
+                className="flex items-center space-x-3 px-4 py-2 rounded-xl bg-profile-background hover:bg-hover transition-colors"
               >
-                <div className="w-8 h-8 bg-gradient-to-br from-red-500 to-blue-500 rounded-full flex items-center justify-center">
-                  <span className="text-white font-medium text-sm">
-                    {user?.username?.[0]?.toUpperCase() || 'U'}
-                  </span>
+                <img
+                  src={`https://imgs.search.brave.com/uDEcwBKmk2pulTQswWm7XSMR4qrHMDyagzZBYVIMHLs/rs:fit:860:0:0:0/g:ce/aHR0cHM6Ly9jZG4u/dmVjdG9yc3RvY2su/Y29tL2kvNTAwcC8y/OC82Ni9ncmF5LXBy/b2ZpbGUtc2lsaG91/ZXR0ZS1hdmF0YXIt/dmVjdG9yLTIxNTQy/ODY2LmpwZw`}
+                  alt="User Avatar"
+                  className="w-8 h-8 rounded-full"
+                />
+                <div className="text-left">
+                  <p className="text-sm font-medium text-text-primary">
+                    {user.username}
+                  </p>
+                  <p className="text-xs text-text-secondary">
+                    {user.is_superuser ? 'Admin' : 'User'}
+                  </p>
                 </div>
-                <span className="text-gray-700 font-medium text-sm">
-                  {user?.username || 'User'}
-                </span>
-                <ChevronDown className={`w-4 h-4 text-gray-500 transition-transform duration-200 ${isDropdownOpen ? 'rotate-180' : ''}`} />
+                <ChevronDown className="w-4 h-4 text-text-secondary" />
               </button>
-
-              {/* Dropdown Menu */}
               {isDropdownOpen && (
-                <div className="absolute right-0 mt-2 w-48 bg-white rounded-xl shadow-lg border border-gray-200 py-2 z-10 animate-fadeIn">
+                <div className="absolute right-0 mt-2 w-48 bg-card-background border border-card-border rounded-lg shadow-lg py-1 z-10">
                   <a
-                    onClick={() => {
+                    onClick={(e) => {
+                      e.preventDefault();
                       setActiveItem(4);
                       setIsDropdownOpen(false);
                     }}
-                    className="block px-4 py-2 text-sm text-gray-700 hover:bg-blue-50 transition-colors"
+                    className="block px-4 py-2 text-sm text-text-primary hover:bg-hover cursor-pointer transition-colors"
                   >
-                    <div className="flex items-center space-x-2">
-                      <div className="w-2 h-2 bg-green-500 rounded-full"></div>
-                      <span>Profile</span>
-                    </div>
+                    Profile
                   </a>
                   <a
-                    onClick={() => {
+                    onClick={(e) => {
+                      e.preventDefault();
                       setActiveItem(1);
                       setIsDropdownOpen(false);
                     }}
-                    className="block px-4 py-2 text-sm text-gray-700 hover:bg-blue-50 cursor-pointer transition-colors"
+                    className="block px-4 py-2 text-sm text-text-primary hover:bg-hover cursor-pointer transition-colors"
                   >
                     Settings
                   </a>
@@ -152,17 +148,17 @@ function DashboardHeader({ setSwitch, setActiveItem, user, logout }) {
                         setActiveItem(0);
                         setIsDropdownOpen(false);
                       }}
-                      className="block px-4 py-2 text-sm text-gray-700 hover:bg-blue-50 cursor-pointer transition-colors"
+                      className="block px-4 py-2 text-sm text-text-primary hover:bg-hover cursor-pointer transition-colors"
                     >
                       Manage Users
                     </a>
                   )}
-                  <hr className="my-2 border-gray-200" />
+                  <hr className="my-2 border-border" />
                   <button
                     onClick={() => {
                       logout();
                     }}
-                    className="block w-full text-left px-4 py-2 text-sm text-red-600 hover:bg-red-50 transition-colors"
+                    className="block w-full text-left px-4 py-2 text-sm text-danger hover:bg-danger-light cursor-pointer transition-colors"
                   >
                     Sign Out
                   </button>
@@ -173,10 +169,10 @@ function DashboardHeader({ setSwitch, setActiveItem, user, logout }) {
         </div>
       </header>
 
-      {/* Enhanced Upload Flow Modal */}
       <UploadFlow
         isOpen={isUploadModalOpen}
         onClose={() => setIsUploadModalOpen(false)}
+        setActiveItem={setActiveItem}
       />
 
       <style jsx>{`
