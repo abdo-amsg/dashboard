@@ -22,12 +22,12 @@ RUN npm install --legacy-peer-deps
 COPY . .
 
 # Create non-root user and set up directories with proper permissions
-RUN useradd -m -u 1001 appuser && \
-    mkdir -p /app/.npm/_logs && \
-    chown -R appuser:appuser /app
+# RUN useradd -m -u 1001 appuser && \
+#     mkdir -p /app/.npm/_logs && \
+#     chown -R appuser:appuser /app
 
-# Switch to non-root user
-USER appuser
+# # Switch to non-root user
+# USER appuser
 
 # Set Vite host and port environment variables
 ENV VITE_HOST=0.0.0.0
