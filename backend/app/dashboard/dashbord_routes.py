@@ -5,9 +5,11 @@ import hashlib
 import os
 import json
 from typing import List, Optional
-from datetime import datetime
+from datetime import datetime, timezone
 from sqlalchemy import func
 from sqlalchemy.orm import Session
+import re
+import aiofiles
 
 from . import models, schemas
 from .database import get_db
@@ -15,6 +17,12 @@ from ..auth.admin_routes import get_current_user, get_admin_user
 from ..auth import models as auth_models
 
 router = APIRouter(prefix="/dashboard", tags=["dashboard"])
+
+def secure_filename(filename: str) -> str:
+    """Remove any unsafe characters from the filename."""
+    filename = os.path.basename(filename)
+    filename = re.sub(r'[^A-Za-z0-9_.-]', '_', filename)
+    return filename
 
 # ==================== KPI MANAGEMENT ====================
 
@@ -66,8 +74,8 @@ async def create_kpi(
     new_kpi = models.KPI(
         **kpi.dict(),
         updated_by=admin.id,
-        created_at=datetime.utcnow(),
-        updated_at=datetime.utcnow()
+        created_at=datetime.now(timezone.utc),
+        updated_at=datetime.now(timezone.utc)
     )
     
     db.add(new_kpi)
@@ -103,7 +111,7 @@ async def update_kpi(
         setattr(kpi, field, value)
     
     kpi.updated_by = admin.id
-    kpi.updated_at = datetime.utcnow()
+    kpi.updated_at = datetime.now(timezone.utc)
     
     db.commit()
     db.refresh(kpi)
@@ -185,8 +193,8 @@ async def create_tool(
     new_tool = models.Tool(
         **tool.dict(),
         updated_by=admin.id,
-        created_at=datetime.utcnow(),
-        updated_at=datetime.utcnow()
+        created_at=datetime.now(timezone.utc),
+        updated_at=datetime.now(timezone.utc)
     )
     
     db.add(new_tool)
@@ -222,7 +230,7 @@ async def update_tool(
         setattr(tool, field, value)
     
     tool.updated_by = admin.id
-    tool.updated_at = datetime.utcnow()
+    tool.updated_at = datetime.now(timezone.utc)
     
     db.commit()
     db.refresh(tool)
@@ -277,7 +285,7 @@ async def get_dashboard_stats(
         
         # Log statistics
         total_logs = db.query(models.Log).count()
-        today_start = datetime.utcnow().replace(hour=0, minute=0, second=0, microsecond=0)
+        today_start = datetime.now(timezone.utc).replace(hour=0, minute=0, second=0, microsecond=0)
         recent_logs = db.query(models.Log).filter(
             models.Log.created_at >= today_start
         ).count()
@@ -295,7 +303,7 @@ async def get_dashboard_stats(
                 "total": total_logs,
                 "today": recent_logs
             },
-            "updated_at": datetime.utcnow().isoformat()
+            "updated_at": datetime.now(timezone.utc).isoformat()
         }
         
     except Exception as e:
@@ -363,15 +371,15 @@ async def get_dashboard_kpi_values(
         "success": True,
         "kpis": kpi_data,
         "count": len(kpi_data),
-        "last_updated": datetime.utcnow().isoformat()
+        "last_updated": datetime.now(timezone.utc).isoformat()
     }
 
 # ==================== FILE MANAGEMENT ====================
 from fastapi import Request, Header
 
 UPLOAD_DIR = "uploads"
-PARSER_SERVICE_URL = "http://parser_backend:8001"
-CALCULATOR_SERVICE_URL = "http://calculator_backend:8002"
+PARSER_SERVICE_URL = "http://localhost:8001"
+CALCULATOR_SERVICE_URL = "http://localhost:8002"
 
 import logging
 # Set up logging
@@ -390,13 +398,13 @@ async def trigger_kpi_calculation(token: str) -> dict:
             
             if response.status_code != 200:
                 logger.error(f"KPI calculation failed: {response.text}")
-                return None
+                return {'error':'KPI calculation failed'}
                 
             return response.json()
             
     except Exception as e:
         logger.error(f"Error triggering KPI calculation: {str(e)}")
-        return None
+        return {'error':'Error triggering KPI calculation'}
 
 @router.post("/files/upload", response_model=schemas.FileUploadResponse)
 async def upload_file(
@@ -414,13 +422,22 @@ async def upload_file(
     contents = await file.read()
     file_hash = hashlib.md5(contents).hexdigest()
     
-    # Create file path
-    file_ext = os.path.splitext(file.filename)[1]
+    # Sanitize filename
+    safe_filename = secure_filename(file.filename)
+    file_ext = os.path.splitext(safe_filename)[1]
+
+    # Construct safe file path
     file_path = os.path.join(UPLOAD_DIR, f"{file_hash}{file_ext}")
     
-    # Save file
-    with open(file_path, "wb") as f:
-        f.write(contents)
+    # Ensure path is inside UPLOAD_DIR (extra protection)
+    abs_upload_dir = os.path.abspath(UPLOAD_DIR)
+    abs_file_path = os.path.abspath(file_path)
+    if not abs_file_path.startswith(abs_upload_dir):
+        raise HTTPException(status_code=400, detail="Invalid file path")
+
+    # Save file asynchronously (non-blocking I/O)
+    async with aiofiles.open(abs_file_path, "wb") as f:
+        await f.write(contents)
     
     # Create file record
     db_file = models.File(
@@ -455,7 +472,7 @@ async def upload_file(
                 try:
                     # Try to extract the parser's error detail
                     error_detail = response.json().get("detail", "Unknown parser error")
-                except:
+                except Exception:
                     error_detail = response.text  # Fallback to raw response
                 logger.error(error_detail)
                 db_file.status = "failed"
@@ -539,22 +556,22 @@ async def upload_file(
             
             # Trigger KPI calculation
             calculation_result = await trigger_kpi_calculation(token)
-            if calculation_result:
+            if calculation_result and not calculation_result.get('error'):
                 logger.info("KPI calculation completed successfully")
                 # Store new KPI values
-                # if calculation_result.get("calculated_kpis"):
-                #     for kpi in calculation_result["calculated_kpis"]:
-                #         try:
-                #             # Create KPI value record
-                #             kpi_value = models.KPIValue(
-                #                 kpi_id=kpi["id"],
-                #                 value=json.dumps(kpi["value"]),
-                #                 timestamp=datetime.utcnow()
-                #             )
-                #             db.add(kpi_value)
-                #         except Exception as e:
-                #             logger.error(f"Error storing KPI value: {str(e)}")
-                #     db.commit()
+                if calculation_result.get("calculated_kpis"):
+                    for kpi in calculation_result["calculated_kpis"]:
+                        try:
+                            # Create KPI value record
+                            kpi_value = models.KPIValue(
+                                kpi_id=kpi["id"],
+                                value=json.dumps(kpi["value"]),
+                                timestamp=datetime.now(timezone.utc)
+                            )
+                            db.add(kpi_value)
+                        except Exception as e:
+                            logger.error(f"Error storing KPI value: {str(e)}")
+                    db.commit()
             else:
                 logger.warning("KPI calculation failed or returned no results")
                 raise HTTPException(

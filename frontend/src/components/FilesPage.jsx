@@ -127,7 +127,7 @@ const FilesPage = () => {
   }
 
   return (
-    <div className="bg-main-background p-6">
+    <div className="bg-main-background p-6 h-full">
       {/* Header */}
       <div className="bg-background rounded-xl shadow-sm p-6 mb-6">
         <div className="flex items-center justify-between">

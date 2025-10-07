@@ -174,59 +174,6 @@ const DashboardLevelSelector = () => {
           />
         </div>
 
-        {/* Enhanced CSS animations */}
-        <style jsx>{`
-          @keyframes float {
-            0%, 100% { transform: translateY(0px) rotate(0deg); }
-            25% { transform: translateY(-20px) rotate(1deg); }
-            50% { transform: translateY(-10px) rotate(-1deg); }
-            75% { transform: translateY(-15px) rotate(0.5deg); }
-          }
-          
-          @keyframes cardExpand {
-            0% { transform: scale(1) translateY(0px); }
-            100% { transform: scale(1.1) translateY(-16px); }
-          }
-          
-          @keyframes cardShrink {
-            0% { transform: scale(1) translateY(0px); }
-            100% { transform: scale(0.95) translateY(0px); }
-          }
-          
-          @keyframes glowPulse {
-            0%, 100% { box-shadow: 0 0 20px rgba(59, 130, 246, 0.3); }
-            50% { box-shadow: 0 0 40px rgba(59, 130, 246, 0.6); }
-          }
-          
-          @keyframes shimmer {
-            0% { background-position: -200px 0; }
-            100% { background-position: calc(200px + 100%) 0; }
-          }
-          
-          .shadow-3xl {
-            box-shadow: 0 35px 60px -12px rgba(0, 0, 0, 0.25);
-          }
-          
-          .card-expanded {
-            animation: cardExpand 0.7s ease-out forwards;
-            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.4);
-          }
-          
-          .card-shrunk {
-            animation: cardShrink 0.7s ease-out forwards;
-          }
-          
-          .shimmer-effect {
-            background: linear-gradient(90deg, transparent 25%, rgba(255,255,255,0.4) 50%, transparent 75%);
-            background-size: 200px 100%;
-            animation: shimmer 2s infinite;
-          }
-          
-          .glow-effect {
-            animation: glowPulse 2s ease-in-out infinite;
-          }
-        `}</style>
-
         <div className="relative p-6" style={{ zIndex: 1 }}>
           {/* Header */}
           <div className="text-center mb-12">
@@ -442,38 +389,6 @@ const DashboardLevelSelector = () => {
             </div>
           </div>
         </div>
-
-        {/* Inline styles */}
-        <style>{`
-        @keyframes float {
-          0%, 100% { transform: translateY(0px) rotate(0deg); }
-          50% { transform: translateY(-10px) rotate(1deg); }
-        }
-
-        .group:hover .group-hover\\:scale-110 {
-          transform: scale(1.1);
-        }
-
-        .group:hover .group-hover\\:translate-x-1 {
-          transform: translateX(0.25rem);
-        }
-
-        .group:hover .group-hover\\:text-blue-900 {
-          color: #1e3a8a;
-        }
-
-        .group:hover .group-hover\\:text-blue-700 {
-          color: #1d4ed8;
-        }
-
-        .group:hover .group-hover\\:scale-105 {
-          transform: scale(1.05);
-        }
-
-        .group:hover .group-hover\\:opacity-5 {
-          opacity: 0.05;
-        }
-      `}</style>
       </div>
     );
   }

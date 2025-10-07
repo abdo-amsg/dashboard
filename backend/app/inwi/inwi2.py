@@ -475,7 +475,7 @@ analyzer = CISOAnalyzer()
 @router.post("/inwi2/upload")
 async def upload_file(
     file: UploadFile = File(...), 
-    reportType: str = Form(...),
+    report_type: str = Form(...),
     current_user: auth_models.User = Depends(get_current_user)
 ):
     """Upload and analyze CISO-level SOC report files"""
@@ -488,7 +488,7 @@ async def upload_file(
         if not file.filename.endswith('.csv'):
             raise HTTPException(status_code=400, detail="Only CSV files are supported")
         
-        if reportType not in analyzer.report_types:
+        if report_type not in analyzer.report_types:
             raise HTTPException(status_code=400, detail="Invalid report type")
         
         # Validate file size (max 10MB)
@@ -507,13 +507,13 @@ async def upload_file(
             raise HTTPException(status_code=400, detail="CSV file is empty")
         
         # Analyze data based on report type
-        analysis_result = analyzer.report_types[reportType](df)
+        analysis_result = analyzer.report_types[report_type](df)
         
-        logger.info(f"Successfully analyzed {reportType} report for user {current_user.email}")
+        logger.info(f"Successfully analyzed {report_type} report for user {current_user.email}")
         
         return {
             'success': True,
-            'reportType': reportType,
+            'report_type': report_type,
             'data': analysis_result,
             'filename': file.filename,
             'rows_processed': len(df)
@@ -522,13 +522,13 @@ async def upload_file(
     except HTTPException:
         raise
     except Exception as e:
-        logger.error(f"Error processing CISO file {file.filename}: {str(e)}")
+        logger.error(f"Error processing CISO file: {str(e)}")
         raise HTTPException(status_code=500, detail=f"Processing error: {str(e)}")
 
 @router.post("/inwi2/upload-test")
 async def upload_file_test(
     file: UploadFile = File(...), 
-    reportType: str = Form(...)
+    report_type: str = Form(...)
 ):
     """Upload and analyze CISO-level SOC report files - TEST VERSION WITHOUT AUTH"""
     try:
@@ -540,7 +540,7 @@ async def upload_file_test(
         if not file.filename.endswith('.csv'):
             raise HTTPException(status_code=400, detail="Only CSV files are supported")
         
-        if reportType not in analyzer.report_types:
+        if report_type not in analyzer.report_types:
             raise HTTPException(status_code=400, detail="Invalid report type")
         
         # Validate file size (max 10MB)
@@ -559,13 +559,13 @@ async def upload_file_test(
             raise HTTPException(status_code=400, detail="CSV file is empty")
         
         # Analyze data based on report type
-        analysis_result = analyzer.report_types[reportType](df)
+        analysis_result = analyzer.report_types[report_type](df)
         
-        logger.info(f"Successfully analyzed {reportType} report (CISO test mode)")
+        logger.info(f"Successfully analyzed {report_type} report (CISO test mode)")
         
         return {
             'success': True,
-            'reportType': reportType,
+            'report_type': report_type,
             'data': analysis_result,
             'filename': file.filename,
             'rows_processed': len(df)
@@ -574,7 +574,7 @@ async def upload_file_test(
     except HTTPException:
         raise
     except Exception as e:
-        logger.error(f"Error processing CISO file {file.filename}: {str(e)}")
+        logger.error(f"Error processing CISO file: {str(e)}")
         raise HTTPException(status_code=500, detail=f"Processing error: {str(e)}")
 
 @router.get("/inwi2/health")

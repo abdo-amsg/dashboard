@@ -174,23 +174,6 @@ function DashboardHeader({ setSwitch, setActiveItem, user, logout }) {
         onClose={() => setIsUploadModalOpen(false)}
         setActiveItem={setActiveItem}
       />
-
-      <style jsx>{`
-        @keyframes fadeIn {
-          from {
-            opacity: 0;
-            transform: translateY(-10px);
-          }
-          to {
-            opacity: 1;
-            transform: translateY(0);
-          }
-        }
-        
-        .animate-fadeIn {
-          animation: fadeIn 0.2s ease-out;
-        }
-      `}</style>
     </>
   );
 }
