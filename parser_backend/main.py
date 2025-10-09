@@ -5,6 +5,7 @@ from parsers import nessus, cisco_asa, KasperskyAV
 from normalizer import Normalizer
 import json
 import logging
+import aiofiles
 
 # Set up logging
 logging.basicConfig(level=logging.INFO)
@@ -12,7 +13,7 @@ logger = logging.getLogger(__name__)
 
 app = FastAPI(title="Security Parser Service", version="1.0.0")
 
-DASHBOARD_SERVICE_URL = "http://backend:8000"  # service name in Docker Compose
+DASHBOARD_SERVICE_URL = "http://localhost:8000"  # service name in Docker Compose
 
 from typing import List, Dict, Any
 class ParsedFinding(BaseModel):
@@ -38,181 +39,141 @@ async def parse_file(request: ParseRequest):
     """Parse uploaded security report file"""
     try:
         logger.info(f"Starting to parse file_id: {request.file_id} with tool_id: {request.tool_id}")
-        
-        # Get file info from dashboard service
-        async with httpx.AsyncClient() as client:
-            # Get file information
-            response = await client.get(
-                f"{DASHBOARD_SERVICE_URL}/api/dashboard/files/{request.file_id}",
-                headers={"Authorization": f"Bearer {request.auth_token}"},
-                timeout=30.0,
-            )
-            
-            if response.status_code != 200:
-                logger.error(f"Failed to get file info: {response.status_code}")
-                raise HTTPException(status_code=404, detail="File not found")
-            
-            file_info = response.json()
-            logger.info(f"Retrieved file info: {file_info['filename']}")
-            
-            # Get tool information to determine parser type
-            tool_response = await client.get(
-                f"{DASHBOARD_SERVICE_URL}/api/dashboard/tools/{request.tool_id}",
-                headers={"Authorization": f"Bearer {request.auth_token}"},
-                timeout=30.0
-            )
-            
-            if tool_response.status_code != 200:
-                logger.error(f"Failed to get tool info: {tool_response.status_code}")
-                raise HTTPException(status_code=404, detail="Tool not found")
-            
-            tool_info = tool_response.json()
-            logger.info(f"Retrieved tool info: {tool_info['name']} - {tool_info['type']}")
-            
-            file_content = None
-            
-            # approche read file content
-            if file_content is None:
-                try:
-                    if "file_path" in file_info:
-                        with open(file_info["file_path"], "r", encoding='utf-8') as f:
-                            file_content = f.read()
-                        logger.info(f"Retrieved file content via direct read: {len(file_content)} characters")
-                    else:
-                        logger.error("No file_path found in file_info")
-                except Exception as e:
-                    logger.error(f"Failed to read file directly: {e}")
-            
-            # Si aucune méthode ne fonctionne
-            if file_content is None:
-                logger.error("Failed to retrieve file content via any method")
-                raise HTTPException(status_code=404, detail="File content not found")
-            
-            # Initialize appropriate parser based on tool type
-            parser = None
-            if tool_info['type'].lower() == 'vulnerability scanner':
-                # For vulnerability scanners, we need to determine the specific type
-                tool_name_lower = tool_info['name'].lower()
-                if 'nessus' in tool_name_lower:
-                    parser = nessus.NessusParser()
-                else:
-                    logger.warning(f"Unsupported vulnerability scanner: {tool_info['name']}")
-                    raise HTTPException(
-                        status_code=400, 
-                        detail=f"Vulnerability scanner '{tool_info['name']}' is not supported yet. Currently supported: Nessus"
-                    )
-            elif tool_info['type'].lower() == 'firewall':    
-                tool_name_lower = tool_info['name'].lower()
-                if 'cisco' in tool_name_lower:
-                    parser = cisco_asa.CiscoASAParser()
-                else:
-                    logger.warning(f"Unsupported firewall tool: {tool_info['name']}")
-                    raise HTTPException(
-                        status_code=400, 
-                        detail=f"Firewall tool '{tool_info['name']}' is not supported yet. Currently supported: Cisco ASA"
-                    )
-            elif tool_info['type'].lower() == 'antivirus':
-                tool_name_lower = tool_info['name'].lower()
-                if 'kaspersky' in tool_name_lower:
-                    parser = KasperskyAV.KasperskyAVParser()
-                else:
-                    logger.warning(f"Unsupported antivirus tool: {tool_info['name']}")
-                    raise HTTPException(
-                        status_code=400, 
-                        detail=f"Antivirus tool '{tool_info['name']}' is not supported yet. Currently supported: Kaspersky"
-                    )
-            else:
-                logger.warning(f"No parser available for tool type: {tool_info['type']}")
-                raise HTTPException(
-                    status_code=400, 
-                    detail=f"Tool type '{tool_info['type']}' is not supported yet. Currently supported: vulnerability_scanner (Nessus), Kaspersky AV"
-                )
-            
-            # Parse the report
-            try:
-                findings = parser.parse_report(file_content, file_info["filename"])
-                logger.info(f"Parser returned {len(findings)} findings")
-                
-                if not isinstance(findings, list):
-                    logger.error("Parser returned non-list result")
-                    raise HTTPException(status_code=500, detail="Invalid response from parser")
-                
-                # Handle empty results
-                if len(findings) == 0:
-                    logger.info("No findings found in the report")
-                    return {"findings": []}
-                
-                # Normalize findings
-                normalizer = Normalizer()
-                parsed_findings = []
-                normalization_errors = 0
-                
-                for i, finding in enumerate(findings):
-                    try:
-                        normalized = normalizer.normalize(finding)
-                        parsed_findings.append({
-                            "raw_finding": finding,      # Original data from parser
-                            "normalized_finding": normalized  # Processed data
-                        })
-                    except Exception as e:
-                        normalization_errors += 1
-                        logger.warning(f"Failed to normalize finding {i+1}: {str(e)}")
-                        # Continue processing other findings
-                        continue
-                
-                # Log normalization results
-                if normalization_errors > 0:
-                    logger.warning(f"Failed to normalize {normalization_errors} out of {len(findings)} findings")
-                
-                logger.info(f"Successfully normalized {len(parsed_findings)} findings")
-                return {"findings": parsed_findings}
-                
-            except ValueError as e:
-                # Handle format validation errors with user-friendly messages
-                error_message = str(e)
-                logger.error(f"Format validation error: {error_message}")
-                
-                # Provide specific guidance based on the error
-                if "does not appear to be a valid Nessus v2 report" in error_message:
-                    raise HTTPException(
-                        status_code=400, 
-                        detail="The uploaded file is not a valid Nessus report. Please ensure you exported the report as '.nessus' format from Tenable Nessus."
-                    )
-                elif "does not appear to be a valid Kaspersky AV log" in error_message:  # CORRIGÉ
-                    raise HTTPException(
-                        status_code=400, 
-                        detail="The uploaded file is not a valid Kaspersky AV log. Please ensure you uploaded a properly formatted Kaspersky AV log file."
-                    )
-                elif "does not have valid Nessus report structure" in error_message:
-                    raise HTTPException(
-                        status_code=400, 
-                        detail="The file structure is not valid for a Nessus report. Please check that the XML export completed successfully."
-                    )
-                elif "does not have valid Kaspersky AV log structure" in error_message:  # CORRIGÉ
-                    raise HTTPException(
-                        status_code=400, 
-                        detail="The file structure is not valid for a Kaspersky AV log. Please check that the log format is correct."
-                    )
-                elif "Invalid XML format" in error_message:
-                    raise HTTPException(
-                        status_code=400, 
-                        detail="The uploaded file contains invalid XML. Please re-export the report from Nessus."
-                    )
-                else:
-                    raise HTTPException(status_code=400, detail=error_message)
-                    
-            except Exception as e:
-                logger.error(f"Unexpected error parsing report: {str(e)}")
-                raise HTTPException(
-                    status_code=500, 
-                    detail=f"An unexpected error occurred while parsing the report. Please check the file format and try again."
-                )
-            
+
+        file_info, tool_info = await _fetch_file_and_tool_info(request)
+        file_content = await _read_file_content(file_info)
+        parser = _initialize_parser(tool_info)
+
+        findings = _parse_and_normalize(parser, file_content, file_info["filename"])
+        return {"findings": findings}
+
     except HTTPException:
         raise
     except Exception as e:
         logger.error(f"Unexpected error in parse_file: {str(e)}")
         raise HTTPException(status_code=500, detail=f"Service error: {str(e)}")
+
+
+# --- Helper functions ---
+
+async def _fetch_file_and_tool_info(request: ParseRequest):
+    """Retrieve file and tool information from dashboard service"""
+    async with httpx.AsyncClient() as client:
+        file_resp = await client.get(
+            f"{DASHBOARD_SERVICE_URL}/api/dashboard/files/{request.file_id}",
+            headers={"Authorization": f"Bearer {request.auth_token}"},
+            timeout=30.0
+        )
+        if file_resp.status_code != 200:
+            logger.error(f"Failed to get file info: {file_resp.status_code}")
+            raise HTTPException(status_code=404, detail="File not found")
+        file_info = file_resp.json()
+        logger.info(f"Retrieved file info: {file_info['filename']}")
+
+        tool_resp = await client.get(
+            f"{DASHBOARD_SERVICE_URL}/api/dashboard/tools/{request.tool_id}",
+            headers={"Authorization": f"Bearer {request.auth_token}"},
+            timeout=30.0
+        )
+        if tool_resp.status_code != 200:
+            logger.error(f"Failed to get tool info: {tool_resp.status_code}")
+            raise HTTPException(status_code=404, detail="Tool not found")
+        tool_info = tool_resp.json()
+        logger.info(f"Retrieved tool info: {tool_info['name']} - {tool_info['type']}")
+
+    return file_info, tool_info
+
+
+async def _read_file_content(file_info: dict):
+    """Read the file content from disk"""
+    if "file_path" not in file_info:
+        logger.error("No file_path found in file_info")
+        raise HTTPException(status_code=404, detail="File content not found")
+
+    try:
+        async with aiofiles.open(f"../backend/{file_info['file_path']}", "r", encoding='utf-8') as f:
+            content = await f.read()
+        logger.info(f"Retrieved file content: {len(content)} characters")
+        return content
+    except Exception as e:
+        logger.error(f"Failed to read file: {e}")
+        raise HTTPException(status_code=404, detail="File content not found")
+
+
+def _initialize_parser(tool_info: dict):
+    """Select the correct parser based on tool type"""
+    tool_type = tool_info["type"].lower()
+    tool_name = tool_info["name"].lower()
+
+    if tool_type == "vulnerability scanner" and "nessus" in tool_name:
+        return nessus.NessusParser()
+    if tool_type == "firewall" and "cisco" in tool_name:
+        return cisco_asa.CiscoASAParser()
+    if tool_type == "antivirus" and "kaspersky" in tool_name:
+        return KasperskyAV.KasperskyAVParser()
+
+    logger.warning(f"Unsupported tool: {tool_info['type']} - {tool_info['name']}")
+    raise HTTPException(
+        status_code=400,
+        detail=f"Tool '{tool_info['name']}' of type '{tool_info['type']}' is not supported"
+    )
+
+
+def _parse_and_normalize(parser, file_content: str, filename: str):
+    """Parse file content and normalize findings"""
+    try:
+        findings = parser.parse_report(file_content, filename)
+    except ValueError as e:
+        _handle_parser_value_error(e)
+    except Exception as e:
+        logger.error(f"Unexpected error parsing report: {str(e)}")
+        raise HTTPException(status_code=500, detail="Unexpected error parsing report")
+
+    if not isinstance(findings, list):
+        logger.error("Parser returned non-list result")
+        raise HTTPException(status_code=500, detail="Invalid response from parser")
+
+    if len(findings) == 0:
+        logger.info("No findings found in the report")
+        return []
+
+    normalizer = Normalizer()
+    normalized_findings = []
+    errors = 0
+    for i, f in enumerate(findings):
+        try:
+            normalized_findings.append({
+                "raw_finding": f,
+                "normalized_finding": normalizer.normalize(f)
+            })
+        except Exception as e:
+            errors += 1
+            logger.warning(f"Failed to normalize finding {i+1}: {e}")
+
+    if errors > 0:
+        logger.warning(f"Failed to normalize {errors} out of {len(findings)} findings")
+    return normalized_findings
+
+
+def _handle_parser_value_error(e: ValueError):
+    msg = str(e)
+    logger.error(f"Format validation error: {msg}")
+
+    if "does not appear to be a valid Nessus v2 report" in msg:
+        detail = "The uploaded file is not a valid Nessus report."
+    elif "does not appear to be a valid Kaspersky AV log" in msg:
+        detail = "The uploaded file is not a valid Kaspersky AV log."
+    elif "does not have valid Nessus report structure" in msg:
+        detail = "Invalid Nessus report structure."
+    elif "does not have valid Kaspersky AV log structure" in msg:
+        detail = "Invalid Kaspersky AV log structure."
+    elif "Invalid XML format" in msg:
+        detail = "The uploaded file contains invalid XML."
+    else:
+        detail = msg
+
+    raise HTTPException(status_code=400, detail=detail)
+
 
 if __name__ == "__main__":
     import uvicorn

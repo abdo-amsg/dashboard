@@ -1,3 +1,165 @@
+const op_labels = [
+    'Taux de comptes conformes au principe "least privilege"',
+    "Taux de comptes inactifs supprimés",
+    'Taux d’implémentation du MFA',
+    'Taux de revue des comptes à privilèges',
+    'Taux de comptes génériques',
+    'Temps moyen de révocation des accès',
+    'Taux de données sensibles chiffrées',
+    'Taux de couverture du DLP',
+    'Taux d’assets critiques chiffrés',
+    'Taux de couverture Antivirus',
+    'Taux de couverture EDR',
+    'Taux d’obsolescence global',
+    'Taux d’obsolescence par systèmes',
+    'Taux de systèmes critiques avec obsolescence critique',
+    'Taux de dérogations contrôlées',
+    'Taux de changements contrôlés',
+    'Taux d’inspection du trafic sortant (messagerie)',
+    'Taux de spams identifiés',
+    'Nombre de spams remontés par les collaborateurs',
+    'Taux de scan code source des applications',
+    'Taux d’assets critiques contrôlés (Pentests/Scans)',
+    'Taux de projets techniquement contrôlés avant MEP',
+    'Taux de vulnérabilités pour les assets critiques',
+    'Taux de couverture des scans de vulnérabilités',
+    'Nombre de vulnérabilités enregistrées par sévérité',
+    'Répartition des vulnérabilités identifiées par catégorie',
+    'Taux de correction des vulnérabilités',
+    'Taux de couverture SOC global',
+    'Taux de couverture SOC par catégorie d’assets',
+    'Répartition des incidents par étape MITRE ATT&CK',
+    'Répartition des incidents par criticité',
+    'Répartition des incidents collectés par typologie',
+    'Taux de faux positifs',
+    'Taux de prise en charge des alertes dans les délais',
+    'Taux de traitement des incidents dans les délais',
+    'Temps moyen de qualification des incidents',
+    'Temps moyen de traitement des incidents',
+    'Temps moyen de mise en place des plans de mitigation',
+    'Taux de remontées avérées couvertes par SOP',
+    'Taux d’incidents de sécurité du Cloud externe',
+    'Taux de couverture des uses cases actuels',
+    'Taux d’implémentation des uses cases SIEM',
+]
+
+let op_nodes = [];
+for (let i = 0; i < op_labels.length; i++) {
+    op_nodes.push({
+        id: `o${i + 1}`,
+        type: "kpiNode",
+        data: {
+            label: op_labels[i],
+            category: 'operational',
+        },
+        parentId: 'operational',
+        extent: 'parent',
+    });
+}
+
+const managerial_labels = [
+    'Taux de conformité par loi et norme SSI',
+    'Taux d’avancement des travaux de revue des lois et normes',
+    'Taux d’avancement des chantiers de mise/maintien en conformité',
+    'Taux de conformité à la PSI Entreprise et directives internes',
+    'Taux de revue de la PSI et directives internes',
+    'Niveau de maturité cyber (ISO27001)',
+    'Taux de suivi global des sessions de sensibilisation SSI',
+    'Taux de réalisation de la feuille de route de sensibilisation',
+    'Taux de réussite au questionnaire SSI',
+    'Taux d’échecs aux campagnes phishing',
+    'Taux de collaborateurs ayant fourni des infos sensibles (phishing)',
+    'Taux de collaborateurs ayant remonté une alerte (phishing)',
+    'Statut de l’analyse de risque SSI',
+    'Taux de couverture des risques par famille',
+    'Taux de couverture des risques par criticité',
+    'Taux d’avancement des plans de traitement des risques',
+    'Taux de contribution des use cases à la couverture des risques',
+    'Répartition des données Cloud par criticité',
+    'Taux d’intégration de la sécurité dans les projets',
+    'Taux d’analyse de risque SSI projet',
+    'Taux de conformité global des scans code source',
+    'Taux des tiers évalués avant contractualisation',
+    'Score moyen des tiers pré-contractualisation',
+    'Taux de prestataires critiques audités',
+    'Score moyen SSI des tiers critiques post-audit',
+    'Turnover des ressources SSI internes',
+    'Charge prévisionnelle du pôle SSI',
+    'Répartition de la charge globale (BUILD/RUN)',
+    'Forecast du pôle SSI',
+    'Suivi global du statut des projets SSI',
+    'Suivi des 5 projets SSI phares',
+    'Indice de performance de la fonction de détection',
+    'Indice de performance de la fonction de réaction',
+    'Indice de protection des assets',
+    'Indice de perméabilité',
+    'Indice d’exposition aux risques cyber',
+]
+
+let managerial_nodes = [];
+for (let i = 0; i < managerial_labels.length; i++) {
+    managerial_nodes.push({
+        id: `m${i + 1}`,
+        type: "kpiNode",
+        data: {
+            label: managerial_labels[i],
+            category: 'managerial',
+        },
+        parentId: 'managerial',
+        extent: 'parent',
+    });
+}
+
+const strategic_labels = [
+    'Indice de Performance de la fonction de Détection',
+    'Indice de Performance de la fonction de Réaction',
+    'Indice de Protection des assets',
+    'Indice de Perméabilité',
+    "Indice d’exposition aux risques cyber",
+    'Part budget dédié à la sécurité SI vs pratiques marché',
+    'Répartition budget CAPEX - OPEX',
+    'Répartition du budget cyber par domaine',
+    'Consommation du budget run vs build',
+    'Return On Security Investments (ROSI) d’une solution déployée',
+    'Taux de conformité global aux lois et normes SSI',
+    'Taux de conformité par loi et normes SSI',
+    'Niveau de maturité cyber par rapport au référentiel ISO27001',
+    'Suivi global du statut des projets/programmes au niveau du pôle',
+    'Taux d’intégration de la sécurité au niveau des projets (SI, réseau, digital)',
+    'Taux de couverture SOC global',
+    'Taux de couverture des uses cases actuels',
+    'Taux d’implémentation des uses cases',
+    'Taux de faux positifs',
+    'Taux de remontées avérées couvertes par une procédure standard de réaction (SOP)',
+    'Temps moyen de mise en place des plans de mitigation des incidents',
+    'Taux de prise en charge des alertes dans les délais',
+    'Taux de traitement des incidents dans les délais',
+    'Taux de couverture des solutions Antivirus avec version à jour',
+    'Taux de couverture de solutions EDR au niveau des endpoints',
+    'Taux d’implémentation du MFA',
+    'Taux de couverture des scans de sécurité et tests d’intrusion',
+    'Taux de spams remontés par les collaborateurs',
+    'Taux d’obsolescence global',
+    'Taux de vulnérabilités pour les assets critiques',
+    'Taux de systèmes critiques avec obsolescence critique',
+    'Statut de l’analyse de risque SSI',
+    'Taux de risques critiques non couverts',
+    'Taux de suivi global des sessions sensibilisations SSI',
+]
+let strategic_nodes = [];
+for (let i = 0; i < strategic_labels.length; i++) {
+    strategic_nodes.push({
+        id: `s${i + 1}`,
+        type: "kpiNode",
+        data: {
+            label: strategic_labels[i],
+            category: 'strategic',
+        },
+        parentId: 'strategic',
+        extent: 'parent',
+    });
+}
+
 export const initialNodes = [
     {
         id: 'strategic',
@@ -32,1126 +194,9 @@ export const initialNodes = [
         style: { width: 2500, height: 430, backgroundColor: 'rgba(255, 0, 0, 0.1)' },
         draggable: false
     },
-    {
-        id: 'o1',
-        type: "kpiNode",
-        data: {
-            label: 'Taux de comptes conformes au principe "least privilege"',
-            category: 'operational',
-        },
-        parentId: 'operational',
-        extent: 'parent',
-    },
-    {
-        id: 'o2',
-        type: "kpiNode",
-        data: {
-            label: 'Taux de comptes inactifs supprimés',
-            category: 'operational',
-        },
-        parentId: 'operational',
-        extent: 'parent',
-    },
-    {
-        id: 'o3',
-        type: "kpiNode",
-        data: {
-            label: 'Taux d’implémentation du MFA',
-            category: 'operational',
-        },
-        parentId: 'operational',
-        extent: 'parent',
-    },
-    {
-        id: 'o4',
-        type: "kpiNode",
-        data: {
-            label: 'Taux de revue des comptes à privilèges',
-            category: 'operational',
-        },
-        parentId: 'operational',
-        extent: 'parent',
-    },
-    {
-        id: 'o5',
-        type: "kpiNode",
-        data: {
-            label: 'Taux de comptes génériques',
-            category: 'operational',
-        },
-        parentId: 'operational',
-        extent: 'parent',
-    },
-    {
-        id: 'o6',
-        type: "kpiNode",
-        data: {
-            label: 'Temps moyen de révocation des accès',
-            category: 'operational',
-        },
-        parentId: 'operational',
-        extent: 'parent',
-    },
-    {
-        id: 'o7',
-        type: "kpiNode",
-        data: {
-            label: 'Taux de données sensibles chiffrées',
-            category: 'operational',
-        },
-        parentId: 'operational',
-        extent: 'parent',
-    },
-    {
-        id: 'o8',
-        type: "kpiNode",
-        data: {
-            label: 'Taux de couverture du DLP',
-            category: 'operational',
-        },
-        parentId: 'operational',
-        extent: 'parent',
-    },
-    {
-        id: 'o9',
-        type: "kpiNode",
-        data: {
-            label: 'Taux d’assets critiques chiffrés',
-            category: 'operational',
-        },
-        parentId: 'operational',
-        extent: 'parent',
-    },
-    {
-        id: 'o10',
-        type: "kpiNode",
-        data: {
-            label: 'Taux de couverture Antivirus',
-            category: 'operational',
-        },
-        parentId: 'operational',
-        extent: 'parent',
-    },
-    {
-        id: 'o11',
-        type: "kpiNode",
-        data: {
-            label: 'Taux de couverture EDR',
-            category: 'operational',
-        },
-        parentId: 'operational',
-        extent: 'parent',
-    },
-    {
-        id: 'o12',
-        type: "kpiNode",
-        data: {
-            label: 'Taux d’obsolescence global',
-            category: 'operational',
-        },
-        parentId: 'operational',
-        extent: 'parent',
-    },
-    {
-        id: 'o13',
-        type: "kpiNode",
-        data: {
-            label: 'Taux d’obsolescence par systèmes',
-            category: 'operational',
-        },
-        parentId: 'operational',
-        extent: 'parent',
-    },
-    {
-        id: 'o14',
-        type: "kpiNode",
-        data: {
-            label: 'Taux de systèmes critiques avec obsolescence critique',
-            category: 'operational',
-        },
-        parentId: 'operational',
-        extent: 'parent',
-    },
-    {
-        id: 'o15',
-        type: "kpiNode",
-        data: {
-            label: 'Taux de dérogations contrôlées',
-            category: 'operational',
-        },
-        parentId: 'operational',
-        extent: 'parent',
-    },
-    {
-        id: 'o16',
-        type: "kpiNode",
-        data: {
-            label: 'Taux de changements contrôlés',
-            category: 'operational',
-        },
-        parentId: 'operational',
-        extent: 'parent',
-    },
-    {
-        id: 'o17',
-        type: "kpiNode",
-        data: {
-            label: 'Taux d’inspection du trafic sortant (messagerie)',
-            category: 'operational',
-        },
-        parentId: 'operational',
-        extent: 'parent',
-    },
-    {
-        id: 'o18',
-        type: "kpiNode",
-        data: {
-            label: 'Taux de spams identifiés',
-            category: 'operational',
-        },
-        parentId: 'operational',
-        extent: 'parent',
-    },
-    {
-        id: 'o19',
-        type: "kpiNode",
-        data: {
-            label: 'Nombre de spams remontés par les collaborateurs',
-            category: 'operational',
-        },
-        parentId: 'operational',
-        extent: 'parent',
-    },
-    {
-        id: 'o20',
-        type: "kpiNode",
-        data: {
-            label: 'Taux de scan code source des applications',
-            category: 'operational',
-        },
-        parentId: 'operational',
-        extent: 'parent',
-    },
-    {
-        id: 'o21',
-        type: "kpiNode",
-        data: {
-            label: 'Taux d’assets critiques contrôlés (Pentests/Scans)',
-            category: 'operational',
-        },
-        parentId: 'operational',
-        extent: 'parent',
-    },
-    {
-        id: 'o22',
-        type: "kpiNode",
-        data: {
-            label: 'Taux de projets techniquement contrôlés avant MEP',
-            category: 'operational',
-        },
-        parentId: 'operational',
-        extent: 'parent',
-    },
-    {
-        id: 'o23',
-        type: "kpiNode",
-        data: {
-            label: 'Taux de vulnérabilités pour les assets critiques',
-            category: 'operational',
-        },
-        parentId: 'operational',
-        extent: 'parent',
-    },
-    {
-        id: 'o24',
-        type: "kpiNode",
-        data: {
-            label: 'Taux de couverture des scans de vulnérabilités',
-            category: 'operational',
-        },
-        parentId: 'operational',
-        extent: 'parent',
-    },
-    {
-        id: 'o25',
-        type: "kpiNode",
-        data: {
-            label: 'Nombre de vulnérabilités enregistrées par sévérité',
-            category: 'operational',
-        },
-        parentId: 'operational',
-        extent: 'parent',
-    },
-    {
-        id: 'o26',
-        type: "kpiNode",
-        data: {
-            label: 'Répartition des vulnérabilités identifiées par catégorie',
-            category: 'operational',
-        },
-        parentId: 'operational',
-        extent: 'parent',
-    },
-    {
-        id: 'o27',
-        type: "kpiNode",
-        data: {
-            label: 'Taux de correction des vulnérabilités',
-            category: 'operational',
-        },
-        parentId: 'operational',
-        extent: 'parent',
-    },
-    {
-        id: 'o28',
-        type: "kpiNode",
-        data: {
-            label: 'Taux de couverture SOC global',
-            category: 'operational',
-        },
-        parentId: 'operational',
-        extent: 'parent',
-    },
-    {
-        id: 'o29',
-        type: "kpiNode",
-        data: {
-            label: 'Taux de couverture SOC par catégorie d’assets',
-            category: 'operational',
-        },
-        parentId: 'operational',
-        extent: 'parent',
-    },
-    {
-        id: 'o30',
-        type: "kpiNode",
-        data: {
-            label: 'Répartition des incidents par étape MITRE ATT&CK',
-            category: 'operational',
-        },
-        parentId: 'operational',
-        extent: 'parent',
-    },
-    {
-        id: 'o31',
-        type: "kpiNode",
-        data: {
-            label: 'Répartition des incidents par criticité',
-            category: 'operational',
-        },
-        parentId: 'operational',
-        extent: 'parent',
-    },
-    {
-        id: 'o32',
-        type: "kpiNode",
-        data: {
-            label: 'Répartition des incidents collectés par typologie',
-            category: 'operational',
-        },
-        parentId: 'operational',
-        extent: 'parent',
-    },
-    {
-        id: 'o33',
-        type: "kpiNode",
-        data: {
-            label: 'Taux de faux positifs',
-            category: 'operational',
-        },
-        parentId: 'operational',
-        extent: 'parent',
-    },
-    {
-        id: 'o34',
-        type: "kpiNode",
-        data: {
-            label: 'Taux de prise en charge des alertes dans les délais',
-            category: 'operational',
-        },
-        parentId: 'operational',
-        extent: 'parent',
-    },
-    {
-        id: 'o35',
-        type: "kpiNode",
-        data: {
-            label: 'Taux de traitement des incidents dans les délais',
-            category: 'operational',
-        },
-        parentId: 'operational',
-        extent: 'parent',
-    },
-    {
-        id: 'o36',
-        type: "kpiNode",
-        data: {
-            label: 'Temps moyen de qualification des incidents',
-            category: 'operational',
-        },
-        parentId: 'operational',
-        extent: 'parent',
-    },
-    {
-        id: 'o37',
-        type: "kpiNode",
-        data: {
-            label: 'Temps moyen de traitement des incidents',
-            category: 'operational',
-        },
-        parentId: 'operational',
-        extent: 'parent',
-    },
-    {
-        id: 'o38',
-        type: "kpiNode",
-        data: {
-            label: 'Temps moyen de mise en place des plans de mitigation',
-            category: 'operational',
-        },
-        parentId: 'operational',
-        extent: 'parent',
-    },
-    {
-        id: 'o39',
-        type: "kpiNode",
-        data: {
-            label: 'Taux de remontées avérées couvertes par SOP',
-            category: 'operational',
-        },
-        parentId: 'operational',
-        extent: 'parent',
-    },
-    {
-        id: 'o40',
-        type: "kpiNode",
-        data: {
-            label: 'Taux d’incidents de sécurité du Cloud externe',
-            category: 'operational',
-        },
-        parentId: 'operational',
-        extent: 'parent',
-    },
-    {
-        id: 'o41',
-        type: "kpiNode",
-        data: {
-            label: 'Taux de couverture des uses cases actuels',
-            category: 'operational',
-        },
-        parentId: 'operational',
-        extent: 'parent',
-    },
-    {
-        id: 'o42',
-        type: "kpiNode",
-        data: {
-            label: 'Taux d’implémentation des uses cases SIEM',
-            category: 'operational',
-        },
-        parentId: 'operational',
-        extent: 'parent',
-    },
-    {
-        id: 'm1',
-        type: "kpiNode",
-        data: {
-            label: 'Taux de conformité par loi et norme SSI',
-            category: 'operational',
-        },
-        parentId: 'managerial',
-        extent: 'parent',
-    },
-    {
-        id: 'm2',
-        type: "kpiNode",
-        data: {
-            label: 'Taux d’avancement des travaux de revue des lois et normes',
-            category: 'operational',
-        },
-        parentId: 'managerial',
-        extent: 'parent',
-    },
-    {
-        id: 'm3',
-        type: "kpiNode",
-        data: {
-            label: 'Taux d’avancement des chantiers de mise/maintien en conformité',
-            category: 'operational',
-        },
-        parentId: 'managerial',
-        extent: 'parent',
-    },
-    {
-        id: 'm4',
-        type: "kpiNode",
-        data: {
-            label: 'Taux de conformité à la PSI Entreprise et directives internes',
-            category: 'operational',
-        },
-        parentId: 'managerial',
-        extent: 'parent',
-    },
-    {
-        id: 'm5',
-        type: "kpiNode",
-        data: {
-            label: 'Taux de revue de la PSI et directives internes',
-            category: 'operational',
-        },
-        parentId: 'managerial',
-        extent: 'parent',
-    },
-    {
-        id: 'm6',
-        type: "kpiNode",
-        data: {
-            label: 'Niveau de maturité cyber (ISO27001)',
-            category: 'operational',
-        },
-        parentId: 'managerial',
-        extent: 'parent',
-    },
-    {
-        id: 'm7',
-        type: "kpiNode",
-        data: {
-            label: 'Taux de suivi global des sessions de sensibilisation SSI',
-            category: 'operational',
-        },
-        parentId: 'managerial',
-        extent: 'parent',
-    },
-    {
-        id: 'm8',
-        type: "kpiNode",
-        data: {
-            label: 'Taux de réalisation de la feuille de route de sensibilisation',
-            category: 'operational',
-        },
-        parentId: 'managerial',
-        extent: 'parent',
-    },
-    {
-        id: 'm9',
-        type: "kpiNode",
-        data: {
-            label: 'Taux de réussite au questionnaire SSI',
-            category: 'operational',
-        },
-        parentId: 'managerial',
-        extent: 'parent',
-    },
-    {
-        id: 'm10',
-        type: "kpiNode",
-        data: {
-            label: 'Taux d’échecs aux campagnes phishing',
-            category: 'operational',
-        },
-        parentId: 'managerial',
-        extent: 'parent',
-    },
-    {
-        id: 'm11',
-        type: "kpiNode",
-        data: {
-            label: 'Taux de collaborateurs ayant fourni des infos sensibles (phishing)',
-            category: 'operational',
-        },
-        parentId: 'managerial',
-        extent: 'parent',
-    },
-    {
-        id: 'm12',
-        type: "kpiNode",
-        data: {
-            label: 'Taux de collaborateurs ayant remonté une alerte (phishing)',
-            category: 'operational',
-        },
-        parentId: 'managerial',
-        extent: 'parent',
-    },
-    {
-        id: 'm13',
-        type: "kpiNode",
-        data: {
-            label: 'Statut de l’analyse de risque SSI',
-            category: 'operational',
-        },
-        parentId: 'managerial',
-        extent: 'parent',
-    },
-    {
-        id: 'm14',
-        type: "kpiNode",
-        data: {
-            label: 'Taux de couverture des risques par famille',
-            category: 'operational',
-        },
-        parentId: 'managerial',
-        extent: 'parent',
-    },
-    {
-        id: 'm15',
-        type: "kpiNode",
-        data: {
-            label: 'Taux de couverture des risques par criticité',
-            category: 'operational',
-        },
-        parentId: 'managerial',
-        extent: 'parent',
-    },
-    {
-        id: 'm16',
-        type: "kpiNode",
-        data: {
-            label: 'Taux d’avancement des plans de traitement des risques',
-            category: 'operational',
-        },
-        parentId: 'managerial',
-        extent: 'parent',
-    },
-    {
-        id: 'm17',
-        type: "kpiNode",
-        data: {
-            label: 'Taux de contribution des use cases à la couverture des risques',
-            category: 'operational',
-        },
-        parentId: 'managerial',
-        extent: 'parent',
-    },
-    {
-        id: 'm18',
-        type: "kpiNode",
-        data: {
-            label: 'Répartition des données Cloud par criticité',
-            category: 'operational',
-        },
-        parentId: 'managerial',
-        extent: 'parent',
-    },
-    {
-        id: 'm19',
-        type: "kpiNode",
-        data: {
-            label: 'Taux d’intégration de la sécurité dans les projets',
-            category: 'operational',
-        },
-        parentId: 'managerial',
-        extent: 'parent',
-    },
-    {
-        id: 'm20',
-        type: "kpiNode",
-        data: {
-            label: 'Taux d’analyse de risque SSI projet',
-            category: 'operational',
-        },
-        parentId: 'managerial',
-        extent: 'parent',
-    },
-    {
-        id: 'm21',
-        type: "kpiNode",
-        data: {
-            label: 'Taux de conformité global des scans code source',
-            category: 'operational',
-        },
-        parentId: 'managerial',
-        extent: 'parent',
-    },
-    {
-        id: 'm22',
-        type: "kpiNode",
-        data: {
-            label: 'Taux des tiers évalués avant contractualisation',
-            category: 'operational',
-        },
-        parentId: 'managerial',
-        extent: 'parent',
-    },
-    {
-        id: 'm23',
-        type: "kpiNode",
-        data: {
-            label: 'Score moyen des tiers pré-contractualisation',
-            category: 'operational',
-        },
-        parentId: 'managerial',
-        extent: 'parent',
-    },
-    {
-        id: 'm24',
-        type: "kpiNode",
-        data: {
-            label: 'Taux de prestataires critiques audités',
-            category: 'operational',
-        },
-        parentId: 'managerial',
-        extent: 'parent',
-    },
-    {
-        id: 'm25',
-        type: "kpiNode",
-        data: {
-            label: 'Score moyen SSI des tiers critiques post-audit',
-            category: 'operational',
-        },
-        parentId: 'managerial',
-        extent: 'parent',
-    },
-    {
-        id: 'm26',
-        type: "kpiNode",
-        data: {
-            label: 'Turnover des ressources SSI internes',
-            category: 'operational',
-        },
-        parentId: 'managerial',
-        extent: 'parent',
-    },
-    {
-        id: 'm27',
-        type: "kpiNode",
-        data: {
-            label: 'Charge prévisionnelle du pôle SSI',
-            category: 'operational',
-        },
-        parentId: 'managerial',
-        extent: 'parent',
-    },
-    {
-        id: 'm28',
-        type: "kpiNode",
-        data: {
-            label: 'Répartition de la charge globale (BUILD/RUN)',
-            category: 'operational',
-        },
-        parentId: 'managerial',
-        extent: 'parent',
-    },
-    {
-        id: 'm29',
-        type: "kpiNode",
-        data: {
-            label: 'Forecast du pôle SSI',
-            category: 'operational',
-        },
-        parentId: 'managerial',
-        extent: 'parent',
-    },
-    {
-        id: 'm30',
-        type: "kpiNode",
-        data: {
-            label: 'Suivi global du statut des projets SSI',
-            category: 'operational',
-        },
-        parentId: 'managerial',
-        extent: 'parent',
-    },
-    {
-        id: 'm31',
-        type: "kpiNode",
-        data: {
-            label: 'Suivi des 5 projets SSI phares',
-            category: 'operational',
-        },
-        parentId: 'managerial',
-        extent: 'parent',
-    },
-    {
-        id: 'm32',
-        type: "kpiNode",
-        data: {
-            label: 'Indice de performance de la fonction de détection',
-            category: 'operational',
-        },
-        parentId: 'managerial',
-        extent: 'parent',
-    },
-    {
-        id: 'm33',
-        type: "kpiNode",
-        data: {
-            label: 'Indice de performance de la fonction de réaction',
-            category: 'operational',
-        },
-        parentId: 'managerial',
-        extent: 'parent',
-    },
-    {
-        id: 'm34',
-        type: "kpiNode",
-        data: {
-            label: 'Indice de protection des assets',
-            category: 'operational',
-        },
-        parentId: 'managerial',
-        extent: 'parent',
-    },
-    {
-        id: 'm35',
-        type: "kpiNode",
-        data: {
-            label: 'Indice de perméabilité',
-            category: 'operational',
-        },
-        parentId: 'managerial',
-        extent: 'parent',
-    },
-    {
-        id: 'm36',
-        type: "kpiNode",
-        data: {
-            label: 'Indice d’exposition aux risques cyber',
-            category: 'operational',
-        },
-        parentId: 'managerial',
-        extent: 'parent',
-    },
-    {
-        id: 's1',
-        type: "kpiNode",
-        data: {
-            label: 'Indice de Performance de la fonction de Détection',
-            category: 'operational',
-        },
-        parentId: 'strategic',
-        extent: 'parent',
-    },
-    {
-        id: 's2',
-        type: "kpiNode",
-        data: {
-            label: 'Indice de Performance de la fonction de Réaction',
-            category: 'operational',
-        },
-        parentId: 'strategic',
-        extent: 'parent',
-    },
-    {
-        id: 's3',
-        type: "kpiNode",
-        data: {
-            label: 'Indice de Protection des assets',
-            category: 'operational',
-        },
-        parentId: 'strategic',
-        extent: 'parent',
-    },
-    {
-        id: 's4',
-        type: "kpiNode",
-        data: {
-            label: 'Indice de Perméabilité',
-            category: 'operational',
-        },
-        parentId: 'strategic',
-        extent: 'parent',
-    },
-    {
-        id: 's5',
-        type: "kpiNode",
-        data: {
-            label: 'Indice d’exposition aux risques cyber',
-            category: 'operational',
-        },
-        parentId: 'strategic',
-        extent: 'parent',
-    },
-    {
-        id: 's6',
-        type: "kpiNode",
-        data: {
-            label: 'Part budget dédié à la sécurité SI vs pratiques marché',
-            category: 'operational',
-        },
-        parentId: 'strategic',
-        extent: 'parent',
-    },
-    {
-        id: 's7',
-        type: "kpiNode",
-        data: {
-            label: 'Répartition budget CAPEX - OPEX',
-            category: 'operational',
-        },
-        parentId: 'strategic',
-        extent: 'parent',
-    },
-    {
-        id: 's8',
-        type: "kpiNode",
-        data: {
-            label: 'Répartition du budget cyber par domaine',
-            category: 'operational',
-        },
-        parentId: 'strategic',
-        extent: 'parent',
-    },
-    {
-        id: 's9',
-        type: "kpiNode",
-        data: {
-            label: 'Consommation du budget run vs build',
-            category: 'operational',
-        },
-        parentId: 'strategic',
-        extent: 'parent',
-    },
-    {
-        id: 's10',
-        type: "kpiNode",
-        data: {
-            label: 'Return On Security Investments (ROSI) d’une solution déployée',
-            category: 'operational',
-        },
-        parentId: 'strategic',
-        extent: 'parent',
-    },
-    {
-        id: 's11',
-        type: "kpiNode",
-        data: {
-            label: 'Taux de conformité global aux lois et normes SSI',
-            category: 'operational',
-        },
-        parentId: 'strategic',
-        extent: 'parent',
-    },
-    {
-        id: 's12',
-        type: "kpiNode",
-        data: {
-            label: 'Taux de conformité par loi et normes SSI',
-            category: 'operational',
-        },
-        parentId: 'strategic',
-        extent: 'parent',
-    },
-    {
-        id: 's13',
-        type: "kpiNode",
-        data: {
-            label: 'Niveau de maturité cyber par rapport au référentiel ISO27001',
-            category: 'operational',
-        },
-        parentId: 'strategic',
-        extent: 'parent',
-    },
-    {
-        id: 's14',
-        type: "kpiNode",
-        data: {
-            label: 'Suivi global du statut des projets/programmes au niveau du pôle',
-            category: 'operational',
-        },
-        parentId: 'strategic',
-        extent: 'parent',
-    },
-    {
-        id: 's15',
-        type: "kpiNode",
-        data: {
-            label: 'Taux d’intégration de la sécurité au niveau des projets (SI, réseau, digital)',
-            category: 'operational',
-        },
-        parentId: 'strategic',
-        extent: 'parent',
-    },
-    {
-        id: 's16',
-        type: "kpiNode",
-        data: {
-            label: 'Taux de couverture SOC global',
-            category: 'operational',
-        },
-        parentId: 'strategic',
-        extent: 'parent',
-    },
-    {
-        id: 's17',
-        type: "kpiNode",
-        data: {
-            label: 'Taux de couverture des uses cases actuels',
-            category: 'operational',
-        },
-        parentId: 'strategic',
-        extent: 'parent',
-    },
-    {
-        id: 's18',
-        type: "kpiNode",
-        data: {
-            label: 'Taux d’implémentation des uses cases',
-            category: 'operational',
-        },
-        parentId: 'strategic',
-        extent: 'parent',
-    },
-    {
-        id: 's19',
-        type: "kpiNode",
-        data: {
-            label: 'Taux de faux positifs',
-            category: 'operational',
-        },
-        parentId: 'strategic',
-        extent: 'parent',
-    },
-    {
-        id: 's20',
-        type: "kpiNode",
-        data: {
-            label: 'Taux de remontées avérées couvertes par une procédure standard de réaction (SOP)',
-            category: 'operational',
-        },
-        parentId: 'strategic',
-        extent: 'parent',
-    },
-    {
-        id: 's21',
-        type: "kpiNode",
-        data: {
-            label: 'Temps moyen de mise en place des plans de mitigation des incidents',
-            category: 'operational',
-        },
-        parentId: 'strategic',
-        extent: 'parent',
-    },
-    {
-        id: 's22',
-        type: "kpiNode",
-        data: {
-            label: 'Taux de prise en charge des alertes dans les délais',
-            category: 'operational',
-        },
-        parentId: 'strategic',
-        extent: 'parent',
-    },
-    {
-        id: 's23',
-        type: "kpiNode",
-        data: {
-            label: 'Taux de traitement des incidents dans les délais',
-            category: 'operational',
-        },
-        parentId: 'strategic',
-        extent: 'parent',
-    },
-    {
-        id: 's24',
-        type: "kpiNode",
-        data: {
-            label: 'Taux de couverture des solutions Antivirus avec version à jour',
-            category: 'operational',
-        },
-        parentId: 'strategic',
-        extent: 'parent',
-    },
-    {
-        id: 's25',
-        type: "kpiNode",
-        data: {
-            label: 'Taux de couverture de solutions EDR au niveau des endpoints',
-            category: 'operational',
-        },
-        parentId: 'strategic',
-        extent: 'parent',
-    },
-    {
-        id: 's26',
-        type: "kpiNode",
-        data: {
-            label: 'Taux d’implémentation du MFA',
-            category: 'operational',
-        },
-        parentId: 'strategic',
-        extent: 'parent',
-    },
-    {
-        id: 's27',
-        type: "kpiNode",
-        data: {
-            label: 'Taux de couverture des scans de sécurité et tests d’intrusion',
-            category: 'operational',
-        },
-        parentId: 'strategic',
-        extent: 'parent',
-    },
-    {
-        id: 's28',
-        type: "kpiNode",
-        data: {
-            label: 'Taux de spams remontés par les collaborateurs',
-            category: 'operational',
-        },
-        parentId: 'strategic',
-        extent: 'parent',
-    },
-    {
-        id: 's29',
-        type: "kpiNode",
-        data: {
-            label: 'Taux d’obsolescence global',
-            category: 'operational',
-        },
-        parentId: 'strategic',
-        extent: 'parent',
-    },
-    {
-        id: 's30',
-        type: "kpiNode",
-        data: {
-            label: 'Taux de vulnérabilités pour les assets critiques',
-            category: 'operational',
-        },
-        parentId: 'strategic',
-        extent: 'parent',
-    },
-    {
-        id: 's31',
-        type: "kpiNode",
-        data: {
-            label: 'Taux de systèmes critiques avec obsolescence critique',
-            category: 'operational',
-        },
-        parentId: 'strategic',
-        extent: 'parent',
-    },
-    {
-        id: 's32',
-        type: "kpiNode",
-        data: {
-            label: 'Statut de l’analyse de risque SSI',
-            category: 'operational',
-        },
-        parentId: 'strategic',
-        extent: 'parent',
-    },
-    {
-        id: 's33',
-        type: "kpiNode",
-        data: {
-            label: 'Taux de risques critiques non couverts',
-            category: 'operational',
-        },
-        parentId: 'strategic',
-        extent: 'parent',
-    },
-    {
-        id: 's34',
-        type: "kpiNode",
-        data: {
-            label: 'Taux de suivi global des sessions sensibilisations SSI',
-            category: 'operational',
-        },
-        parentId: 'strategic',
-        extent: 'parent',
-    },
+    ...op_nodes,
+    ...managerial_nodes,
+    ...strategic_nodes,
 ];
 
 export const initialEdges = [

@@ -33,19 +33,21 @@ class ExportRequest(BaseModel):
     analysisResult: Dict[str, Any]
     reportType: str
 
+number_regex = r'[\d.]+'
+
 class DashboardExporter:
     def __init__(self):
         # Set matplotlib style for professional reports
         try:
             plt.style.use('seaborn-v0_8-whitegrid')
-        except:
+        except Exception:
             # Fallback to default style if seaborn style is not available
             plt.style.use('default')
         
         # Set color palette
         try:
             sns.set_palette("Blues_r")
-        except:
+        except Exception:
             pass
         
         # Color scheme matching frontend
@@ -88,7 +90,7 @@ class DashboardExporter:
             if isinstance(value, str):
                 # Try to extract number from string
                 import re
-                numbers = re.findall(r'[\d.]+', str(value))
+                numbers = re.findall(number_regex, str(value))
                 if numbers:
                     values.append(float(numbers[0]))
                 else:
@@ -137,7 +139,7 @@ class DashboardExporter:
         for item in alert_data:
             if isinstance(item['value'], str):
                 import re
-                numbers = re.findall(r'[\d.]+', str(item['value']))
+                numbers = re.findall(number_regex, str(item['value']))
                 item['value'] = int(float(numbers[0])) if numbers else 0
             else:
                 item['value'] = int(item['value']) if item['value'] is not None else 0
@@ -184,7 +186,7 @@ class DashboardExporter:
         
         return fig
 
-    def get_optimal_chart_type(self, title: str, report_type: str) -> str:
+    def get_optimal_chart_type(self, title: str) -> str:
         """Get optimal chart type based on data and title - matching frontend logic"""
         chart_type_mapping = {
             'Distribution par Gravité': 'pie',
@@ -207,7 +209,7 @@ class DashboardExporter:
         }
         return chart_type_mapping.get(title, 'bar')
 
-    def create_chart_from_data(self, chart_data: Dict[str, Any], chart_title: str, report_type: str = '') -> plt.Figure:
+    def create_chart_from_data(self, chart_data: Dict[str, Any], chart_title: str) -> plt.Figure:
         """Create a chart from data dictionary - matching frontend visualizations exactly"""
         fig, ax = plt.subplots(figsize=(12, 8))
         
@@ -218,7 +220,7 @@ class DashboardExporter:
             return fig
         
         # Get optimal chart type based on title (matching frontend logic)
-        chart_type = self.get_optimal_chart_type(chart_title, report_type)
+        chart_type = self.get_optimal_chart_type(chart_title)
         
         labels = list(chart_data.keys())
         values = list(chart_data.values())
@@ -228,7 +230,7 @@ class DashboardExporter:
         for v in values:
             if isinstance(v, str):
                 import re
-                numbers = re.findall(r'[\d.]+', str(v))
+                numbers = re.findall(number_regex, str(v))
                 if numbers:
                     numeric_values.append(float(numbers[0]))
                 else:
@@ -244,14 +246,14 @@ class DashboardExporter:
         
         if chart_type == 'pie':
             # Donut-style pie chart matching frontend
-            wedges, texts, autotexts = ax.pie(
+            _, texts, autotexts = ax.pie(
                 numeric_values, 
                 labels=labels, 
                 autopct='%1.1f%%',
                 colors=chart_colors[:len(labels)],
                 startangle=90,
                 pctdistance=0.85,
-                wedgeprops=dict(width=0.5, edgecolor='white', linewidth=2)  # Donut style
+                wedgeprops={"width":0.5, "edgecolor":'white', "linewidth":2}  # Donut style
             )
             
             # Style the text
@@ -402,7 +404,7 @@ class DashboardExporter:
             if 'charts' in analysis_data and analysis_data['charts']:
                 for chart_name, chart_data in analysis_data['charts'].items():
                     if chart_data:
-                        chart_fig = self.create_chart_from_data(chart_data, chart_name, report_type)
+                        chart_fig = self.create_chart_from_data(chart_data, chart_name)
                         pdf.savefig(chart_fig, bbox_inches='tight')
                         plt.close(chart_fig)
         
@@ -443,7 +445,7 @@ class DashboardExporter:
             for _, value in kpi_items:
                 if isinstance(value, str):
                     import re
-                    numbers = re.findall(r'[\d.]+', str(value))
+                    numbers = re.findall(number_regex, str(value))
                     if numbers:
                         values.append(float(numbers[0]))
                     else:
@@ -474,7 +476,7 @@ class DashboardExporter:
                 
                 if chart_data:
                     # Get optimal chart type matching frontend
-                    chart_type = self.get_optimal_chart_type(chart_name, report_type)
+                    chart_type = self.get_optimal_chart_type(chart_name)
                     
                     labels = list(chart_data.keys())[:5]  # Limit to 5 items per chart
                     values = []
@@ -483,7 +485,7 @@ class DashboardExporter:
                         value = chart_data[label]
                         if isinstance(value, str):
                             import re
-                            numbers = re.findall(r'[\d.]+', str(value))
+                            numbers = re.findall(number_regex, str(value))
                             if numbers:
                                 values.append(float(numbers[0]))
                             else:
@@ -498,14 +500,14 @@ class DashboardExporter:
                     
                     if chart_type == 'pie':
                         # Donut-style pie chart matching frontend
-                        wedges, texts, autotexts = ax.pie(
+                        _, _, autotexts = ax.pie(
                             values, 
                             labels=labels, 
                             autopct='%1.1f%%',
                             colors=chart_colors[:len(labels)],
                             startangle=90,
                             pctdistance=0.85,
-                            wedgeprops=dict(width=0.5, edgecolor='white', linewidth=1)
+                            wedgeprops={'width':0.5, 'edgecolor':'white', 'linewidth':1}
                         )
                         for autotext in autotexts:
                             autotext.set_color('white')

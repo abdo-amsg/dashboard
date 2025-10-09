@@ -190,7 +190,7 @@ const UploadFlow = ({ isOpen, onClose, setActiveItem }) => {
 
                 try {
                     const statusResponse = await api.get(`/api/dashboard/files/${result.id}`);
-                    if (!statusResponse.statusText === "OK") throw new Error('Failed to check status');
+                    if (!statusResponse.statusText == "OK") throw new Error('Failed to check status');
                     const fileStatus = statusResponse.data;
                     console.log('f: ', fileStatus);
                     if (fileStatus.status === "processed") {
@@ -548,16 +548,13 @@ const UploadFlow = ({ isOpen, onClose, setActiveItem }) => {
 
                                     {/* Parsing Status */}
                                     <div className={`transition-all  ${processingStatus === 'parsing' ? 'opacity-100' :
-                                        ['calculating', 'complete'].includes(processingStatus) ? 'opacity-50' :
-                                            processingStatus === 'failed' ? 'opacity-30' : 'opacity-30'
+                                        ['calculating', 'complete'].includes(processingStatus) ? 'opacity-50' : 'opacity-30'
                                         }`}>
                                         <div className="flex items-center justify-center space-x-2">
                                             {processingStatus === 'parsing' ? (
                                                 <Loader2 className="w-5 h-5 text-brand animate-spin" />
                                             ) : ['calculating', 'complete'].includes(processingStatus) ? (
                                                 <CheckCircle2 className="w-5 h-5 text-green-600" />
-                                            ) : processingStatus === 'failed' ? (
-                                                <div className="w-5 h-5" /> // Empty space for alignment
                                             ) : (
                                                 <div className="w-5 h-5" />
                                             )}
@@ -567,16 +564,13 @@ const UploadFlow = ({ isOpen, onClose, setActiveItem }) => {
 
                                     {/* KPI Calculation Status */}
                                     <div className={`transition-all  ${processingStatus === 'calculating' ? 'opacity-100' :
-                                        processingStatus === 'complete' ? 'opacity-50' :
-                                            processingStatus === 'failed' ? 'opacity-30' : 'opacity-30'
+                                        processingStatus === 'complete' ? 'opacity-50' : 'opacity-30'
                                         }`}>
                                         <div className="flex items-center justify-center space-x-2">
                                             {processingStatus === 'calculating' ? (
                                                 <Loader2 className="w-5 h-5 text-brand animate-spin" />
                                             ) : processingStatus === 'complete' ? (
                                                 <CheckCircle2 className="w-5 h-5 text-green-600" />
-                                            ) : processingStatus === 'failed' ? (
-                                                <div className="w-5 h-5" /> // Empty space for alignment
                                             ) : (
                                                 <div className="w-5 h-5" />
                                             )}

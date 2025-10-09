@@ -2,7 +2,7 @@
 from fastapi import APIRouter, File, UploadFile, Form, HTTPException, Depends
 import pandas as pd
 import io
-from datetime import datetime
+from datetime import datetime, timezone
 from typing import Dict, Any
 import logging
 from app.auth.auth_routes import get_current_user
@@ -29,49 +29,16 @@ class Inwi3StrategicAnalyzer:
     def _to_num(self, s):
         try:
             return pd.to_numeric(s, errors='coerce')
-        except:
+        except Exception:
             return pd.Series(dtype='float64')
 
     # === Analyseurs (intacts) ===
     def analyze_risk_posture(self, df: pd.DataFrame) -> Dict[str, Any]:
         try:
-            # Safely handle missing columns and convert numeric criticality to text
-            if 'asset_criticality' not in df.columns:
-                df['asset_criticality'] = 'Medium'
-            else:
-                # Convert numeric criticality to text categories
-                df['asset_criticality'] = df['asset_criticality'].fillna(3)
-                df['asset_criticality'] = pd.to_numeric(df['asset_criticality'], errors='coerce').fillna(3)
-                df['asset_criticality'] = df['asset_criticality'].map({
-                    5: 'High',
-                    4: 'Medium-High', 
-                    3: 'Medium',
-                    2: 'Low-Medium',
-                    1: 'Low'
-                }).fillna('Medium').astype(str)
-            
-            if 'incident_count' not in df.columns:
-                df['incident_count'] = 0
-            else:
-                df['incident_count'] = pd.to_numeric(df['incident_count'], errors='coerce').fillna(0)
-            
-            if 'vuln_severity' not in df.columns:
-                df['vuln_severity'] = 0
-            else:
-                df['vuln_severity'] = pd.to_numeric(df['vuln_severity'], errors='coerce').fillna(0)
-            
-            if 'score_risk' not in df.columns:
-                df['score_risk'] = 0
-            else:
-                df['score_risk'] = pd.to_numeric(df['score_risk'], errors='coerce').fillna(0)
-            
-            if 'patch_status' not in df.columns:
-                df['patch_status'] = 'unknown'
-            else:
-                df['patch_status'] = df['patch_status'].fillna('unknown').astype(str)
+            df = self._prepare_dataframe(df)
 
             avg_risk_score = float(df['score_risk'].mean()) if len(df) else 0.0
-            assets_high_critical = int((df['asset_criticality'].isin(['High', 'Medium-High'])).sum())
+            assets_high_critical = int(df['asset_criticality'].isin(['High', 'Medium-High']).sum())
             avg_vuln_severity = float(df['vuln_severity'].mean()) if len(df) else 0.0
             incidents_total = int(df['incident_count'].sum())
 
@@ -80,13 +47,7 @@ class Inwi3StrategicAnalyzer:
             patch_coverage_pct = (patched / total_assets * 100) if total_assets > 0 else 0.0
 
             by_criticality = df['asset_criticality'].value_counts(dropna=False).to_dict()
-            
-            # Handle missing columns for charts
-            if 'asset_id' in df.columns:
-                top_risky_assets = df.sort_values('score_risk', ascending=False).head(10)[['asset_id', 'score_risk']].to_dict('records')
-                top_risky_dict = {r['asset_id']: r['score_risk'] for r in top_risky_assets}
-            else:
-                top_risky_dict = {'Unknown': avg_risk_score}
+            top_risky_dict = self._get_top_risky_assets(df, avg_risk_score)
 
             return {
                 'kpis': {
@@ -101,8 +62,55 @@ class Inwi3StrategicAnalyzer:
                     'top_risky_assets': top_risky_dict
                 }
             }
+
         except Exception as e:
             return {'error': f'Error analyzing risk posture: {str(e)}'}
+
+    # ---------------- Helper Methods ---------------- #
+
+    def _prepare_dataframe(self, df: pd.DataFrame) -> pd.DataFrame:
+        """Ensure required columns exist and are safely formatted."""
+        df = df.copy()
+
+        df['asset_criticality'] = self._normalize_asset_criticality(df)
+        df['incident_count'] = self._normalize_numeric(df, 'incident_count', default=0)
+        df['vuln_severity'] = self._normalize_numeric(df, 'vuln_severity', default=0)
+        df['score_risk'] = self._normalize_numeric(df, 'score_risk', default=0)
+        df['patch_status'] = self._normalize_text(df, 'patch_status', default='unknown')
+
+        return df
+
+
+    def _normalize_asset_criticality(self, df: pd.DataFrame) -> pd.Series:
+        """Convert asset_criticality values into text categories."""
+        if 'asset_criticality' not in df.columns:
+            return pd.Series(['Medium'] * len(df))
+
+        values = pd.to_numeric(df['asset_criticality'].fillna(3), errors='coerce').fillna(3)
+        mapping = {5: 'High', 4: 'Medium-High', 3: 'Medium', 2: 'Low-Medium', 1: 'Low'}
+        return values.map(mapping).fillna('Medium').astype(str)
+
+
+    def _normalize_numeric(self, df: pd.DataFrame, col: str, default: float = 0) -> pd.Series:
+        """Ensure a numeric column exists and is cleaned."""
+        if col not in df.columns:
+            return pd.Series([default] * len(df))
+        return pd.to_numeric(df[col], errors='coerce').fillna(default)
+
+
+    def _normalize_text(self, df: pd.DataFrame, col: str, default: str) -> pd.Series:
+        """Ensure a text column exists and fill missing values."""
+        if col not in df.columns:
+            return pd.Series([default] * len(df))
+        return df[col].fillna(default).astype(str)
+
+
+    def _get_top_risky_assets(self, df: pd.DataFrame, avg_risk_score: float) -> Dict[str, float]:
+        """Return top 10 risky assets or a default if asset_id is missing."""
+        if 'asset_id' not in df.columns:
+            return {'Unknown': avg_risk_score}
+        top = df.sort_values('score_risk', ascending=False).head(10)[['asset_id', 'score_risk']]
+        return dict(zip(top['asset_id'], top['score_risk']))
 
     def analyze_financial_costs(self, df: pd.DataFrame) -> Dict[str, Any]:
         try:
@@ -281,56 +289,52 @@ class Inwi3StrategicAnalyzer:
 
     def analyze_incident_resolution(self, df: pd.DataFrame) -> Dict[str, Any]:
         try:
-            # Handle different column formats for time data
-            if 'detection_time_hours' in df.columns and 'resolution_time_hours' in df.columns:
-                # Direct time columns (COMEX format)
-                df['time_to_detect_hours'] = pd.to_numeric(df['detection_time_hours'], errors='coerce').fillna(0)
-                df['time_to_resolve_hours'] = pd.to_numeric(df['resolution_time_hours'], errors='coerce').fillna(0)
-            else:
-                # Calculate from timestamps (legacy format)
-                if 'created_at' in df.columns:
-                    df['created_at'] = pd.to_datetime(df['created_at'], errors='coerce')
-                else:
-                    df['created_at'] = pd.NaT
-                
-                if 'detected_at' in df.columns:
-                    df['detected_at'] = pd.to_datetime(df['detected_at'], errors='coerce')
-                else:
-                    df['detected_at'] = pd.NaT
-                
-                if 'resolved_at' in df.columns:
-                    df['resolved_at'] = pd.to_datetime(df['resolved_at'], errors='coerce')
-                else:
-                    df['resolved_at'] = pd.NaT
-                
-                df['time_to_detect_hours'] = (df['detected_at'] - df['created_at']).dt.total_seconds() / 3600
-                df['time_to_resolve_hours'] = (df['resolved_at'] - df['detected_at']).dt.total_seconds() / 3600
+            def ensure_datetime(col_name: str) -> pd.Series:
+                return pd.to_datetime(df[col_name], errors='coerce') if col_name in df.columns else pd.NaT
 
-            avg_ttd = float(df['time_to_detect_hours'].mean()) if len(df) > 0 else 0.0
-            avg_ttr = float(df['time_to_resolve_hours'].mean()) if len(df) > 0 else 0.0
-            
-            # Handle missing status column
-            if 'status' in df.columns:
-                unresolved = int(df['status'].str.lower().isin(['open', 'in_progress', 'pending', 'investigating']).sum())
-            else:
-                unresolved = 0
+            def calculate_time_metrics() -> None:
+                """Normalize time columns or compute from timestamps"""
+                if {'detection_time_hours', 'resolution_time_hours'}.issubset(df.columns):
+                    df['time_to_detect_hours'] = pd.to_numeric(df['detection_time_hours'], errors='coerce').fillna(0)
+                    df['time_to_resolve_hours'] = pd.to_numeric(df['resolution_time_hours'], errors='coerce').fillna(0)
+                else:
+                    df['created_at'] = ensure_datetime('created_at')
+                    df['detected_at'] = ensure_datetime('detected_at')
+                    df['resolved_at'] = ensure_datetime('resolved_at')
+                    df['time_to_detect_hours'] = (
+                        (df['detected_at'] - df['created_at']).dt.total_seconds() / 3600
+                    )
+                    df['time_to_resolve_hours'] = (
+                        (df['resolved_at'] - df['detected_at']).dt.total_seconds() / 3600
+                    )
 
-            # Handle missing columns for charts
-            if 'severity' in df.columns and 'incident_id' in df.columns:
-                by_severity = df.groupby('severity').agg({'incident_id': 'count'}).to_dict()['incident_id']
-            elif 'severity' in df.columns:
-                by_severity = df['severity'].value_counts().to_dict()
-            else:
-                by_severity = {'Unknown': len(df)}
+            def get_unresolved_count() -> int:
+                if 'status' not in df.columns:
+                    return 0
+                return int(df['status'].str.lower().isin(
+                    ['open', 'in_progress', 'pending', 'investigating']
+                ).sum())
+
+            def get_by_severity() -> Dict[str, Any]:
+                if 'severity' in df.columns:
+                    if 'incident_id' in df.columns:
+                        return df.groupby('severity')['incident_id'].count().to_dict()
+                    return df['severity'].value_counts().to_dict()
+                return {'Unknown': len(df)}
+
+            # --- Main logic ---
+            calculate_time_metrics()
+            avg_ttd = float(df['time_to_detect_hours'].mean()) if len(df) else 0.0
+            avg_ttr = float(df['time_to_resolve_hours'].mean()) if len(df) else 0.0
 
             return {
                 'kpis': {
                     'avg_time_to_detect_hours': round(avg_ttd, 1),
                     'avg_time_to_resolve_hours': round(avg_ttr, 1),
-                    'unresolved_incidents': unresolved
+                    'unresolved_incidents': get_unresolved_count()
                 },
                 'charts': {
-                    'incidents_by_severity': by_severity
+                    'incidents_by_severity': get_by_severity()
                 }
             }
         except Exception as e:
@@ -463,28 +467,28 @@ analyzer = Inwi3StrategicAnalyzer()
 # === Upload endpoints ===
 
 @router.post("/inwi3/upload-test")
-async def upload_inwi3_test(file: UploadFile = File(...), reportType: str = Form(...)):
+async def upload_inwi3_test(file: UploadFile = File(...), report_type: str = Form(...)):
     """Upload libre pour tests (pas d'auth)."""
-    return await _process_upload(file, reportType)
+    return await _process_upload(file, report_type)
 
 
 @router.post("/inwi3/upload")
 async def upload_inwi3(
     file: UploadFile = File(...),
-    reportType: str = Form(...),
+    report_type: str = Form(...),
     current_user: dict = Depends(get_current_user)
 ):
     """Upload sécurisé avec authentification (Bearer token)."""
-    return await _process_upload(file, reportType)
+    return await _process_upload(file, report_type)
 
 
-async def _process_upload(file: UploadFile, reportType: str):
+async def _process_upload(file: UploadFile, report_type: str):
     try:
         if not file:
             raise HTTPException(status_code=400, detail="No file provided")
         if not file.filename.lower().endswith('.csv'):
             raise HTTPException(status_code=400, detail="Only CSV files are supported")
-        if reportType not in analyzer.report_types:
+        if report_type not in analyzer.report_types:
             raise HTTPException(status_code=400, detail="Invalid report type")
 
         content = await file.read()
@@ -496,10 +500,10 @@ async def _process_upload(file: UploadFile, reportType: str):
         if df.empty:
             raise HTTPException(status_code=400, detail="CSV file is empty")
 
-        result = analyzer.report_types[reportType](df)
+        result = analyzer.report_types[report_type](df)
         return {
             'success': True,
-            'reportType': reportType,
+            'report_type': report_type,
             'data': result,
             'filename': file.filename,
             'rows_processed': len(df)
@@ -517,6 +521,6 @@ async def health_inwi3():
     return {
         'status': 'healthy',
         'module': 'inwi3_strategic',
-        'timestamp': datetime.utcnow().isoformat(),
+        'timestamp': datetime.now(timezone.utc).isoformat(),
         'supported_reports': list(analyzer.report_types.keys())
     }

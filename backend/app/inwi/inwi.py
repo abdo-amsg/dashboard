@@ -2,8 +2,7 @@ from fastapi import APIRouter, File, UploadFile, Form, HTTPException, Depends
 import pandas as pd
 import io
 from datetime import datetime
-import numpy as np
-from typing import Dict, List, Any
+from typing import Dict, Any
 from app.auth import models as auth_models
 from app.auth.auth_routes import get_current_user
 import logging
