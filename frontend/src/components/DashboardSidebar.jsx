@@ -1,4 +1,5 @@
-import { Map, Language, FolderOutlined, SettingsOutlined, AutoAwesomeMosaicOutlined, ChevronLeft, ChevronRight, ShieldOutlined } from '@mui/icons-material';
+import { Map, Language, FolderOutlined, SettingsOutlined, AutoAwesomeMosaicOutlined, ChevronLeft, ChevronRight } from '@mui/icons-material';
+import { INWI_ICON, INWI } from './ui/inwi';
 
 // Accepts activeItem (string or number) and onSelect (function) as props
 function DashboardSidebar({ activeItem, onSelect, is_superuser, isOpen, onToggle }) {
@@ -30,8 +31,8 @@ function DashboardSidebar({ activeItem, onSelect, is_superuser, isOpen, onToggle
     },
     {
       id: 6,
-      label: 'INWI Security',
-      icon: ShieldOutlined
+      logo: INWI,
+      icon: INWI_ICON
     }
   ];
 
@@ -46,18 +47,18 @@ function DashboardSidebar({ activeItem, onSelect, is_superuser, isOpen, onToggle
       <div className="flex-grow py-4">
         {menuItems.map((item) => {
           if (!is_superuser && item.label === "Files") return null; // Return null for cleaner rendering
-          const IconComponent = item.icon;
+          const IconComponent = item.logo && isOpen ? item.logo : item.icon;
           const isActive = activeItem === item.id;
           return (
             <button
               key={item.id}
               onClick={() => handleItemClick(item.id)}
               className={`w-full flex items-center px-4 py-3 text-left transition-colors ${isActive
-                  ? 'bg-highlight text-brand border-r-4 border-brand-light' // Made border thicker
-                  : 'text-text-primary hover:bg-hover'
+                ? 'bg-highlight text-brand border-r-4 border-brand-light' // Made border thicker
+                : 'text-text-primary hover:bg-hover'
                 }`}
             >
-              <IconComponent className={`w-5 h-5 ${isOpen ? 'mr-3' : 'mx-auto'}`} />
+              <IconComponent className={`w-5 h-5 mr-3`} height={18} />
               {isOpen && (
                 <span className="text-sm font-medium whitespace-nowrap">{item.label}</span>
               )}

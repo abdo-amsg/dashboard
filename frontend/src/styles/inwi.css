@@ -1,0 +1,9 @@
+.bg-pattern {
+  background-image: url('../../assets/pattern.jpeg');
+  background-size: 300px;
+  background-repeat: repeat;
+}
+
+.backdrop-blur-sm {
+  backdrop-filter: blur(4px);
+}

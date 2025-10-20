@@ -88,7 +88,6 @@ export const authApi = {
 
     getRoles: async () => {
         const response = await api.get('/api/roles');
-        console.log('Roles fetched:', response);
         return response.data;
     },
     getPermissions: async () => {

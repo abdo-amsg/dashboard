@@ -37,6 +37,93 @@
   --stat-card-background3: hsl(300,60%,85%);
   --stat-card-color4: hsl(30, 100%, 40%);
   --stat-card-background4: hsl(30,100%,85%);
+  --inwi-color: hsl(317, 66%, 52%);
+  --inwi-background: hsl(317,66%,96%);
+
+  --background: 0 0% 98%;
+    --foreground: 280 8% 20%;
+
+    --card: 0 0% 100%;
+    --card-foreground: 280 8% 20%;
+
+    --popover: 0 0% 100%;
+    --popover-foreground: 280 8% 20%;
+
+    --primary: 320 85% 48%;
+    --primary-foreground: 0 0% 100%;
+
+    --secondary: 280 8% 95%;
+    --secondary-foreground: 280 8% 20%;
+
+    --muted: 280 5% 96%;
+    --muted-foreground: 280 5% 46%;
+
+    --accent: 320 85% 96%;
+    --accent-foreground: 320 85% 48%;
+
+    --destructive: 0 84% 60%;
+    --destructive-foreground: 0 0% 100%;
+
+    --border: 280 5% 90%;
+    --input: 280 5% 90%;
+    --ring: 320 85% 48%;
+
+    --radius: 0.75rem;
+  
+    /* Level 1 - Operational (INWI Magenta) */
+    --level1-primary: 320 85% 48%;
+    --level1-primary-foreground: 0 0% 100%;
+    --level1-secondary: 320 85% 96%;
+    --level1-accent: 320 85% 88%;
+    --level1-muted: 320 30% 94%;
+    
+    /* Level 2 - Management (INWI Purple) */
+    --level2-primary: 280 65% 50%;
+    --level2-primary-foreground: 0 0% 100%;
+    --level2-secondary: 280 65% 96%;
+    --level2-accent: 280 65% 88%;
+    --level2-muted: 280 30% 94%;
+    
+    /* Level 3 - Executive (INWI Deep Purple) */
+    --level3-primary: 280 45% 28%;
+    --level3-primary-foreground: 0 0% 100%;
+    --level3-secondary: 280 45% 96%;
+    --level3-accent: 280 45% 88%;
+    --level3-muted: 280 30% 94%;
+
+    /* Status colors */
+    --status-critical: 0 84% 60%;
+    --status-high: 25 95% 53%;
+    --status-medium: 45 93% 47%;
+    --status-low: 158 64% 52%;
+    --status-info: 320 85% 48%;
+
+    /* Chart colors */
+    --chart-1: 320 85% 48%;
+    --chart-2: 280 65% 50%;
+    --chart-3: 280 45% 28%;
+    --chart-4: 45 93% 47%;
+    --chart-5: 340 82% 52%;
+
+    /* Shadows */
+    --shadow-sm: 0 1px 2px 0 hsl(320 85% 48% / 0.05);
+    --shadow-md: 0 4px 6px -1px hsl(320 85% 48% / 0.1);
+    --shadow-lg: 0 10px 15px -3px hsl(320 85% 48% / 0.1);
+    --shadow-xl: 0 20px 25px -5px hsl(320 85% 48% / 0.15);
+
+    /* Gradients */
+    --gradient-level1: linear-gradient(135deg, hsl(320 85% 48%) 0%, hsl(320 85% 58%) 100%);
+    --gradient-level2: linear-gradient(135deg, hsl(280 65% 50%) 0%, hsl(280 65% 60%) 100%);
+    --gradient-level3: linear-gradient(135deg, hsl(280 45% 28%) 0%, hsl(280 45% 38%) 100%);
+
+    --sidebar-background: 0 0% 100%;
+    --sidebar-foreground: 280 8% 20%;
+    --sidebar-primary: 320 85% 48%;
+    --sidebar-primary-foreground: 0 0% 100%;
+    --sidebar-accent: 320 85% 96%;
+    --sidebar-accent-foreground: 320 85% 48%;
+    --sidebar-border: 280 5% 90%;
+    --sidebar-ring: 320 85% 48%;
 }
 
 [data-theme='dark'] {
@@ -70,6 +157,65 @@
   --stat-card-background22: hsl(130,30%,30%);
   --stat-card-background3: hsl(300,30%,20%);
   --stat-card-background4: hsl(30, 30%, 20%);
+  --inwi-background: hsl(317,100%,4%);
+
+  --background: 280 45% 8%;
+    --foreground: 0 0% 98%;
+
+    --card: 280 35% 12%;
+    --card-foreground: 0 0% 98%;
+
+    --popover: 280 35% 12%;
+    --popover-foreground: 0 0% 98%;
+
+    --primary: 320 85% 58%;
+    --primary-foreground: 0 0% 100%;
+
+    --secondary: 280 30% 18%;
+    --secondary-foreground: 0 0% 98%;
+
+    --muted: 280 30% 18%;
+    --muted-foreground: 280 10% 65%;
+
+    --accent: 280 30% 18%;
+    --accent-foreground: 320 85% 58%;
+
+    --destructive: 0 63% 31%;
+    --destructive-foreground: 0 0% 98%;
+
+    --border: 280 30% 18%;
+    --input: 280 30% 18%;
+    --ring: 320 85% 58%;    
+
+  /* Level 1 - Operational (INWI Magenta) */
+    --level1-primary: 320 85% 58%;
+    --level1-primary-foreground: 0 0% 100%;
+    --level1-secondary: 320 50% 15%;
+    --level1-accent: 320 50% 25%;
+    --level1-muted: 320 30% 20%;
+    
+    /* Level 2 - Management (INWI Purple) */
+    --level2-primary: 280 65% 58%;
+    --level2-primary-foreground: 0 0% 100%;
+    --level2-secondary: 280 40% 15%;
+    --level2-accent: 280 40% 25%;
+    --level2-muted: 280 30% 20%;
+    
+    /* Level 3 - Executive (INWI Deep Purple) */
+    --level3-primary: 280 45% 40%;
+    --level3-primary-foreground: 0 0% 100%;
+    --level3-secondary: 280 40% 15%;
+    --level3-accent: 280 40% 25%;
+    --level3-muted: 280 30% 20%;
+
+    --sidebar-background: 280 35% 12%;
+    --sidebar-foreground: 0 0% 98%;
+    --sidebar-primary: 320 85% 58%;
+    --sidebar-primary-foreground: 0 0% 100%;
+    --sidebar-accent: 280 30% 18%;
+    --sidebar-accent-foreground: 320 85% 58%;
+    --sidebar-border: 280 30% 18%;
+    --sidebar-ring: 320 85% 58%;
 }
 
 body {

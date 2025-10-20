@@ -210,7 +210,6 @@ function KPICard(props) {
   }, [unit, current_value, progress_value])
 
   const percentageChange = previous_value ? ((current_value - previous_value) / previous_value) * 100 : 0
-
   const { status, statusColor, statusBorder, statusBg, trendIndicator } = useMemo(() => {
     let status = "neutral"
     let statusColor = "bg-text-secondary"
@@ -636,7 +635,7 @@ function DashboardContent({ user, user_role, loading }) {
 
         {/* KPI Cards */}
         <Section title="Key Performance Indicators" subtitle="Monitor your critical security metrics in real-time">
-          <div className={`grid grid-cols-${gridCols || 3} gap-8`}>
+          <div className={`grid lg:grid-cols-${gridCols} sm:grid-cols-2 gap-8`}>
             {state.kpiData.length
               ? state.kpiData.map((k, i) => <MemoizedKPICard key={i} {...k} />)
               : Array.from({ length: 5 }).map((_, i) => <Skeleton key={i} className="h-48 rounded-2xl" />)}

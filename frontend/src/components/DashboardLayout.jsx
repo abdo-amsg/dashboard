@@ -9,7 +9,7 @@ import Profile from './Profile';
 import { useEffect, useState } from 'react';
 import { useAuth } from '../contexts/AuthContext';
 import KPIMindmap from './Mapping';
-import DashboardLevelSelector from './DashboardLevelSelector';
+import DashboardLevelSelector from './inwi/DashboardLevelSelector';
 import PropTypes from 'prop-types';
 
 DashboardLayout.propTypes = {
